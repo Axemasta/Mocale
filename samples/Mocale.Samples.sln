@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31611.283
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mocale.Samples", "Mocale.Samples\Mocale.Samples.csproj", "{77135462-4281-422C-90EF-AE89F9C3C7FE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Library", "Library", "{AEF022DA-558F-432C-A6D3-1520EABBD3B3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{30608F13-5526-4C56-AB32-8123BC2A8D9C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mocale", "..\src\Mocale\Mocale.csproj", "{12EECF69-0E0D-428A-9E4D-FF944FABAA67}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{77135462-4281-422C-90EF-AE89F9C3C7FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77135462-4281-422C-90EF-AE89F9C3C7FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77135462-4281-422C-90EF-AE89F9C3C7FE}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{77135462-4281-422C-90EF-AE89F9C3C7FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77135462-4281-422C-90EF-AE89F9C3C7FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77135462-4281-422C-90EF-AE89F9C3C7FE}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{12EECF69-0E0D-428A-9E4D-FF944FABAA67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12EECF69-0E0D-428A-9E4D-FF944FABAA67}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12EECF69-0E0D-428A-9E4D-FF944FABAA67}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12EECF69-0E0D-428A-9E4D-FF944FABAA67}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{77135462-4281-422C-90EF-AE89F9C3C7FE} = {30608F13-5526-4C56-AB32-8123BC2A8D9C}
+		{12EECF69-0E0D-428A-9E4D-FF944FABAA67} = {AEF022DA-558F-432C-A6D3-1520EABBD3B3}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {61F7FB11-1E47-470C-91E2-47F8143E1572}
+	EndGlobalSection
+EndGlobal
