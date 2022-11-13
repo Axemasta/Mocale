@@ -55,6 +55,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\..\src\Mocale\Mocale.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <Compile Update="Resources\Resx\AppResources.Designer.cs">
 	    <DesignTime>True</DesignTime>
 	    <AutoGen>True</AutoGen>

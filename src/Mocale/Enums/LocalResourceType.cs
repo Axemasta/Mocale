@@ -1,6 +1,6 @@
 ﻿namespace Mocale.Enums
 {
-    internal enum LocalResourceType
+    public enum LocalResourceType
     {
         Resx = 0,
         Json = 1,

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Mocale.Enums;
 
 namespace Mocale.Samples;
 
@@ -9,7 +10,11 @@ public static class MauiProgram
 		var builder = MauiApp.CreateBuilder();
 		builder
 			.UseMauiApp<App>()
-			.ConfigureFonts(fonts =>
+			.UseMocale(config =>
+			{
+				config.ResourceType = LocalResourceType.Json;
+			})
+            .ConfigureFonts(fonts =>
 			{
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
 				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
