@@ -1,5 +1,5 @@
 ﻿using System.Globalization;
-using Mocale.Samples.MoveToLib;
+using Mocale.Managers;
 using MvvmHelpers;
 
 namespace Mocale.Samples.ViewModels
@@ -47,7 +47,7 @@ namespace Mocale.Samples.ViewModels
 
             var culture = new CultureInfo(newValue);
 
-            LocalizationResourceManager.Instance.SetCulture(culture);
+            LocalizationManager.Instance.SetCulture(culture);
         }
     }
 }

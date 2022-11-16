@@ -1,9 +1,11 @@
-﻿namespace Mocale.Samples.MoveToLib
+﻿using Mocale.Managers;
+
+namespace Mocale.Extensions
 {
-    [ContentProperty(nameof(Name))]
+    [ContentProperty(nameof(Key))]
     public class LocalizeExtension : IMarkupExtension<BindingBase>
     {
-        public string? Name { get; set; }
+        public string Key { get; set; }
 
         public IValueConverter Converter { get; set; }
 
@@ -12,8 +14,8 @@
             return new Binding
             {
                 Mode = BindingMode.OneWay,
-                Path = $"[{Name}]",
-                Source = LocalizationResourceManager.Instance,
+                Path = $"[{Key}]",
+                Source = LocalizationManager.Instance,
                 Converter = Converter,
             };
         }

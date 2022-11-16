@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Mocale.Enums;
+using Mocale.Resx;
 
 namespace Mocale.Samples;
 
@@ -10,9 +11,14 @@ public static class MauiProgram
 		var builder = MauiApp.CreateBuilder();
 		builder
 			.UseMauiApp<App>()
-			.UseMocale(config =>
+			.UseMocale(mocale =>
 			{
-				config.ResourceType = LocalResourceType.Json;
+				mocale.WithConfiguration(config =>
+				{
+					config.ResourceType = LocalResourceType.Resx;
+				});
+
+				mocale.WithAppResourcesProvider();
 			})
             .ConfigureFonts(fonts =>
 			{

@@ -55,6 +55,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\..\src\Mocale.Resx\Mocale.Resx.csproj" />
 	  <ProjectReference Include="..\..\src\Mocale\Mocale.csproj" />
 	</ItemGroup>
 
