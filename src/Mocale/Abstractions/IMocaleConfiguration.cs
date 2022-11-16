@@ -1,4 +1,4 @@
-﻿using Mocale.Enums;
+using Mocale.Enums;
 
 namespace Mocale.Abstractions
 {

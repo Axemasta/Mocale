@@ -1,4 +1,4 @@
-﻿using Mocale.Abstractions;
+using Mocale.Abstractions;
 using Mocale.Enums;
 
 namespace Mocale.Models

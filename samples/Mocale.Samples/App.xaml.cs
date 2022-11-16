@@ -5,15 +5,15 @@ namespace Mocale.Samples;
 
 public partial class App : Application
 {
-	public App()
-	{
-		InitializeComponent();
+    public App()
+    {
+        InitializeComponent();
 
-		var introPage = new IntroductionPage()
-		{
-			BindingContext = new IntroductionPageViewModel(),
-		};
+        var introPage = new IntroductionPage()
+        {
+            BindingContext = new IntroductionPageViewModel(),
+        };
 
-		MainPage = new NavigationPage(introPage);
-	}
+        MainPage = new NavigationPage(introPage);
+    }
 }

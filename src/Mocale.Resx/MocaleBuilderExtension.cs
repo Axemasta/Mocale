@@ -1,4 +1,4 @@
-﻿namespace Mocale.Resx
+namespace Mocale.Resx
 {
     public static class MocaleBuilderExtension
     {

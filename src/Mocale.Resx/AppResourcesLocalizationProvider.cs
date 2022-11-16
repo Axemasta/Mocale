@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using Mocale.Abstractions;
 
 namespace Mocale.Resx
@@ -10,8 +10,8 @@ namespace Mocale.Resx
 
         private Dictionary<CultureInfo, Dictionary<string, string>> Localizations { get; } = new Dictionary<CultureInfo, Dictionary<string, string>>()
         {
-            { 
-                new CultureInfo("en-GB"), 
+            {
+                new CultureInfo("en-GB"),
                 new Dictionary<string, string>()
                 {
                     { "CurrentLocaleName", "English" },
@@ -29,7 +29,6 @@ namespace Mocale.Resx
                 }
             }
         };
-
 
         public Dictionary<string, string> GetValuesForCulture(CultureInfo cultureInfo)
         {

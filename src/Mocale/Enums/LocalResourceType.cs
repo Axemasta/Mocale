@@ -1,4 +1,4 @@
-﻿namespace Mocale.Enums
+namespace Mocale.Enums
 {
     public enum LocalResourceType
     {

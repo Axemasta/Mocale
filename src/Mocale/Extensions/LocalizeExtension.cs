@@ -1,4 +1,4 @@
-﻿using Mocale.Managers;
+using Mocale.Managers;
 
 namespace Mocale.Extensions
 {

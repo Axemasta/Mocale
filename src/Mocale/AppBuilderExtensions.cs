@@ -1,4 +1,4 @@
-﻿using Mocale.Models;
+using Mocale.Models;
 
 namespace Mocale
 {
@@ -8,7 +8,7 @@ namespace Mocale
     public static class AppBuilderExtensions
     {
         public static MauiAppBuilder UseConfiguredMocale(
-            this MauiAppBuilder builder, 
+            this MauiAppBuilder builder,
             Action<MocaleConfiguration>? configuration = default)
         {
             // Invoke configuration action

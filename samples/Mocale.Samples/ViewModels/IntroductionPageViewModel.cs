@@ -24,7 +24,7 @@ namespace Mocale.Samples.ViewModels
             }
         }
 
-        public IntroductionPageViewModel() 
+        public IntroductionPageViewModel()
         {
             Locales = new ObservableRangeCollection<string>(new string[]
             {

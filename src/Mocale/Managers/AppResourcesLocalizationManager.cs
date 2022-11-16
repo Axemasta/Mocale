@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Globalization;
 using Mocale.Abstractions;
 
@@ -37,4 +37,3 @@ namespace Mocale.Managers
         }
     }
 }
-
