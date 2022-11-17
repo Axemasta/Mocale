@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging;
 using Mocale.Enums;
 using Mocale.Resx;
+using Mocale.Samples.Resources.Resx;
 
 namespace Mocale.Samples;
 
@@ -23,7 +24,7 @@ public static class MauiProgram
 
                 mocale.WithAppResourcesProvider(config =>
                 {
-                    config.ResourceAssembly = typeof(App).Assembly;
+                    config.AppResourcesType = typeof(AppResources);
                 });
             })
             .ConfigureFonts(fonts =>

@@ -12,7 +12,7 @@ public static class MocaleBuilderExtension
 
         var globalConfig = ConfigurationManager.Instance.GetConfiguration();
 
-        var provider = new AppResourcesLocalizationProvider(globalConfig, config);
+        var provider = new AppResourcesLocalizationProvider(config);
 
         return builder.WithLocalizationProvider(() => provider);
     }

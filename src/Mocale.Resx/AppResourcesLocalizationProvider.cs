@@ -1,54 +1,44 @@
+using System.Collections;
 using System.Globalization;
+using System.Resources;
 using Mocale.Abstractions;
 using Mocale.Resx.Abstractions;
 
 namespace Mocale.Resx;
 
 public class AppResourcesLocalizationProvider : ILocalizationProvider
-
 {
-    private readonly IMocaleConfiguration globalConfiguration;
-    private readonly IAppResourcesConfig localConfiguration;
+    private readonly ResourceManager resourceManager;
 
-    public AppResourcesLocalizationProvider(IMocaleConfiguration globalConfiguration, IAppResourcesConfig localConfiguration)
+    public AppResourcesLocalizationProvider(IAppResourcesConfig localConfiguration)
     {
-        this.globalConfiguration = globalConfiguration;
-        this.localConfiguration = localConfiguration;
+        this.resourceManager = new ResourceManager(localConfiguration.AppResourcesType);
     }
-
-    // Great hacky implementation here, take notes recruiters!
-
-    private Dictionary<CultureInfo, Dictionary<string, string>> Localizations { get; } = new Dictionary<CultureInfo, Dictionary<string, string>>()
-    {
-        {
-            new CultureInfo("en-GB"),
-            new Dictionary<string, string>()
-            {
-                { "CurrentLocaleName", "English" },
-                { "MocaleDescription", "Localization framework for .NET Maui" },
-                { "MocaleTitle", "Mocale" },
-            }
-        },
-        {
-            new CultureInfo("fr-FR"),
-            new Dictionary<string, string>()
-            {
-                { "CurrentLocaleName", "French" },
-                { "MocaleDescription", "Framework de localisation pour .NET Maui" },
-                { "MocaleTitle", "Mocale" },
-            }
-        }
-    };
 
     public Dictionary<string, string> GetValuesForCulture(CultureInfo cultureInfo)
     {
-        var kvp = Localizations[cultureInfo];
+        // https://stackoverflow.com/a/1970941/8828057
+        var resourceSet = resourceManager.GetResourceSet(cultureInfo, true, false);
 
-        if (kvp is not null)
+        if (resourceSet is null)
         {
-            return kvp;
+            // Currently if the AppResources represents en-GB this path will be taken.
+            // This is because en-GB is the default and doesnt have the explicit cultural naming
+            // So GetResourceSet will return null and this path will be followed.
+            //
+            // If the default value isn't equal to the app resources default I dont even know
+            // if there is a real way of knowing what culture the app.resources is?
+            // Maybe this is one of those semi bugs that wont be fixed :D
+
+            Console.WriteLine($"Unable to load resources for culture: {cultureInfo.Name}, reverting to default");
+
+            var defaultSet = resourceManager.GetResourceSet(CultureInfo.InvariantCulture, true, false);
+
+            return defaultSet.Cast<DictionaryEntry>()
+            .ToDictionary(r => r.Key.ToString(), r => r.Value.ToString());
         }
 
-        return Localizations.First().Value;
+        return resourceSet.Cast<DictionaryEntry>()
+            .ToDictionary(r => r.Key.ToString(), r => r.Value.ToString());
     }
 }

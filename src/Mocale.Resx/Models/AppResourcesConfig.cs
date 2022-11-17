@@ -1,9 +1,11 @@
-using System.Reflection;
 using Mocale.Resx.Abstractions;
 
 namespace Mocale.Resx.Models;
 
+/// <summary>
+/// Configuration for App Resources localizations
+/// </summary>
 public class AppResourcesConfig : IAppResourcesConfig
 {
-    public Assembly ResourceAssembly { get; set; }
+    public Type AppResourcesType { get; set; }
 }
