@@ -1,12 +1,19 @@
-namespace Mocale.Resx
-{
-    public static class MocaleBuilderExtension
-    {
-        public static MocaleBuilder WithAppResourcesProvider(this MocaleBuilder builder)
-        {
-            var provider = new AppResourcesLocalizationProvider();
+using Mocale.Resx.Models;
+using Mocale.Services;
 
-            return builder.WithLocalizationProvider(() => provider);
-        }
+namespace Mocale.Resx;
+
+public static class MocaleBuilderExtension
+{
+    public static MocaleBuilder WithAppResourcesProvider(this MocaleBuilder builder, Action<AppResourcesConfig> resourceConfig)
+    {
+        var config = new AppResourcesConfig();
+        resourceConfig.Invoke(config);
+
+        var globalConfig = ConfigurationManager.Instance.GetConfiguration();
+
+        var provider = new AppResourcesLocalizationProvider(globalConfig, config);
+
+        return builder.WithLocalizationProvider(() => provider);
     }
 }

@@ -1,9 +1,11 @@
+using System.Globalization;
 using Mocale.Enums;
 
-namespace Mocale.Abstractions
+namespace Mocale.Abstractions;
+
+public interface IMocaleConfiguration
 {
-    public interface IMocaleConfiguration
-    {
-        LocalResourceType ResourceType { get; }
-    }
+    LocalResourceType ResourceType { get; }
+
+    CultureInfo DefaultCulture { get; }
 }

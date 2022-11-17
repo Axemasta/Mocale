@@ -1,5 +1,6 @@
 using Mocale.Abstractions;
 using Mocale.Models;
+using Mocale.Services;
 
 namespace Mocale
 {
@@ -11,6 +12,10 @@ namespace Mocale
 
         public MocaleBuilder WithConfiguration(Action<MocaleConfiguration> configuration)
         {
+            var config = new MocaleConfiguration();
+            configuration.Invoke(config);
+            ConfigurationManager.Instance.SetConfiguration(config);
+
             return this;
         }
 
