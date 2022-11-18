@@ -8,4 +8,8 @@ public interface IMocaleConfiguration
     LocalResourceType ResourceType { get; }
 
     CultureInfo DefaultCulture { get; }
+
+    bool ShowMissingKeys { get; }
+
+    string NotFoundSymbol { get; }
 }

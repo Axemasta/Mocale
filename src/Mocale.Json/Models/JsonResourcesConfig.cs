@@ -9,6 +9,8 @@ namespace Mocale.Json.Models
         public string ResourcesPath { get; set; }
 
         public Assembly ResourcesAssembly { get; set; }
+
+        public bool UseResourceFolder { get; set; }
     }
 }
 

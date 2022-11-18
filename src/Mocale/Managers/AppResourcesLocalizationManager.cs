@@ -28,9 +28,27 @@ namespace Mocale.Managers
 
         public static LocalizationManager Instance { get; } = new(ConfigurationManager.Instance);
 
-        public object this[string resourceKey] => (object)Localizations[resourceKey] ?? Array.Empty<byte>();
+        public object this[string resourceKey]
+        {
+            get
+            {
+                if (!Localizations.ContainsKey(resourceKey))
+                {
+                    Console.WriteLine($"Resource key not found: {resourceKey}");
 
-        public event PropertyChangedEventHandler? PropertyChanged;
+                    if (!configuration.ShowMissingKeys)
+                    {
+                        return string.Empty;
+                    }
+
+                    return configuration.NotFoundSymbol + resourceKey + configuration.NotFoundSymbol;
+                }
+
+                return Localizations[resourceKey];
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public void SetCulture(CultureInfo culture)
         {

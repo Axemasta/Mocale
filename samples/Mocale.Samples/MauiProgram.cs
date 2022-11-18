@@ -18,6 +18,7 @@ public static class MauiProgram
                 mocale.WithConfiguration(config =>
                 {
                     config.DefaultCulture = new System.Globalization.CultureInfo("en-GB");
+                    config.NotFoundSymbol = "?";
                 });
 
                 // Would it be the worst idea to have usemocale & withconfig return a MocaleBuilder and then the WithResourceProvider return the host builder?
