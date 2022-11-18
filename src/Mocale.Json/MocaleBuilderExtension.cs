@@ -13,7 +13,7 @@ namespace Mocale.Json
 
             var globalConfig = ConfigurationManager.Instance.GetConfiguration();
 
-            var provider = new JsonResourcesLocalizationProvider(config);
+            var provider = new JsonResourcesLocalizationProvider(globalConfig, config);
 
             return builder.WithLocalizationProvider(() => provider);
         }

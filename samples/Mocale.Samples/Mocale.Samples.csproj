@@ -95,5 +95,6 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <Folder Include="Resources\Locales\" />
+		<EmbeddedResource Include="Resources\Locales\*.json"/>
 	</ItemGroup>
 </Project>
