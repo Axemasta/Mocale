@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
     x:Class="Mocale.Samples.Views.IntroductionPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
@@ -14,8 +14,19 @@
             <converters:LanguageEmojiConverter x:Key="LanguageEmojiConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
-    <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+    <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="10">
         <Label Text="{mocale:Localize Key=CurrentLocaleName, Converter={StaticResource LanguageEmojiConverter}}" />
+
+        <Label>
+            <Label.FormattedText>
+                <FormattedString>
+                    <Span Text="{mocale:Localize LocalizationCurrentProviderIs}"/>
+                    <Span Text=" "/>
+                    <Span Text="{mocale:Localize LocalizationProviderName}"/>
+                </FormattedString>
+
+            </Label.FormattedText>
+        </Label>
 
         <Label Text="{mocale:Localize MocaleDescription}" />
 

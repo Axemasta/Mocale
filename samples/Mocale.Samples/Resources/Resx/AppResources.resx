@@ -120,6 +120,12 @@
   <data name="CurrentLocaleName" xml:space="preserve">
     <value>English</value>
   </data>
+  <data name="LocalizationCurrentProviderIs" xml:space="preserve">
+    <value>The current localization provider is:</value>
+  </data>
+  <data name="LocalizationProviderName" xml:space="preserve">
+    <value>Resx</value>
+  </data>
   <data name="MocaleDescription" xml:space="preserve">
     <value>Localization framework for .NET Maui</value>
   </data>

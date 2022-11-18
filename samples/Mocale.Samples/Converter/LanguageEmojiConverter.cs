@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using Mocale.Managers;
 using Mocale.Samples.Resources.Resx;
 
 namespace Mocale.Samples.Converter;
@@ -7,12 +8,7 @@ internal class LanguageEmojiConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        var currentCulture = AppResources.Culture;
-
-        if (currentCulture is null)
-        {
-            return value;
-        }
+        var currentCulture = LocalizationManager.Instance.CurrentCulture;
 
         return GetFlag(currentCulture.EnglishName);
     }
@@ -37,7 +33,8 @@ internal class LanguageEmojiConverter : IValueConverter
         var region = new RegionInfo(englishRegion.LCID);
 
         var countryAbbrev = region.TwoLetterISORegionName;
-        return IsoCountryCodeToFlagEmoji(countryAbbrev);
+        var flag = IsoCountryCodeToFlagEmoji(countryAbbrev);
+        return flag;
     }
 
     public string IsoCountryCodeToFlagEmoji(string countryCode) => string.Concat(countryCode.ToUpper().Select(x => char.ConvertFromUtf32(x + 0x1F1A5)));
