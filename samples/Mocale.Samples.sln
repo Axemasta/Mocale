@@ -18,6 +18,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\.editorconfig = ..\.editorconfig
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mocale.Json", "..\src\Mocale.Json\Mocale.Json.csproj", "{34740897-5C0B-4F50-AF38-CD825A8CE7B0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +40,10 @@ Global
 		{609BCCE0-AAFE-4EC3-A4E3-D78D993AA907}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{609BCCE0-AAFE-4EC3-A4E3-D78D993AA907}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{609BCCE0-AAFE-4EC3-A4E3-D78D993AA907}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34740897-5C0B-4F50-AF38-CD825A8CE7B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34740897-5C0B-4F50-AF38-CD825A8CE7B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34740897-5C0B-4F50-AF38-CD825A8CE7B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34740897-5C0B-4F50-AF38-CD825A8CE7B0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -46,6 +52,7 @@ Global
 		{77135462-4281-422C-90EF-AE89F9C3C7FE} = {30608F13-5526-4C56-AB32-8123BC2A8D9C}
 		{12EECF69-0E0D-428A-9E4D-FF944FABAA67} = {AEF022DA-558F-432C-A6D3-1520EABBD3B3}
 		{609BCCE0-AAFE-4EC3-A4E3-D78D993AA907} = {AEF022DA-558F-432C-A6D3-1520EABBD3B3}
+		{34740897-5C0B-4F50-AF38-CD825A8CE7B0} = {AEF022DA-558F-432C-A6D3-1520EABBD3B3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {61F7FB11-1E47-470C-91E2-47F8143E1572}

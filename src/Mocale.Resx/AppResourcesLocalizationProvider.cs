@@ -6,7 +6,7 @@ using Mocale.Resx.Abstractions;
 
 namespace Mocale.Resx;
 
-public class AppResourcesLocalizationProvider : ILocalizationProvider
+internal class AppResourcesLocalizationProvider : ILocalizationProvider
 {
     private readonly ResourceManager resourceManager;
 

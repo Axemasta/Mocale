@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using Mocale.Enums;
+using Mocale.Json;
 using Mocale.Resx;
 using Mocale.Samples.Resources.Resx;
 
@@ -16,15 +17,20 @@ public static class MauiProgram
             {
                 mocale.WithConfiguration(config =>
                 {
-                    config.ResourceType = LocalResourceType.Resx;
-                    config.DefaultCulture = new System.Globalization.CultureInfo("fr-FR");
+                    config.DefaultCulture = new System.Globalization.CultureInfo("en-GB");
                 });
 
                 // Would it be the worst idea to have usemocale & withconfig return a MocaleBuilder and then the WithResourceProvider return the host builder?
 
-                mocale.WithAppResourcesProvider(config =>
+                //mocale.WithAppResourcesProvider(config =>
+                //{
+                //    config.AppResourcesType = typeof(AppResources);
+                //});
+
+                mocale.WithJsonResourcesProvider(config =>
                 {
-                    config.AppResourcesType = typeof(AppResources);
+                    config.ResourcesPath = "Locales";
+                    config.ResourcesAssembly = typeof(App).Assembly;
                 });
             })
             .ConfigureFonts(fonts =>
