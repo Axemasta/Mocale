@@ -1,11 +1,4 @@
-﻿namespace Mocale.Abstractions;
-
-/// <summary>
-/// Configuration Manager
-/// </summary>
-public interface IConfigurationManager : IConfigurationManager<IMocaleConfiguration>
-{
-}
+namespace Mocale.Abstractions;
 
 public interface IConfigurationManager<T>
 {

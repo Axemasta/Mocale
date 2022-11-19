@@ -1,41 +1,40 @@
 using Mocale.Abstractions;
 using Mocale.Managers;
 using Mocale.Models;
-using Mocale.Services;
 
-namespace Mocale
+namespace Mocale;
+
+/// <summary>
+/// Host build extensions for Mocale
+/// </summary>
+public static class AppBuilderExtensions
 {
-    /// <summary>
-    /// Host build extensions for Mocale
-    /// </summary>
-    public static class AppBuilderExtensions
+    public static IServiceProvider ServiceProvider { get; private set; }
+
+    public static MauiAppBuilder UseMocale(
+        this MauiAppBuilder mauiAppBuilder,
+        Action<MocaleBuilder> builder = default)
     {
-        public static IServiceProvider ServiceProvider { get; private set; }
-
-        public static MauiAppBuilder UseMocale(
-            this MauiAppBuilder builder,
-            Action<MocaleBuilder>? configuration = default)
+        var mocaleBuilder = new MocaleBuilder()
         {
-            var configurationManager = new ConfigurationManager();
-            builder.Services.AddSingleton<IConfigurationManager>(configurationManager);
+            AppBuilder = mauiAppBuilder, // Give the builders a reference so they can register things
+        };
 
-            // Invoke configuration action
-            configuration?.Invoke(new MocaleBuilder()
-            {
-                AppBuilder = builder, // Give the builders a reference so they can register things
-                ConfigurationManager = configurationManager,
-            });
+        // Invoke mocaleConfiguration action
+        builder?.Invoke(mocaleBuilder);
 
-            builder.Services.AddSingleton<ILocalizationManager, LocalizationManager>();
+        // Default config if the consumer doesn't call WithConfiguration(...)
+        mocaleBuilder.ConfigurationManager ??= new ConfigurationManager<IMocaleConfiguration>(new MocaleConfiguration());
 
-            // Is this really bad to be doing? probably 🙈
-            ServiceProvider = builder.Services.BuildServiceProvider();
+        mauiAppBuilder.Services.AddSingleton(mocaleBuilder.ConfigurationManager);
+        mauiAppBuilder.Services.AddSingleton<ILocalizationManager, LocalizationManager>();
 
-            // Make sure this is initialized before the app starts.
-            // Maybe a feature to defer this init? to improve startup speeds...
-            var man = ServiceProvider.GetRequiredService<ILocalizationManager>();
+        // Is this really bad to be doing? probably 🙈
+        ServiceProvider = mauiAppBuilder.Services.BuildServiceProvider();
 
-            return builder;
-        }
+        // Move to an init function so that this isn't ran in the host builder
+        _ = ServiceProvider.GetRequiredService<ILocalizationManager>();
+
+        return mauiAppBuilder;
     }
 }

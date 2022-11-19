@@ -1,7 +1,7 @@
-using Microsoft.Extensions.Logging;
 using Mocale.Abstractions;
+using Mocale.Managers;
+using Mocale.Resx.Abstractions;
 using Mocale.Resx.Models;
-using Mocale.Services;
 
 namespace Mocale.Resx;
 
@@ -12,8 +12,11 @@ public static class MocaleBuilderExtension
         var config = new AppResourcesConfig();
         resourceConfig.Invoke(config);
 
+        var appResourcesConfigManager = new ConfigurationManager<IAppResourcesConfig>(config);
+
+        builder.AppBuilder.Services.AddSingleton<IConfigurationManager<IAppResourcesConfig>>(appResourcesConfigManager);
         builder.AppBuilder.Services.AddSingleton<ILocalizationProvider, AppResourcesLocalizationProvider>();
 
-        return builder.WithLocalizationProvider(() => AppBuilderExtensions.ServiceProvider.GetRequiredService<ILocalizationProvider>());
+        return builder;
     }
 }

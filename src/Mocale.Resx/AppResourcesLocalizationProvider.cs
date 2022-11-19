@@ -11,12 +11,14 @@ internal class AppResourcesLocalizationProvider : ILocalizationProvider
 {
     private readonly ResourceManager resourceManager;
     private readonly ILogger logger;
+    private readonly IAppResourcesConfig appResourcesConfig;
 
     public AppResourcesLocalizationProvider(
-        IAppResourcesConfig localConfiguration,
+        IConfigurationManager<IAppResourcesConfig> appResourcesConfigurationManager,
         ILogger<AppResourcesLocalizationProvider> logger)
     {
-        this.resourceManager = new ResourceManager(localConfiguration.AppResourcesType);
+        this.appResourcesConfig = appResourcesConfigurationManager.GetConfiguration();
+        this.resourceManager = new ResourceManager(appResourcesConfig.AppResourcesType);
         this.logger = logger;
     }
 

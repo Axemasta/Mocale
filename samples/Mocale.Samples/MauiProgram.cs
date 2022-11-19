@@ -1,8 +1,5 @@
 using Microsoft.Extensions.Logging;
-using Mocale.Enums;
 using Mocale.Json;
-using Mocale.Resx;
-using Mocale.Samples.Resources.Resx;
 
 namespace Mocale.Samples;
 
@@ -44,8 +41,6 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
-
-
 
         return builder.Build();
     }

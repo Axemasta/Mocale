@@ -1,27 +1,22 @@
-using System;
-using Microsoft.Extensions.Logging;
 using Mocale.Abstractions;
 using Mocale.Json.Abstractions;
-using Mocale.Json.Managers;
 using Mocale.Json.Models;
-using Mocale.Services;
+using Mocale.Managers;
 
-namespace Mocale.Json
+namespace Mocale.Json;
+
+public static class MocaleBuilderExtension
 {
-    public static class MocaleBuilderExtension
+    public static MocaleBuilder WithJsonResourcesProvider(this MocaleBuilder builder, Action<JsonResourcesConfig> resourceConfig)
     {
-        public static MocaleBuilder WithJsonResourcesProvider(this MocaleBuilder builder, Action<JsonResourcesConfig> resourceConfig)
-        {
-            var config = new JsonResourcesConfig();
-            resourceConfig.Invoke(config);
+        var config = new JsonResourcesConfig();
+        resourceConfig.Invoke(config);
 
-            var jsonConfigurationManager = new JsonConfigurationManager();
-            jsonConfigurationManager.SetConfiguration(config);
+        var jsonConfigurationManager = new ConfigurationManager<IJsonResourcesConfig>(config);
 
-            builder.AppBuilder.Services.AddSingleton<IJsonConfigurationManager>(jsonConfigurationManager);
-            builder.AppBuilder.Services.AddSingleton<ILocalizationProvider, JsonResourcesLocalizationProvider>();
+        builder.AppBuilder.Services.AddSingleton<IConfigurationManager<IJsonResourcesConfig>>(jsonConfigurationManager);
+        builder.AppBuilder.Services.AddSingleton<ILocalizationProvider, JsonResourcesLocalizationProvider>();
 
-            return builder.WithLocalizationProvider(() => AppBuilderExtensions.ServiceProvider.GetRequiredService<ILocalizationProvider>());
-        }
+        return builder;
     }
 }
