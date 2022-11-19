@@ -10,7 +10,7 @@ public class MocaleBuilder
 
     internal MauiAppBuilder AppBuilder { get; set; }
 
-    internal IConfigurationManager<IMocaleConfiguration>? ConfigurationManager { get; set; }
+    internal ConfigurationManager<IMocaleConfiguration>? ConfigurationManager { get; set; }
 
     public MocaleBuilder WithConfiguration(Action<MocaleConfiguration> configuration)
     {

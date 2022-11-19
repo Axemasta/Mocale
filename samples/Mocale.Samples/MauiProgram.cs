@@ -1,5 +1,7 @@
 using Microsoft.Extensions.Logging;
 using Mocale.Json;
+using Mocale.Resx;
+using Mocale.Samples.Resources.Resx;
 
 namespace Mocale.Samples;
 
@@ -18,14 +20,12 @@ public static class MauiProgram
                     config.NotFoundSymbol = "?";
                 });
 
-                // Would it be the worst idea to have usemocale & withconfig return a MocaleBuilder and then the WithResourceProvider return the host builder?
-
-                //mocale.WithAppResourcesProvider(config =>
+                //mocale.UseAppResources(config =>
                 //{
                 //    config.AppResourcesType = typeof(AppResources);
                 //});
 
-                mocale.WithJsonResourcesProvider(config =>
+                mocale.UseJsonResources(config =>
                 {
                     config.ResourcesPath = "Locales";
                     config.ResourcesAssembly = typeof(App).Assembly;

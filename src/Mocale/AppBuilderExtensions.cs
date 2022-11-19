@@ -24,7 +24,7 @@ public static class AppBuilderExtensions
         // Default config if the consumer doesn't call WithConfiguration(...)
         mocaleBuilder.ConfigurationManager ??= new ConfigurationManager<IMocaleConfiguration>(new MocaleConfiguration());
 
-        mauiAppBuilder.Services.AddSingleton(mocaleBuilder.ConfigurationManager);
+        mauiAppBuilder.Services.AddSingleton<IConfigurationManager<IMocaleConfiguration>>(mocaleBuilder.ConfigurationManager);
         mauiAppBuilder.Services.AddSingleton<ILocalizationManager, LocalizationManager>();
 
         return mauiAppBuilder;

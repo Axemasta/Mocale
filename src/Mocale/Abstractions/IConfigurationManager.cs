@@ -6,3 +6,8 @@ public interface IConfigurationManager<T>
 
     void SetConfiguration(T configuration);
 }
+
+public interface IConfigurationUpdateManager<TConfig>
+{
+    void UpdateConfiguration(Action<TConfig> configuration);
+}
