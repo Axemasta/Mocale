@@ -26,9 +26,11 @@
 	<ItemGroup>
 	  <None Remove="Abstractions\" />
 	  <None Remove="Models\" />
+	  <None Remove="Managers\" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Folder Include="Abstractions\" />
 	  <Folder Include="Models\" />
+	  <Folder Include="Managers\" />
 	</ItemGroup>
 </Project>

@@ -5,5 +5,7 @@ namespace Mocale.Abstractions
     public interface ILocalizationManager
     {
         CultureInfo CurrentCulture { get; }
+
+        void SetCulture(CultureInfo culture);
     }
 }

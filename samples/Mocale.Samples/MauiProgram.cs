@@ -11,6 +11,11 @@ public static class MauiProgram
     public static MauiApp CreateMauiApp()
     {
         var builder = MauiApp.CreateBuilder();
+
+#if DEBUG
+        builder.Logging.AddDebug();
+#endif
+
         builder
             .UseMauiApp<App>()
             .UseMocale(mocale =>
@@ -40,9 +45,7 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
 
-#if DEBUG
-        builder.Logging.AddDebug();
-#endif
+
 
         return builder.Build();
     }

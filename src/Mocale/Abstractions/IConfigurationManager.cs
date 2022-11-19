@@ -3,9 +3,13 @@
 /// <summary>
 /// Configuration Manager
 /// </summary>
-internal interface IConfigurationManager
+public interface IConfigurationManager : IConfigurationManager<IMocaleConfiguration>
 {
-    IMocaleConfiguration GetConfiguration();
+}
 
-    void SetConfiguration(IMocaleConfiguration mocaleConfiguration);
+public interface IConfigurationManager<T>
+{
+    T GetConfiguration();
+
+    void SetConfiguration(T configuration);
 }

@@ -49,7 +49,7 @@ internal class IntroductionPageViewModel : BaseViewModel
             return;
         }
 
-        if (oldValue.Equals(newValue))
+        if (oldValue.Equals(newValue, StringComparison.Ordinal))
             return;
 
         var culture = new CultureInfo(newValue);

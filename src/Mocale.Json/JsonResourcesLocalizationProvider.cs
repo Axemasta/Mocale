@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using System.Reflection;
 using System.Text.Json;
+using Microsoft.Extensions.Logging;
 using Mocale.Abstractions;
 using Mocale.Json.Abstractions;
 
@@ -11,13 +12,16 @@ namespace Mocale.Json
     {
         private readonly IMocaleConfiguration globalConfiguration;
         private readonly IJsonResourcesConfig localConfig;
+        private readonly ILogger logger;
 
         public JsonResourcesLocalizationProvider(
-            IMocaleConfiguration mocaleConfiguration,
-            IJsonResourcesConfig jsonResourcesConfig)
+            IConfigurationManager configurationManager,
+            IJsonConfigurationManager jsonConfigurationManager,
+            ILogger<JsonResourcesLocalizationProvider> logger)
         {
-            this.globalConfiguration = mocaleConfiguration;
-            this.localConfig = jsonResourcesConfig;
+            this.globalConfiguration = configurationManager.GetConfiguration();
+            this.localConfig = jsonConfigurationManager.GetConfiguration();
+            this.logger = logger;
         }
 
         public Dictionary<string, string> GetValuesForCulture(CultureInfo cultureInfo)
@@ -25,7 +29,7 @@ namespace Mocale.Json
             // read assembly
             if (localConfig.ResourcesAssembly is null)
             {
-                Console.WriteLine("No Resources Assembly provided");
+                logger.LogWarning("Configured resource assembly was null");
                 return new Dictionary<string, string>();
             }
 
@@ -33,7 +37,7 @@ namespace Mocale.Json
 
             if (resources is null)
             {
-                Console.WriteLine($"No resources found in assembly: {localConfig.ResourcesAssembly}");
+                logger.LogWarning("No embedded resources found in assembly {0}", localConfig.ResourcesAssembly);
                 return new Dictionary<string, string>();
             }
 
@@ -48,7 +52,7 @@ namespace Mocale.Json
 
             if (!localesFolderResources.Any())
             {
-                Console.WriteLine($"No resources found with prefix: {folderPrefix}");
+                logger.LogWarning("No assembly resources found with prefix: {0}", folderPrefix);
                 return new Dictionary<string, string>();
             }
 
@@ -70,7 +74,8 @@ namespace Mocale.Json
                 return ParseFile(defaultMatch, localConfig.ResourcesAssembly);
             }
 
-            Console.WriteLine($"Unable to find resource for selected culture: {cultureInfo.Name}, or default culture: {globalConfiguration.DefaultCulture.Name}");
+            logger.LogWarning("Unable to find resource for selected culture: {0}, or default culture: {1}", cultureInfo.Name, globalConfiguration.DefaultCulture.Name);
+
             return new Dictionary<string, string>();
         }
 
@@ -95,8 +100,8 @@ namespace Mocale.Json
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Unable to parse file as dictionary: {filePath}");
-                    Console.WriteLine(ex);
+                    logger.LogError(ex, "An exception occurred loading & parsing assembly resource {0}", filePath);
+
                     return new Dictionary<string, string>();
                 }
             }

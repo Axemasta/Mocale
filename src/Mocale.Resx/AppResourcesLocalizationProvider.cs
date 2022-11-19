@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Globalization;
 using System.Resources;
+using Microsoft.Extensions.Logging;
 using Mocale.Abstractions;
 using Mocale.Resx.Abstractions;
 
@@ -9,10 +10,14 @@ namespace Mocale.Resx;
 internal class AppResourcesLocalizationProvider : ILocalizationProvider
 {
     private readonly ResourceManager resourceManager;
+    private readonly ILogger logger;
 
-    public AppResourcesLocalizationProvider(IAppResourcesConfig localConfiguration)
+    public AppResourcesLocalizationProvider(
+        IAppResourcesConfig localConfiguration,
+        ILogger<AppResourcesLocalizationProvider> logger)
     {
         this.resourceManager = new ResourceManager(localConfiguration.AppResourcesType);
+        this.logger = logger;
     }
 
     public Dictionary<string, string> GetValuesForCulture(CultureInfo cultureInfo)
@@ -30,7 +35,7 @@ internal class AppResourcesLocalizationProvider : ILocalizationProvider
             // if there is a real way of knowing what culture the app.resources is?
             // Maybe this is one of those semi bugs that wont be fixed :D
 
-            Console.WriteLine($"Unable to load resources for culture: {cultureInfo.Name}, reverting to default");
+            logger.LogWarning("Unable to load resources for culture: {0}, reverting to default", cultureInfo.Name);
 
             var defaultSet = resourceManager.GetResourceSet(CultureInfo.InvariantCulture, true, false);
 

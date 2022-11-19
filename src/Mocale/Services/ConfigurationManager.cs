@@ -7,8 +7,6 @@ internal class ConfigurationManager : IConfigurationManager
 {
     private IMocaleConfiguration? configuration;
 
-    public static IConfigurationManager Instance { get; } = new ConfigurationManager();
-
     public IMocaleConfiguration GetConfiguration()
     {
         return configuration ?? new MocaleConfiguration();

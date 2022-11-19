@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.Globalization;
+using Microsoft.Extensions.Logging;
 using Mocale.Abstractions;
 using Mocale.Services;
 
@@ -8,6 +9,7 @@ namespace Mocale.Managers
     public class LocalizationManager : ILocalizationManager, INotifyPropertyChanged
     {
         private readonly IMocaleConfiguration configuration;
+        private readonly ILogger logger;
 
         public CultureInfo CurrentCulture { get; set; }
 
@@ -15,18 +17,29 @@ namespace Mocale.Managers
 
         private readonly ILocalizationProvider localizationProvider;
 
-        private LocalizationManager(IConfigurationManager configurationManager)
+        public LocalizationManager(
+            IConfigurationManager configurationManager,
+            ILocalizationProvider localizationProvider,
+            ILogger<LocalizationManager> logger)
         {
             this.configuration = configurationManager.GetConfiguration();
+            this.localizationProvider = localizationProvider;
+            this.logger = logger;
 
             CurrentCulture = configuration.DefaultCulture;
-
-            localizationProvider = MocaleBuilder.Instance.LocalizationProvider;
 
             Localizations = localizationProvider.GetValuesForCulture(CurrentCulture);
         }
 
-        public static LocalizationManager Instance { get; } = new(ConfigurationManager.Instance);
+        // Using a service locator here is just criminal, need to init when the library is all registered...
+        // Maybe a .Build() method on the apphostbuilder to commit everything once config has occurred?
+        public static ILocalizationManager Instance
+        {
+            get
+            {
+                return AppBuilderExtensions.ServiceProvider.GetRequiredService<ILocalizationManager>();
+            }
+        }
 
         public object this[string resourceKey]
         {
@@ -34,7 +47,7 @@ namespace Mocale.Managers
             {
                 if (!Localizations.ContainsKey(resourceKey))
                 {
-                    Console.WriteLine($"Resource key not found: {resourceKey}");
+                    logger.LogWarning("Resource key not found '{0}'", resourceKey);
 
                     if (!configuration.ShowMissingKeys)
                     {
@@ -56,6 +69,8 @@ namespace Mocale.Managers
             CurrentCulture = culture;
             Localizations = localizationProvider.GetValuesForCulture(CurrentCulture);
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(null));
+
+            logger.LogDebug("Updated localization culture to {0}", culture.Name);
         }
     }
 }
