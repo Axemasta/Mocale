@@ -9,7 +9,7 @@ internal class LanguageEmojiConverter : IValueConverter
 
     public LanguageEmojiConverter()
     {
-        localizationManager = MauiProgram.Services.GetRequiredService<ILocalizationManager>();
+        localizationManager = MocaleLocator.GetLocalizationManager();
     }
 
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

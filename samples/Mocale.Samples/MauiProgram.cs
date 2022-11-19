@@ -5,8 +5,6 @@ namespace Mocale.Samples;
 
 public static class MauiProgram
 {
-    public static IServiceProvider Services { get; private set; }
-
     public static MauiApp CreateMauiApp()
     {
         var builder = MauiApp.CreateBuilder();
@@ -47,9 +45,6 @@ public static class MauiProgram
 #endif
         });
 
-        // https://montemagno.com/dotnet-maui-appsettings-json-configuration/
-        var app = builder.Build();
-        Services = app.Services;
-        return app;
+        return builder.Build();
     }
 }
