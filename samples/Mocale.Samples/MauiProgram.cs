@@ -5,14 +5,11 @@ namespace Mocale.Samples;
 
 public static class MauiProgram
 {
+    public static IServiceProvider Services { get; private set; }
+
     public static MauiApp CreateMauiApp()
     {
         var builder = MauiApp.CreateBuilder();
-
-#if DEBUG
-        builder.Logging.AddDebug();
-#endif
-
         builder
             .UseMauiApp<App>()
             .UseMocale(mocale =>
@@ -42,6 +39,17 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
 
-        return builder.Build();
+        builder.Services.AddLogging(builder =>
+        {
+#if DEBUG
+            builder.AddDebug()
+                .AddFilter("Mocale", LogLevel.Trace);
+#endif
+        });
+
+        // https://montemagno.com/dotnet-maui-appsettings-json-configuration/
+        var app = builder.Build();
+        Services = app.Services;
+        return app;
     }
 }

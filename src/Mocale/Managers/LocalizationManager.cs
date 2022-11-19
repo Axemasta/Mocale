@@ -16,6 +16,8 @@ public class LocalizationManager : ILocalizationManager, INotifyPropertyChanged
 
     private readonly ILocalizationProvider localizationProvider;
 
+    internal static ILocalizationManager Instance { get; private set; }
+
     public LocalizationManager(
         IConfigurationManager<IMocaleConfiguration> mocaleConfigurationManager,
         ILocalizationProvider localizationProvider,
@@ -28,11 +30,10 @@ public class LocalizationManager : ILocalizationManager, INotifyPropertyChanged
         CurrentCulture = mocaleConfiguration.DefaultCulture;
 
         Localizations = localizationProvider.GetValuesForCulture(CurrentCulture);
-    }
 
-    // Using a service locator here is just criminal, need to init when the library is all registered...
-    // Maybe a .Build() method on the apphostbuilder to commit everything once config has occurred?
-    public static ILocalizationManager Instance => AppBuilderExtensions.ServiceProvider.GetRequiredService<ILocalizationManager>();
+        //
+        Instance = this;
+    }
 
     public object this[string resourceKey]
     {

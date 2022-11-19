@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using Mocale.Abstractions;
 using Mocale.Managers;
 using MvvmHelpers;
@@ -50,10 +50,12 @@ internal class IntroductionPageViewModel : BaseViewModel
         }
 
         if (oldValue.Equals(newValue, StringComparison.Ordinal))
+        {
             return;
+        }
 
         var culture = new CultureInfo(newValue);
 
-        LocalizationManager.Instance.SetCulture(culture);
+        localizationManager.SetCulture(culture);
     }
 }

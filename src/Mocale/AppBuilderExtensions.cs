@@ -9,8 +9,6 @@ namespace Mocale;
 /// </summary>
 public static class AppBuilderExtensions
 {
-    public static IServiceProvider ServiceProvider { get; private set; }
-
     public static MauiAppBuilder UseMocale(
         this MauiAppBuilder mauiAppBuilder,
         Action<MocaleBuilder> builder = default)
@@ -28,12 +26,6 @@ public static class AppBuilderExtensions
 
         mauiAppBuilder.Services.AddSingleton(mocaleBuilder.ConfigurationManager);
         mauiAppBuilder.Services.AddSingleton<ILocalizationManager, LocalizationManager>();
-
-        // Is this really bad to be doing? probably 🙈
-        ServiceProvider = mauiAppBuilder.Services.BuildServiceProvider();
-
-        // Move to an init function so that this isn't ran in the host builder
-        _ = ServiceProvider.GetRequiredService<ILocalizationManager>();
 
         return mauiAppBuilder;
     }

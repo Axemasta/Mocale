@@ -1,11 +1,10 @@
 using System.Globalization;
 
-namespace Mocale.Abstractions
-{
-    public interface ILocalizationManager
-    {
-        CultureInfo CurrentCulture { get; }
+namespace Mocale.Abstractions;
 
-        void SetCulture(CultureInfo culture);
-    }
+public interface ILocalizationManager
+{
+    CultureInfo CurrentCulture { get; }
+
+    void SetCulture(CultureInfo culture);
 }

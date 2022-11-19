@@ -1,14 +1,20 @@
-﻿using System.Globalization;
-using Mocale.Managers;
-using Mocale.Samples.Resources.Resx;
+using System.Globalization;
+using Mocale.Abstractions;
 
 namespace Mocale.Samples.Converter;
 
 internal class LanguageEmojiConverter : IValueConverter
 {
+    private readonly ILocalizationManager localizationManager;
+
+    public LanguageEmojiConverter()
+    {
+        localizationManager = MauiProgram.Services.GetRequiredService<ILocalizationManager>();
+    }
+
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        var currentCulture = LocalizationManager.Instance.CurrentCulture;
+        var currentCulture = localizationManager.CurrentCulture;
 
         return GetFlag(currentCulture.EnglishName);
     }
