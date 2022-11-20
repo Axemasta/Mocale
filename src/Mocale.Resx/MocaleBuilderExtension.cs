@@ -9,12 +9,12 @@ namespace Mocale.Resx;
 
 public static class MocaleBuilderExtension
 {
-    public static MocaleBuilder UseAppResources(this MocaleBuilder builder, Action<AppResourcesConfig> resourceConfig)
+    public static MocaleBuilder UseAppResources(this MocaleBuilder builder, Action<AppResourcesConfig> configureResources)
     {
         builder.ConfigurationManager.UpdateConfiguration(config => ((MocaleConfiguration)config).ResourceType = LocalResourceType.Resx);
 
         var config = new AppResourcesConfig();
-        resourceConfig.Invoke(config);
+        configureResources.Invoke(config);
 
         var appResourcesConfigManager = new ConfigurationManager<IAppResourcesConfig>(config);
 

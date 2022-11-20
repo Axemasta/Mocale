@@ -1,7 +1,5 @@
 using Microsoft.Extensions.Logging;
 using Mocale.Json;
-using Mocale.Resx;
-using Mocale.Samples.Resources.Resx;
 
 namespace Mocale.Samples;
 
@@ -18,14 +16,12 @@ public static class MauiProgram
                 {
                     config.DefaultCulture = new System.Globalization.CultureInfo("en-GB");
                     config.NotFoundSymbol = "?";
-                });
-
-                //mocale.UseAppResources(config =>
+                })
+                //.UseAppResources(config =>
                 //{
                 //    config.AppResourcesType = typeof(AppResources);
                 //});
-
-                mocale.UseJsonResources(config =>
+                .UseJsonResources(config =>
                 {
                     config.ResourcesPath = "Locales";
                     config.ResourcesAssembly = typeof(App).Assembly;

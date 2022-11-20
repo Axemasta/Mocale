@@ -9,12 +9,12 @@ namespace Mocale.Json;
 
 public static class MocaleBuilderExtension
 {
-    public static MocaleBuilder UseJsonResources(this MocaleBuilder builder, Action<JsonResourcesConfig> resourceConfig)
+    public static MocaleBuilder UseJsonResources(this MocaleBuilder builder, Action<JsonResourcesConfig> configureJson)
     {
         builder.ConfigurationManager.UpdateConfiguration(config => ((MocaleConfiguration)config).ResourceType = LocalResourceType.Json);
 
         var config = new JsonResourcesConfig();
-        resourceConfig.Invoke(config);
+        configureJson.Invoke(config);
 
         var jsonConfigurationManager = new ConfigurationManager<IJsonResourcesConfig>(config);
 

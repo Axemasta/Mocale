@@ -12,11 +12,11 @@ public class MocaleBuilder
 
     internal ConfigurationManager<IMocaleConfiguration>? ConfigurationManager { get; set; }
 
-    public MocaleBuilder WithConfiguration(Action<MocaleConfiguration> configuration)
+    public MocaleBuilder WithConfiguration(Action<MocaleConfiguration> configureMocale)
     {
         var config = new MocaleConfiguration();
 
-        configuration.Invoke(config);
+        configureMocale.Invoke(config);
 
         ConfigurationManager = new ConfigurationManager<IMocaleConfiguration>(config);
 
