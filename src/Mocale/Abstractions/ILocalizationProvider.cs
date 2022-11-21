@@ -14,4 +14,12 @@ namespace Mocale.Abstractions
         /// <returns>The localizations as a key value pair</returns>
         Dictionary<string, string> GetValuesForCulture(CultureInfo cultureInfo);
     }
+
+    /// <summary>
+    /// Move this over to ILocalizationProvider, this is a bit of a palceholder
+    /// </summary>
+    public interface ILocalizationSource
+    {
+        Task<Dictionary<string, string>> GetValuesForCulture(CultureInfo cultureInfo);
+    }
 }

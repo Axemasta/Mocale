@@ -1,5 +1,8 @@
 using Microsoft.Extensions.Logging;
 using Mocale.Json;
+using Mocale.Providers.Azure.Blob;
+using Mocale.Resx;
+using Mocale.Samples.Resources.Resx;
 
 namespace Mocale.Samples;
 
@@ -25,6 +28,12 @@ public static class MauiProgram
                 {
                     config.ResourcesPath = "Locales";
                     config.ResourcesAssembly = typeof(App).Assembly;
+                })
+                .UseBlobStorage(config =>
+                {
+                    config.BlobContainerUri = new Uri("");
+                    config.RequiresAuthentication = false;
+                    config.CheckForFile = true;
                 });
             })
             .ConfigureFonts(fonts =>

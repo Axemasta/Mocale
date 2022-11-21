@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFrameworks>net7.0-android;net7.0-ios;net7.0-maccatalyst</TargetFrameworks>
@@ -54,6 +54,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\..\src\Mocale.Providers.Aws.S3\Mocale.Providers.AWS.S3.csproj" />
+	  <ProjectReference Include="..\..\src\Mocale.Providers.Azure.Blob\Mocale.Providers.Azure.Blob.csproj" />
 	  <ProjectReference Include="..\..\src\Mocale.Resx\Mocale.Resx.csproj" />
 	  <ProjectReference Include="..\..\src\Mocale\Mocale.csproj" />
 	  <ProjectReference Include="..\..\src\Mocale.Json\Mocale.Json.csproj" />
@@ -95,6 +97,6 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <Folder Include="Resources\Locales\" />
-		<EmbeddedResource Include="Resources\Locales\*.json"/>
+		<EmbeddedResource Include="Resources\Locales\*.json" />
 	</ItemGroup>
 </Project>
