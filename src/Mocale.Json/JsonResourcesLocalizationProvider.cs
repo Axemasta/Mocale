@@ -65,16 +65,7 @@ internal class JsonResourcesLocalizationProvider : ILocalizationProvider
             return ParseFile(cultureMatch, localConfig.ResourcesAssembly);
         }
 
-        // Lookup default
-        var defaultMatch = localesFolderResources.FirstOrDefault(r => FileMatchesCulture(r, globalConfiguration.DefaultCulture));
-
-        if (defaultMatch != null)
-        {
-            // deserialize if match
-            return ParseFile(defaultMatch, localConfig.ResourcesAssembly);
-        }
-
-        logger.LogWarning("Unable to find resource for selected culture: {0}, or default culture: {1}", cultureInfo.Name, globalConfiguration.DefaultCulture.Name);
+        logger.LogWarning("Unable to find resource for selected culture: {0}", cultureInfo.Name);
 
         return new Dictionary<string, string>();
     }

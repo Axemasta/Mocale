@@ -12,14 +12,18 @@ internal class AppResourcesLocalizationProvider : ILocalizationProvider
     private readonly ResourceManager resourceManager;
     private readonly ILogger logger;
     private readonly IAppResourcesConfig appResourcesConfig;
+    private readonly IMocaleConfiguration mocaleConfiguration;
 
     public AppResourcesLocalizationProvider(
         IConfigurationManager<IAppResourcesConfig> appResourcesConfigurationManager,
-        ILogger<AppResourcesLocalizationProvider> logger)
+        ILogger<AppResourcesLocalizationProvider> logger,
+        IConfigurationManager<IMocaleConfiguration> mocaleConfigurationManager)
     {
-        this.appResourcesConfig = appResourcesConfigurationManager.GetConfiguration();
-        this.resourceManager = new ResourceManager(appResourcesConfig.AppResourcesType);
         this.logger = logger;
+        this.appResourcesConfig = appResourcesConfigurationManager.GetConfiguration();
+        this.mocaleConfiguration = mocaleConfigurationManager.GetConfiguration();
+
+        this.resourceManager = new ResourceManager(appResourcesConfig.AppResourcesType);
     }
 
     public Dictionary<string, string> GetValuesForCulture(CultureInfo cultureInfo)
@@ -29,20 +33,19 @@ internal class AppResourcesLocalizationProvider : ILocalizationProvider
 
         if (resourceSet is null)
         {
-            // Currently if the AppResources represents en-GB this path will be taken.
-            // This is because en-GB is the default and doesnt have the explicit cultural naming
-            // So GetResourceSet will return null and this path will be followed.
-            //
-            // If the default value isn't equal to the app resources default I dont even know
-            // if there is a real way of knowing what culture the app.resources is?
-            // Maybe this is one of those semi bugs that wont be fixed :D
+            // The default culture will not have a name (ie en-GB.resx) so we will have
+            // to trust the user configured this correctly?!
+            if (cultureInfo.Equals(mocaleConfiguration.DefaultCulture))
+            {
+                var defaultSet = resourceManager.GetResourceSet(CultureInfo.InvariantCulture, true, false);
 
-            logger.LogWarning("Unable to load resources for culture: {0}, reverting to default", cultureInfo.Name);
+                return defaultSet.Cast<DictionaryEntry>()
+                .ToDictionary(r => r.Key.ToString(), r => r.Value.ToString());
+            }
 
-            var defaultSet = resourceManager.GetResourceSet(CultureInfo.InvariantCulture, true, false);
+            // Since we don't know about this culture, lets not return a default
 
-            return defaultSet.Cast<DictionaryEntry>()
-            .ToDictionary(r => r.Key.ToString(), r => r.Value.ToString());
+            return null;
         }
 
         return resourceSet.Cast<DictionaryEntry>()

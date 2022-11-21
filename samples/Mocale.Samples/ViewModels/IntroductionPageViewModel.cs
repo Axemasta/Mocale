@@ -1,6 +1,5 @@
 using System.Globalization;
 using Mocale.Abstractions;
-using Mocale.Managers;
 using MvvmHelpers;
 
 namespace Mocale.Samples.ViewModels;
@@ -35,6 +34,7 @@ internal class IntroductionPageViewModel : BaseViewModel
         {
             "en-GB",
             "fr-FR",
+            "it-IT",
         });
 
         var selectedLocale = Locales.FirstOrDefault(localizationManager.CurrentCulture.Name.Equals);
@@ -42,7 +42,7 @@ internal class IntroductionPageViewModel : BaseViewModel
         SelectedLocale = selectedLocale ?? Locales[0];
     }
 
-    private void RaiseLocaleSelected(string oldValue, string newValue)
+    private async void RaiseLocaleSelected(string oldValue, string newValue)
     {
         if (string.IsNullOrEmpty(oldValue))
         {
@@ -56,6 +56,16 @@ internal class IntroductionPageViewModel : BaseViewModel
 
         var culture = new CultureInfo(newValue);
 
-        localizationManager.SetCulture(culture);
+        if (culture.Equals(localizationManager.CurrentCulture))
+        {
+            return;
+        }
+
+        var loaded = await localizationManager.SetCultureAsync(culture);
+
+        if (!loaded)
+        {
+            SelectedLocale = oldValue;
+        }
     }
 }

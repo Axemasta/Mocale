@@ -31,7 +31,7 @@ public class LocalizationManager : ILocalizationManager, INotifyPropertyChanged
 
         Localizations = localizationProvider.GetValuesForCulture(CurrentCulture);
 
-        //
+        // We need a singleton instance for the xaml extensions
         Instance = this;
     }
 
@@ -57,13 +57,33 @@ public class LocalizationManager : ILocalizationManager, INotifyPropertyChanged
 
     public event PropertyChangedEventHandler PropertyChanged;
 
-    public void SetCulture(CultureInfo culture)
+    public async Task<bool> SetCultureAsync(CultureInfo culture)
     {
-        //AppResources.Culture = culture;
-        CurrentCulture = culture;
-        Localizations = localizationProvider.GetValuesForCulture(CurrentCulture);
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(null));
+        try
+        {
+            var values = localizationProvider.GetValuesForCulture(culture);
 
-        logger.LogDebug("Updated localization culture to {0}", culture.Name);
+            if (values is null || !values.Any())
+            {
+                logger.LogWarning("Unable to load culture {0}, no localizations found", culture.Name);
+                return false;
+            }
+
+            Localizations = values;
+
+            CurrentCulture = culture;
+
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(null));
+
+            logger.LogDebug("Updated localization culture to {0}", culture.Name);
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "An exception occurred loading culture: {0}", culture.Name);
+
+            return false;
+        }
     }
 }
