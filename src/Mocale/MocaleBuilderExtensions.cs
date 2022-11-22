@@ -8,7 +8,7 @@ namespace Mocale;
 
 public static class MocaleBuilderExtensions
 {
-    public static MocaleBuilder UseAppResourcesLocalProvider(this MocaleBuilder builder, Action<AppResourcesConfig> configureResources)
+    public static MocaleBuilder UseAppResources(this MocaleBuilder builder, Action<AppResourcesConfig> configureResources)
     {
         builder.ConfigurationManager.UpdateConfiguration(config => ((MocaleConfiguration)config).ResourceType = LocaleResourceType.Resx);
 
@@ -23,7 +23,7 @@ public static class MocaleBuilderExtensions
         return builder;
     }
 
-    public static MocaleBuilder UseJsonResourcesLocalProvider(this MocaleBuilder builder, Action<EmbeddedResourcesConfig> configureJson)
+    public static MocaleBuilder UseEmbeddedResources(this MocaleBuilder builder, Action<EmbeddedResourcesConfig> configureJson)
     {
         builder.ConfigurationManager.UpdateConfiguration(config => ((MocaleConfiguration)config).ResourceType = LocaleResourceType.Json);
 

@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Logging;
+using Mocale.Providers.AWS.S3;
 using Mocale.Providers.Azure.Blob;
 using Mocale.Samples.Resources.Resx;
 
@@ -18,11 +19,11 @@ public static class MauiProgram
                     config.DefaultCulture = new System.Globalization.CultureInfo("en-GB");
                     config.NotFoundSymbol = "?";
                 })
-                //.UseAppResourcesLocalProvider(config =>
+                //.UseAppResources(config =>
                 //{
                 //    config.AppResourcesType = typeof(AppResources);
                 //})
-                .UseJsonResourcesLocalProvider(config =>
+                .UseEmbeddedResources(config =>
                 {
                     config.ResourcesPath = "Locales";
                     config.ResourcesAssembly = typeof(App).Assembly;
@@ -32,6 +33,10 @@ public static class MauiProgram
                     config.BlobContainerUri = new Uri("https://azurestorage/mocale/");
                     config.RequiresAuthentication = false;
                     config.CheckForFile = true;
+                })
+                .UseS3Bucket(config =>
+                {
+                    config.BucketUri = new Uri("https://aws.com/mocale/");
                 });
             })
             .ConfigureFonts(fonts =>
