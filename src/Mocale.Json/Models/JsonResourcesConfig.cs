@@ -1,4 +1,3 @@
-using System;
 using System.Reflection;
 using Mocale.Json.Abstractions;
 
@@ -13,4 +12,3 @@ namespace Mocale.Json.Models
         public bool UseResourceFolder { get; set; } = true;
     }
 }
-

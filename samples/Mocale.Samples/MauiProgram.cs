@@ -1,7 +1,5 @@
 using Microsoft.Extensions.Logging;
-using Mocale.Json;
 using Mocale.Providers.Azure.Blob;
-using Mocale.Resx;
 using Mocale.Samples.Resources.Resx;
 
 namespace Mocale.Samples;
@@ -20,18 +18,18 @@ public static class MauiProgram
                     config.DefaultCulture = new System.Globalization.CultureInfo("en-GB");
                     config.NotFoundSymbol = "?";
                 })
-                //.UseAppResources(config =>
+                //.UseAppResourcesLocalProvider(config =>
                 //{
                 //    config.AppResourcesType = typeof(AppResources);
-                //});
-                .UseJsonResources(config =>
+                //})
+                .UseJsonResourcesLocalProvider(config =>
                 {
                     config.ResourcesPath = "Locales";
                     config.ResourcesAssembly = typeof(App).Assembly;
                 })
                 .UseBlobStorage(config =>
                 {
-                    config.BlobContainerUri = new Uri("");
+                    config.BlobContainerUri = new Uri("https://azurestorage/mocale/");
                     config.RequiresAuthentication = false;
                     config.CheckForFile = true;
                 });

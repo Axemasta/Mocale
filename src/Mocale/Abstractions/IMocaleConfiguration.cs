@@ -5,7 +5,7 @@ namespace Mocale.Abstractions;
 
 public interface IMocaleConfiguration
 {
-    LocalResourceType ResourceType { get; }
+    LocaleResourceType ResourceType { get; }
 
     CultureInfo DefaultCulture { get; }
 

@@ -11,20 +11,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{3060
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mocale", "..\src\Mocale\Mocale.csproj", "{12EECF69-0E0D-428A-9E4D-FF944FABAA67}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mocale.Resx", "..\src\Mocale.Resx\Mocale.Resx.csproj", "{609BCCE0-AAFE-4EC3-A4E3-D78D993AA907}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DD07193B-0A76-436A-80B6-B6915F00C20A}"
 	ProjectSection(SolutionItems) = preProject
 		..\.editorconfig = ..\.editorconfig
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mocale.Json", "..\src\Mocale.Json\Mocale.Json.csproj", "{34740897-5C0B-4F50-AF38-CD825A8CE7B0}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mocale.Providers.Azure.Blob", "..\src\Mocale.Providers.Azure.Blob\Mocale.Providers.Azure.Blob.csproj", "{1BF264ED-14A2-4847-9578-9312BF9ECFA9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mocale.Providers.Azure.Blob", "..\src\Mocale.Providers.Azure.Blob\Mocale.Providers.Azure.Blob.csproj", "{1BF264ED-14A2-4847-9578-9312BF9ECFA9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Providers", "Providers", "{0B693BD4-B0C5-4448-9784-8839869C7371}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mocale.Providers.AWS.S3", "..\src\Mocale.Providers.Aws.S3\Mocale.Providers.AWS.S3.csproj", "{3CAEC7AE-82D2-46DC-9B52-2BC99B3A8AA8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mocale.Providers.AWS.S3", "..\src\Mocale.Providers.Aws.S3\Mocale.Providers.AWS.S3.csproj", "{3CAEC7AE-82D2-46DC-9B52-2BC99B3A8AA8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,14 +38,6 @@ Global
 		{12EECF69-0E0D-428A-9E4D-FF944FABAA67}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{12EECF69-0E0D-428A-9E4D-FF944FABAA67}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{12EECF69-0E0D-428A-9E4D-FF944FABAA67}.Release|Any CPU.Build.0 = Release|Any CPU
-		{609BCCE0-AAFE-4EC3-A4E3-D78D993AA907}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{609BCCE0-AAFE-4EC3-A4E3-D78D993AA907}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{609BCCE0-AAFE-4EC3-A4E3-D78D993AA907}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{609BCCE0-AAFE-4EC3-A4E3-D78D993AA907}.Release|Any CPU.Build.0 = Release|Any CPU
-		{34740897-5C0B-4F50-AF38-CD825A8CE7B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{34740897-5C0B-4F50-AF38-CD825A8CE7B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{34740897-5C0B-4F50-AF38-CD825A8CE7B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{34740897-5C0B-4F50-AF38-CD825A8CE7B0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1BF264ED-14A2-4847-9578-9312BF9ECFA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1BF264ED-14A2-4847-9578-9312BF9ECFA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1BF264ED-14A2-4847-9578-9312BF9ECFA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -65,8 +53,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{77135462-4281-422C-90EF-AE89F9C3C7FE} = {30608F13-5526-4C56-AB32-8123BC2A8D9C}
 		{12EECF69-0E0D-428A-9E4D-FF944FABAA67} = {AEF022DA-558F-432C-A6D3-1520EABBD3B3}
-		{609BCCE0-AAFE-4EC3-A4E3-D78D993AA907} = {AEF022DA-558F-432C-A6D3-1520EABBD3B3}
-		{34740897-5C0B-4F50-AF38-CD825A8CE7B0} = {AEF022DA-558F-432C-A6D3-1520EABBD3B3}
 		{1BF264ED-14A2-4847-9578-9312BF9ECFA9} = {0B693BD4-B0C5-4448-9784-8839869C7371}
 		{0B693BD4-B0C5-4448-9784-8839869C7371} = {AEF022DA-558F-432C-A6D3-1520EABBD3B3}
 		{3CAEC7AE-82D2-46DC-9B52-2BC99B3A8AA8} = {0B693BD4-B0C5-4448-9784-8839869C7371}

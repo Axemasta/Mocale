@@ -1,4 +1,3 @@
-using System;
 using System.Globalization;
 using System.Reflection;
 using System.Text.Json;
@@ -10,16 +9,13 @@ namespace Mocale.Json;
 
 internal class JsonResourcesLocalizationProvider : ILocalizationProvider
 {
-    private readonly IMocaleConfiguration globalConfiguration;
     private readonly IJsonResourcesConfig localConfig;
     private readonly ILogger logger;
 
     public JsonResourcesLocalizationProvider(
-        IConfigurationManager<IMocaleConfiguration> mocaleConfigurationManager,
         IConfigurationManager<IJsonResourcesConfig> jsonConfigurationManager,
         ILogger<JsonResourcesLocalizationProvider> logger)
     {
-        this.globalConfiguration = mocaleConfigurationManager.GetConfiguration();
         this.localConfig = jsonConfigurationManager.GetConfiguration();
         this.logger = logger;
     }
