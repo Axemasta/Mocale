@@ -33,11 +33,11 @@ public static class MauiProgram
                     config.BlobContainerUri = new Uri("https://azurestorage/mocale/");
                     config.RequiresAuthentication = false;
                     config.CheckForFile = true;
-                })
-                .UseS3Bucket(config =>
-                {
-                    config.BucketUri = new Uri("https://aws.com/mocale/");
                 });
+                //.UseS3Bucket(config =>
+                //{
+                //    config.BucketUri = new Uri("https://aws.com/mocale/");
+                //});
             })
             .ConfigureFonts(fonts =>
             {

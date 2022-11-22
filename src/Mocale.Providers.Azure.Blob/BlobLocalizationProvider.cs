@@ -3,9 +3,9 @@ using Mocale.Abstractions;
 
 namespace Mocale.Providers.Azure.Blob;
 
-internal class BlobLocalizationProvider : ILocalizationSource
+internal class BlobLocalizationProvider : IExternalLocalizationProvider
 {
-    public Task<Dictionary<string, string>> GetValuesForCulture(CultureInfo cultureInfo)
+    public Task<IExternalLocalizationResult> GetValuesForCultureAsync(CultureInfo cultureInfo)
     {
         throw new NotImplementedException();
     }

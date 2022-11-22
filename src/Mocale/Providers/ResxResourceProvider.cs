@@ -6,19 +6,16 @@ using Mocale.Abstractions;
 
 namespace Mocale.Providers;
 
-internal class AppResourceProvider : ILocalizationProvider
+internal class AppResourceProvider : IInternalLocalizationProvider
 {
     private readonly ResourceManager resourceManager;
-    private readonly ILogger logger;
     private readonly IAppResourcesConfig appResourcesConfig;
     private readonly IMocaleConfiguration mocaleConfiguration;
 
     public AppResourceProvider(
         IConfigurationManager<IAppResourcesConfig> appResourcesConfigurationManager,
-        ILogger<AppResourceProvider> logger,
         IConfigurationManager<IMocaleConfiguration> mocaleConfigurationManager)
     {
-        this.logger = logger;
         this.appResourcesConfig = appResourcesConfigurationManager.GetConfiguration();
         this.mocaleConfiguration = mocaleConfigurationManager.GetConfiguration();
 

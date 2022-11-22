@@ -14,13 +14,13 @@ public class LocalizationManager : ILocalizationManager, INotifyPropertyChanged
 
     private Dictionary<string, string> Localizations { get; set; } = new Dictionary<string, string>();
 
-    private readonly ILocalizationProvider localizationProvider;
+    private readonly IInternalLocalizationProvider localizationProvider;
 
     internal static ILocalizationManager Instance { get; private set; }
 
     public LocalizationManager(
         IConfigurationManager<IMocaleConfiguration> mocaleConfigurationManager,
-        ILocalizationProvider localizationProvider,
+        IInternalLocalizationProvider localizationProvider,
         ILogger<LocalizationManager> logger)
     {
         this.mocaleConfiguration = mocaleConfigurationManager.GetConfiguration();

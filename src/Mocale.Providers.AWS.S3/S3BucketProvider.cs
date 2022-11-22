@@ -3,9 +3,9 @@ using Mocale.Abstractions;
 
 namespace Mocale.Providers.AWS.S3;
 
-internal class S3BucketProvider : ILocalizationSource
+internal class S3BucketProvider : IExternalLocalizationProvider
 {
-    public Task<Dictionary<string, string>> GetValuesForCulture(CultureInfo cultureInfo)
+    public Task<IExternalLocalizationResult> GetValuesForCultureAsync(CultureInfo cultureInfo)
     {
         throw new NotImplementedException();
     }

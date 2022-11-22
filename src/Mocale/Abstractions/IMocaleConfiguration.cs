@@ -12,4 +12,6 @@ public interface IMocaleConfiguration
     bool ShowMissingKeys { get; }
 
     string NotFoundSymbol { get; }
+
+    bool UseExternalProvider { get; }
 }

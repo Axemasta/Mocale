@@ -13,4 +13,6 @@ public class MocaleConfiguration : IMocaleConfiguration
     public bool ShowMissingKeys { get; set; } = true;
 
     public string NotFoundSymbol { get; set; } = "$";
+
+    public bool UseExternalProvider { get; set; } = true;
 }

@@ -1,4 +1,5 @@
 using Mocale.Abstractions;
+using Mocale.Exceptions;
 using Mocale.Managers;
 using Mocale.Models;
 
@@ -26,6 +27,18 @@ public static class AppBuilderExtensions
 
         mauiAppBuilder.Services.AddSingleton<IConfigurationManager<IMocaleConfiguration>>(mocaleBuilder.ConfigurationManager);
         mauiAppBuilder.Services.AddSingleton<ILocalizationManager, LocalizationManager>();
+
+        if (!mocaleBuilder.LocalProviderRegistered)
+        {
+            throw new InitializationException($"No local provider has been registered, please call either {nameof(MocaleBuilderExtensions.UseAppResources)} or {nameof(MocaleBuilderExtensions.UseEmbeddedResources)} in order to use mocale");
+        }
+
+        var config = mocaleBuilder.ConfigurationManager.GetConfiguration();
+
+        if (config.UseExternalProvider && !mocaleBuilder.ExternalProviderRegistered)
+        {
+            throw new InitializationException($"No external provider was registered when mocale was configured to use one. Please register an external provider or set {nameof(IMocaleConfiguration.UseExternalProvider)} to false.");
+        }
 
         return mauiAppBuilder;
     }

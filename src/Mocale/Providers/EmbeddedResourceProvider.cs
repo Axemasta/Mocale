@@ -1,17 +1,12 @@
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Mocale.Abstractions;
 
 namespace Mocale.Providers;
 
-internal class EmbeddedResourceProvider : ILocalizationProvider
+internal class EmbeddedResourceProvider : IInternalLocalizationProvider
 {
     private readonly IEmbeddedResourcesConfig localConfig;
     private readonly ILogger logger;
