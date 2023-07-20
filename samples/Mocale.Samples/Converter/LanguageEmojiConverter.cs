@@ -9,7 +9,7 @@ internal class LanguageEmojiConverter : IValueConverter
 
     public LanguageEmojiConverter()
     {
-        localizationManager = MocaleLocator.GetLocalizationManager();
+        localizationManager = MocaleLocator.LocalizationManager;
     }
 
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

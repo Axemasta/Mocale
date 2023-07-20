@@ -1,14 +1,19 @@
 using Mocale.Abstractions;
-using Mocale.Managers;
 using Mocale.Samples.ViewModels;
 using Mocale.Samples.Views;
 
 namespace Mocale.Samples;
 
-public partial class App : Application
+public partial class App : Application, IAppServiceProvider
 {
-    public App(ILocalizationManager localizationManager)
+    public IServiceProvider ServiceProvider { get; }
+
+    public App(
+        IServiceProvider serviceProvider,
+        ILocalizationManager localizationManager)
     {
+        this.ServiceProvider = serviceProvider;
+
         InitializeComponent();
 
         var introPage = new IntroductionPage()

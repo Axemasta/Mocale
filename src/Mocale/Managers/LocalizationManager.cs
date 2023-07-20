@@ -16,8 +16,6 @@ public class LocalizationManager : ILocalizationManager, INotifyPropertyChanged
 
     private readonly IInternalLocalizationProvider localizationProvider;
 
-    internal static ILocalizationManager Instance { get; private set; }
-
     public LocalizationManager(
         IConfigurationManager<IMocaleConfiguration> mocaleConfigurationManager,
         IInternalLocalizationProvider localizationProvider,
@@ -30,9 +28,6 @@ public class LocalizationManager : ILocalizationManager, INotifyPropertyChanged
         CurrentCulture = mocaleConfiguration.DefaultCulture;
 
         Localizations = localizationProvider.GetValuesForCulture(CurrentCulture);
-
-        // We need a singleton instance for the xaml extensions
-        Instance = this;
     }
 
     public object this[string resourceKey]

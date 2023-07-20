@@ -1,32 +1,44 @@
 using System.ComponentModel;
 using Mocale.Abstractions;
-using Mocale.Managers;
+using Mocale.Exceptions;
 
 namespace Mocale;
 
 /// <summary>
-/// Mocale Service Locator for services that need to fallback to a service locator pattern
+/// Mocale Service Locator for services that need to fallback to a service locator pattern.
+///
+/// The primary reason for this class is for XamlExtensions lacking access to the app's main service provider.
+/// See issue:
+/// https://github.com/dotnet/maui/issues/8824
+///
+/// When the ability to peek the apps main service provider from markup extensions becomes available,
+/// this service locator will be obsolete.
+///
+/// I've tried to make this not hang off statically stored instances as much as possible, at runtime the app
+/// will use the service provider and not store any state. During a test you can set a custom instance to
+/// mock any functionality required.
 /// </summary>
 public static class MocaleLocator
 {
     private static ILocalizationManager customInstance;
 
-    /// <summary>
-    /// Get the current localization manager instance.
-    /// <para/>
-    /// Only use this locator if you class cannot acquire an instance of <see cref="ILocalizationManager"/> via
-    /// constructor injection ie:
-    /// <list type="bullet">
-    /// <item><description>Converter</description></item>
-    /// <item><description>Markup Extension</description></item>
-    /// </list>
-    /// etc
-    /// </summary>
-    /// <returns></returns>
-    public static ILocalizationManager GetLocalizationManager()
+    public static ILocalizationManager LocalizationManager
     {
-        // A future nice to have would be an analyzer to warn this usage unless the class is IValueConverter etc
-        return customInstance ?? LocalizationManager.Instance;
+        get
+        {
+            if (customInstance != null)
+            {
+                return customInstance;
+            }
+
+            if (Application.Current is not IAppServiceProvider app)
+            {
+                throw new MocaleException($"App must implement {nameof(IAppServiceProvider)}");
+            }
+
+            return app.ServiceProvider.GetRequiredService<ILocalizationManager>();
+        }
+        internal set => customInstance = value;
     }
 
     /// <summary>
@@ -36,6 +48,6 @@ public static class MocaleLocator
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static void SetInstance(ILocalizationManager instance)
     {
-        customInstance = instance;
+        LocalizationManager = instance;
     }
 }

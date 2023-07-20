@@ -1,5 +1,3 @@
-using Mocale.Managers;
-
 namespace Mocale.Extensions;
 
 [ContentProperty(nameof(Key))]
@@ -15,7 +13,7 @@ public class LocalizeExtension : IMarkupExtension<BindingBase>
         {
             Mode = BindingMode.OneWay,
             Path = $"[{Key}]",
-            Source = LocalizationManager.Instance,
+            Source = MocaleLocator.LocalizationManager,
             Converter = Converter,
         };
     }
