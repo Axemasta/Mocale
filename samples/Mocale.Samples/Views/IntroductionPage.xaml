@@ -31,5 +31,7 @@
         <Label Text="{mocale:Localize MocaleDescription}" />
 
         <Picker ItemsSource="{Binding Locales}" SelectedItem="{Binding SelectedLocale}" />
+
+        <Label Text="{mocale:Localize LoadedTranslation}"/>
     </VerticalStackLayout>
 </ContentPage>

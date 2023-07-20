@@ -2,6 +2,8 @@ using System.ComponentModel;
 using System.Globalization;
 using Microsoft.Extensions.Logging;
 using Mocale.Abstractions;
+using Mocale.Extensions;
+using Mocale.Models;
 
 namespace Mocale.Managers;
 
@@ -9,6 +11,8 @@ public class LocalizationManager : ILocalizationManager, INotifyPropertyChanged
 {
     private readonly IMocaleConfiguration mocaleConfiguration;
     private readonly ILogger logger;
+
+    public event PropertyChangedEventHandler PropertyChanged;
 
     public CultureInfo CurrentCulture { get; set; }
 
@@ -48,7 +52,7 @@ public class LocalizationManager : ILocalizationManager, INotifyPropertyChanged
         }
     }
 
-    public event PropertyChangedEventHandler PropertyChanged;
+    
 
     public async Task<bool> SetCultureAsync(CultureInfo culture)
     {
@@ -80,10 +84,39 @@ public class LocalizationManager : ILocalizationManager, INotifyPropertyChanged
         }
     }
 
-    public Task Initialize()
+    public async Task Initialize()
     {
-        Localizations = localizationProvider.GetValuesForCulture(CurrentCulture);
+        try
+        {
+            await InitializeInternal();
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "An exception occurred initializing LocalizationManager");
+        }
+    }
 
-        return Task.CompletedTask;
+    private async Task InitializeInternal()
+    {
+        // TODO: Lookup selected culture
+        var activeCulture = CurrentCulture;
+
+        Localizations = localizationProvider.GetValuesForCulture(activeCulture);
+
+        // Check cache and go get up to date translations
+
+        Task.Run(() => CheckForTranslationUpdates(activeCulture))
+            .Forget();
+    }
+
+    private async Task CheckForTranslationUpdates(CultureInfo cultureInfo)
+    {
+        await Task.Delay(5000);
+
+        Localizations.Add("LoadedTranslation", "THIS CAME LATER!");
+
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(null));
+
+        // This will become available 5 seconds after the app loads
     }
 }

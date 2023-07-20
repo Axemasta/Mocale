@@ -1,11 +1,25 @@
+using Mocale.Abstractions;
+
 namespace Mocale.Extensions;
 
 [ContentProperty(nameof(Key))]
 public class LocalizeExtension : IMarkupExtension<BindingBase>
 {
+    private readonly ILocalizationManager localizationManager;
+
     public string Key { get; set; }
 
     public IValueConverter Converter { get; set; }
+
+    public LocalizeExtension()
+        : this(MocaleLocator.LocalizationManager)
+    {
+    }
+
+    public LocalizeExtension(ILocalizationManager localizationManager)
+    {
+        this.localizationManager = localizationManager;
+    }
 
     public BindingBase ProvideValue(IServiceProvider serviceProvider)
     {
@@ -13,7 +27,7 @@ public class LocalizeExtension : IMarkupExtension<BindingBase>
         {
             Mode = BindingMode.OneWay,
             Path = $"[{Key}]",
-            Source = MocaleLocator.LocalizationManager,
+            Source = localizationManager,
             Converter = Converter,
         };
     }
