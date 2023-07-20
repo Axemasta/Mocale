@@ -1,7 +1,6 @@
 using System.Globalization;
 using Mocale.Abstractions;
 using MvvmHelpers;
-
 namespace Mocale.Samples.ViewModels;
 
 public class IntroductionPageViewModel : BaseViewModel
@@ -30,7 +29,7 @@ public class IntroductionPageViewModel : BaseViewModel
     {
         this.localizationManager = localizationManager;
 
-        Locales = new ObservableRangeCollection<string>(new string[]
+        Locales = new ObservableRangeCollection<string>(new[]
         {
             "en-GB",
             "fr-FR",

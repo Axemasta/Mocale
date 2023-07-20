@@ -1,6 +1,5 @@
 using System.Globalization;
 using Mocale.Abstractions;
-
 namespace Mocale.Samples.Converter;
 
 internal class LanguageEmojiConverter : IValueConverter
@@ -43,5 +42,8 @@ internal class LanguageEmojiConverter : IValueConverter
         return flag;
     }
 
-    public string IsoCountryCodeToFlagEmoji(string countryCode) => string.Concat(countryCode.ToUpper().Select(x => char.ConvertFromUtf32(x + 0x1F1A5)));
+    public string IsoCountryCodeToFlagEmoji(string countryCode)
+    {
+        return string.Concat(countryCode.ToUpper().Select(x => char.ConvertFromUtf32(x + 0x1F1A5)));
+    }
 }

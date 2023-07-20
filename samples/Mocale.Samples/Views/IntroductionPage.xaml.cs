@@ -5,7 +5,7 @@ public partial class IntroductionPage : ContentPage
 {
     public IntroductionPage(IntroductionPageViewModel introductionPageViewModel)
     {
-        this.BindingContext = introductionPageViewModel;
+        BindingContext = introductionPageViewModel;
 
         InitializeComponent();
     }

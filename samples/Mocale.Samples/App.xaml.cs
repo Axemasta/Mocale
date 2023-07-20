@@ -1,7 +1,4 @@
-using Mocale.Abstractions;
-using Mocale.Samples.ViewModels;
 using Mocale.Samples.Views;
-
 namespace Mocale.Samples;
 
 public partial class App : Application
