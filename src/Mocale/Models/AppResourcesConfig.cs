@@ -1,5 +1,3 @@
-using Mocale.Abstractions;
-
 namespace Mocale.Models;
 
 /// <summary>

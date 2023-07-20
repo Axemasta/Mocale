@@ -1,9 +1,6 @@
 using System.Collections;
 using System.Globalization;
-using Microsoft.Extensions.Logging;
 using System.Resources;
-using Mocale.Abstractions;
-
 namespace Mocale.Providers;
 
 internal class AppResourceProvider : IInternalLocalizationProvider
@@ -16,10 +13,10 @@ internal class AppResourceProvider : IInternalLocalizationProvider
         IConfigurationManager<IAppResourcesConfig> appResourcesConfigurationManager,
         IConfigurationManager<IMocaleConfiguration> mocaleConfigurationManager)
     {
-        this.appResourcesConfig = appResourcesConfigurationManager.GetConfiguration();
-        this.mocaleConfiguration = mocaleConfigurationManager.GetConfiguration();
+        appResourcesConfig = appResourcesConfigurationManager.GetConfiguration();
+        mocaleConfiguration = mocaleConfigurationManager.GetConfiguration();
 
-        this.resourceManager = new ResourceManager(appResourcesConfig.AppResourcesType);
+        resourceManager = new ResourceManager(appResourcesConfig.AppResourcesType);
     }
 
     public Dictionary<string, string> GetValuesForCulture(CultureInfo cultureInfo)
@@ -36,7 +33,7 @@ internal class AppResourceProvider : IInternalLocalizationProvider
                 var defaultSet = resourceManager.GetResourceSet(CultureInfo.InvariantCulture, true, false);
 
                 return defaultSet.Cast<DictionaryEntry>()
-                .ToDictionary(r => r.Key.ToString(), r => r.Value.ToString());
+                    .ToDictionary(r => r.Key.ToString(), r => r.Value.ToString());
             }
 
             // Since we don't know about this culture, lets not return a default

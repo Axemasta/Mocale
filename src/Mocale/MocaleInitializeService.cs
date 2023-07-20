@@ -1,5 +1,3 @@
-using Mocale.Abstractions;
-
 namespace Mocale;
 
 internal class MocaleInitializeService : IMauiInitializeService
@@ -13,4 +11,3 @@ internal class MocaleInitializeService : IMauiInitializeService
         Task.Run(localizationManager.Initialize);
     }
 }
-

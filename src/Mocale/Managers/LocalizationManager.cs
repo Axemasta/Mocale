@@ -1,10 +1,6 @@
 using System.ComponentModel;
 using System.Globalization;
 using Microsoft.Extensions.Logging;
-using Mocale.Abstractions;
-using Mocale.Extensions;
-using Mocale.Models;
-
 namespace Mocale.Managers;
 
 public class LocalizationManager : ILocalizationManager, INotifyPropertyChanged
@@ -25,7 +21,7 @@ public class LocalizationManager : ILocalizationManager, INotifyPropertyChanged
         IInternalLocalizationProvider localizationProvider,
         ILogger<LocalizationManager> logger)
     {
-        this.mocaleConfiguration = mocaleConfigurationManager.GetConfiguration();
+        mocaleConfiguration = mocaleConfigurationManager.GetConfiguration();
         this.localizationProvider = localizationProvider;
         this.logger = logger;
 
@@ -52,7 +48,6 @@ public class LocalizationManager : ILocalizationManager, INotifyPropertyChanged
         }
     }
 
-    
 
     public async Task<bool> SetCultureAsync(CultureInfo culture)
     {

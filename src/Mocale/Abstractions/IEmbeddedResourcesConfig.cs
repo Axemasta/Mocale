@@ -1,5 +1,4 @@
 using System.Reflection;
-
 namespace Mocale.Abstractions;
 
 internal interface IEmbeddedResourcesConfig

@@ -1,5 +1,3 @@
-using Mocale.Abstractions;
-
 namespace Mocale.Extensions;
 
 [ContentProperty(nameof(Key))]

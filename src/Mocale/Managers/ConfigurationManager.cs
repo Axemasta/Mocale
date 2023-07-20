@@ -1,6 +1,4 @@
 using Ardalis.GuardClauses;
-using Mocale.Abstractions;
-
 namespace Mocale.Managers;
 
 /// <summary>
@@ -23,11 +21,11 @@ internal class ConfigurationManager<TConfig> : IConfigurationManager<TConfig>, I
 
     public void SetConfiguration(TConfig configuration)
     {
-        this.config = Guard.Against.Null(configuration, nameof(configuration));
+        config = Guard.Against.Null(configuration, nameof(configuration));
     }
 
     public void UpdateConfiguration(Action<TConfig> configuration)
     {
-        configuration(this.config);
+        configuration(config);
     }
 }

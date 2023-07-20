@@ -2,8 +2,6 @@ using System.Globalization;
 using System.Reflection;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
-using Mocale.Abstractions;
-
 namespace Mocale.Providers;
 
 internal class EmbeddedResourceProvider : IInternalLocalizationProvider
@@ -15,7 +13,7 @@ internal class EmbeddedResourceProvider : IInternalLocalizationProvider
         IConfigurationManager<IEmbeddedResourcesConfig> jsonConfigurationManager,
         ILogger<EmbeddedResourceProvider> logger)
     {
-        this.localConfig = jsonConfigurationManager.GetConfiguration();
+        localConfig = jsonConfigurationManager.GetConfiguration();
         this.logger = logger;
     }
 

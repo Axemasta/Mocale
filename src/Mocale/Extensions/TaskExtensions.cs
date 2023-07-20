@@ -1,6 +1,6 @@
 namespace Mocale.Extensions;
 
-internal static partial class TaskExtensions
+internal static class TaskExtensions
 {
     // https://www.meziantou.net/fire-and-forget-a-task-in-dotnet.htm
     public static void Forget(this Task task)
@@ -12,7 +12,7 @@ internal static partial class TaskExtensions
             _ = ForgetAwaited(task);
         }
 
-        async static Task ForgetAwaited(Task task)
+        static async Task ForgetAwaited(Task task)
         {
             try
             {

@@ -1,5 +1,4 @@
 using System.Globalization;
-
 namespace Mocale.Abstractions;
 
 /// <summary>

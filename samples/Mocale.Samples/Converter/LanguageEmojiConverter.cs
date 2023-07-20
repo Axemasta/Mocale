@@ -42,7 +42,7 @@ internal class LanguageEmojiConverter : IValueConverter
         return flag;
     }
 
-    public string IsoCountryCodeToFlagEmoji(string countryCode)
+    private string IsoCountryCodeToFlagEmoji(string countryCode)
     {
         return string.Concat(countryCode.ToUpper().Select(x => char.ConvertFromUtf32(x + 0x1F1A5)));
     }

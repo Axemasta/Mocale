@@ -1,6 +1,4 @@
 using System.Text.Json;
-using Mocale.Abstractions;
-
 namespace Mocale.Parsers;
 
 internal class JsonParser : ILocalizationParser

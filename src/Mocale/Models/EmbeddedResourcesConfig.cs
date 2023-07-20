@@ -1,6 +1,4 @@
 using System.Reflection;
-using Mocale.Abstractions;
-
 namespace Mocale.Models;
 
 public class EmbeddedResourcesConfig : IEmbeddedResourcesConfig
