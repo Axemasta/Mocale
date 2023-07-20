@@ -25,4 +25,10 @@
     <ProjectReference Include="..\Mocale\Mocale.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
 </Project>
