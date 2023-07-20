@@ -1,6 +1,5 @@
 using System.ComponentModel;
 using Mocale.Abstractions;
-using Mocale.Exceptions;
 
 namespace Mocale;
 
@@ -20,26 +19,10 @@ namespace Mocale;
 /// </summary>
 public static class MocaleLocator
 {
-    private static ILocalizationManager customInstance;
-
-    public static ILocalizationManager LocalizationManager
-    {
-        get
-        {
-            if (customInstance != null)
-            {
-                return customInstance;
-            }
-
-            if (Application.Current is not IAppServiceProvider app)
-            {
-                throw new MocaleException($"App must implement {nameof(IAppServiceProvider)}");
-            }
-
-            return app.ServiceProvider.GetRequiredService<ILocalizationManager>();
-        }
-        internal set => customInstance = value;
-    }
+    /// <summary>
+    /// Localization Manager
+    /// </summary>
+    public static ILocalizationManager LocalizationManager { get; internal set; }
 
     /// <summary>
     /// Set custom instance of <see cref="ILocalizationManager"/> for test scenarios

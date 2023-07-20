@@ -14,14 +14,6 @@ public static class AppBuilderExtensions
         this MauiAppBuilder mauiAppBuilder,
         Action<MocaleBuilder> builder = default)
     {
-        // This prevents us from having a static service locator
-        var appDescriptor = mauiAppBuilder.Services.FirstOrDefault(s => s.ServiceType == typeof(IApplication));
-
-        if (!appDescriptor.ImplementationType.IsAssignableTo(typeof(IAppServiceProvider)))
-        {
-            throw new InitializationException($"Your MauiApp must implement {nameof(IAppServiceProvider)}, please review setup documentation for further instruction");
-        }
-
         var mocaleBuilder = new MocaleBuilder()
         {
             AppBuilder = mauiAppBuilder, // Give the builders a reference so they can register things
@@ -47,6 +39,8 @@ public static class AppBuilderExtensions
         {
             throw new InitializationException($"No external provider was registered when mocale was configured to use one. Please register an external provider or set {nameof(IMocaleConfiguration.UseExternalProvider)} to false.");
         }
+
+        mauiAppBuilder.Services.AddSingleton<IMauiInitializeService, MocaleInitializeService>();
 
         return mauiAppBuilder;
     }

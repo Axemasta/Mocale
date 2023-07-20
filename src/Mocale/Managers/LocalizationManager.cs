@@ -26,8 +26,6 @@ public class LocalizationManager : ILocalizationManager, INotifyPropertyChanged
         this.logger = logger;
 
         CurrentCulture = mocaleConfiguration.DefaultCulture;
-
-        Localizations = localizationProvider.GetValuesForCulture(CurrentCulture);
     }
 
     public object this[string resourceKey]
@@ -80,5 +78,12 @@ public class LocalizationManager : ILocalizationManager, INotifyPropertyChanged
 
             return false;
         }
+    }
+
+    public Task Initialize()
+    {
+        Localizations = localizationProvider.GetValuesForCulture(CurrentCulture);
+
+        return Task.CompletedTask;
     }
 }

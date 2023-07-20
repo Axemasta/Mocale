@@ -4,16 +4,11 @@ using Mocale.Samples.Views;
 
 namespace Mocale.Samples;
 
-public partial class App : Application, IAppServiceProvider
+public partial class App : Application
 {
-    public IServiceProvider ServiceProvider { get; }
 
-    public App(
-        IServiceProvider serviceProvider,
-        ILocalizationManager localizationManager)
+    public App(ILocalizationManager localizationManager)
     {
-        this.ServiceProvider = serviceProvider;
-
         InitializeComponent();
 
         var introPage = new IntroductionPage()
