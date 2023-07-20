@@ -1,8 +1,5 @@
 using Mocale.Abstractions;
 using Mocale.Managers;
-using Mocale.Providers.AWS.S3.Abstractions;
-using Mocale.Providers.AWS.S3.Models;
-
 namespace Mocale.Providers.AWS.S3;
 
 public static class MocaleBuilderExtension
