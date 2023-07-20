@@ -2,6 +2,8 @@ using Microsoft.Extensions.Logging;
 using Mocale.Providers.AWS.S3;
 using Mocale.Providers.Azure.Blob;
 using Mocale.Samples.Resources.Resx;
+using Mocale.Samples.ViewModels;
+using Mocale.Samples.Views;
 
 namespace Mocale.Samples;
 
@@ -52,6 +54,9 @@ public static class MauiProgram
                 .AddFilter("Mocale", LogLevel.Trace);
 #endif
         });
+
+        builder.Services.AddTransient<IntroductionPage>();
+        builder.Services.AddTransient<IntroductionPageViewModel>();
 
         return builder.Build();
     }

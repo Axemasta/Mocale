@@ -4,7 +4,7 @@ using MvvmHelpers;
 
 namespace Mocale.Samples.ViewModels;
 
-internal class IntroductionPageViewModel : BaseViewModel
+public class IntroductionPageViewModel : BaseViewModel
 {
     private readonly ILocalizationManager localizationManager;
 
