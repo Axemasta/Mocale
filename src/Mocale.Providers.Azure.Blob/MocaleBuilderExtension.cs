@@ -1,8 +1,5 @@
 using Mocale.Abstractions;
 using Mocale.Managers;
-using Mocale.Providers.Azure.Blob.Abstractions;
-using Mocale.Providers.Azure.Blob.Models;
-
 namespace Mocale.Providers.Azure.Blob;
 
 public static class MocaleBuilderExtension

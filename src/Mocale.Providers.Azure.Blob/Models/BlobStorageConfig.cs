@@ -1,5 +1,3 @@
-using Mocale.Providers.Azure.Blob.Abstractions;
-
 namespace Mocale.Providers.Azure.Blob.Models;
 
 public class BlobStorageConfig : IBlobStorageConfig

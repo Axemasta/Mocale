@@ -9,7 +9,7 @@ public interface IBlobStorageConfig
 
     /// <summary>
     /// Whether the requests require authentication.
-    /// <para/>
+    /// <para />
     /// If true then the authentication host builder extension will need to be provided in order for
     /// the configured authenticaton to kick in
     /// </summary>

@@ -1,6 +1,5 @@
 using System.Globalization;
 using Mocale.Abstractions;
-
 namespace Mocale.Providers.Azure.Blob;
 
 internal class BlobLocalizationProvider : IExternalLocalizationProvider
