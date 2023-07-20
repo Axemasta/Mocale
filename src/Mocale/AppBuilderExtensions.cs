@@ -24,6 +24,8 @@ public static class AppBuilderExtensions
 
         mauiAppBuilder.Services.AddSingleton<IConfigurationManager<IMocaleConfiguration>>(mocaleBuilder.ConfigurationManager);
         mauiAppBuilder.Services.AddSingleton<ILocalizationManager, LocalizationManager>();
+        mauiAppBuilder.Services.AddSingleton<IMauiInitializeService, MocaleInitializeService>();
+        mauiAppBuilder.Services.AddSingleton(Preferences.Default);
 
         if (!mocaleBuilder.LocalProviderRegistered)
         {
@@ -36,8 +38,6 @@ public static class AppBuilderExtensions
         {
             throw new InitializationException($"No external provider was registered when mocale was configured to use one. Please register an external provider or set {nameof(IMocaleConfiguration.UseExternalProvider)} to false.");
         }
-
-        mauiAppBuilder.Services.AddSingleton<IMauiInitializeService, MocaleInitializeService>();
 
         return mauiAppBuilder;
     }

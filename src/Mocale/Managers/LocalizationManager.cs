@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.Globalization;
+using Ardalis.GuardClauses;
 using Microsoft.Extensions.Logging;
 namespace Mocale.Managers;
 
@@ -7,10 +8,11 @@ public class LocalizationManager : ILocalizationManager, INotifyPropertyChanged
 {
     private readonly IMocaleConfiguration mocaleConfiguration;
     private readonly ILogger logger;
+    private readonly IPreferences preferences;
 
     public event PropertyChangedEventHandler PropertyChanged;
 
-    public CultureInfo CurrentCulture { get; set; }
+    public CultureInfo CurrentCulture { get; private set; }
 
     private Dictionary<string, string> Localizations { get; set; } = new Dictionary<string, string>();
 
@@ -19,13 +21,15 @@ public class LocalizationManager : ILocalizationManager, INotifyPropertyChanged
     public LocalizationManager(
         IConfigurationManager<IMocaleConfiguration> mocaleConfigurationManager,
         IInternalLocalizationProvider localizationProvider,
-        ILogger<LocalizationManager> logger)
+        ILogger<LocalizationManager> logger,
+        IPreferences preferences)
     {
-        mocaleConfiguration = mocaleConfigurationManager.GetConfiguration();
-        this.localizationProvider = localizationProvider;
-        this.logger = logger;
+        mocaleConfigurationManager = Guard.Against.Null(mocaleConfigurationManager, nameof(mocaleConfigurationManager));
 
-        CurrentCulture = mocaleConfiguration.DefaultCulture;
+        this.mocaleConfiguration = mocaleConfigurationManager.GetConfiguration();
+        this.localizationProvider = Guard.Against.Null(localizationProvider, nameof(localizationProvider));
+        this.logger = Guard.Against.Null(logger, nameof(logger));
+        this.preferences = Guard.Against.Null(preferences, nameof(preferences));
     }
 
     public object this[string resourceKey]
@@ -65,6 +69,8 @@ public class LocalizationManager : ILocalizationManager, INotifyPropertyChanged
 
             CurrentCulture = culture;
 
+            SetActiveCulture(culture);
+
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(null));
 
             logger.LogDebug("Updated localization culture to {0}", culture.Name);
@@ -91,10 +97,47 @@ public class LocalizationManager : ILocalizationManager, INotifyPropertyChanged
         }
     }
 
+    private CultureInfo GetActiveCulture()
+    {
+        var defaultCulture = mocaleConfiguration.DefaultCulture;
+
+        if (!mocaleConfiguration.SaveCultureChanged)
+        {
+            return defaultCulture;
+        }
+
+        // Load Here
+        var lastUsedCulture = preferences.Get(Constants.LastUsedCultureKey, string.Empty);
+
+        if (string.IsNullOrEmpty(lastUsedCulture))
+        {
+            logger.LogTrace("Setting Last Used Culture as: {0}", defaultCulture);
+            SetActiveCulture(defaultCulture);
+            return defaultCulture;
+        }
+
+        if (!lastUsedCulture.TryParseCultureInfo(out CultureInfo cultureInfo))
+        {
+            logger.LogWarning("Unable to parse culture from preferences: {0}", lastUsedCulture);
+            return defaultCulture;
+        }
+
+        return cultureInfo;
+    }
+
+    private void SetActiveCulture(CultureInfo cultureInfo)
+    {
+        var cultureString = cultureInfo.ToString();
+
+        preferences.Set(Constants.LastUsedCultureKey, cultureString);
+    }
+
     private async Task InitializeInternal()
     {
         // TODO: Lookup selected culture
-        var activeCulture = CurrentCulture;
+        var activeCulture =  GetActiveCulture();
+
+        CurrentCulture = activeCulture;
 
         Localizations = localizationProvider.GetValuesForCulture(activeCulture);
 

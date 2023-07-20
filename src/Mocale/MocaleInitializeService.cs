@@ -8,6 +8,9 @@ internal class MocaleInitializeService : IMauiInitializeService
 
         MocaleLocator.LocalizationManager = localizationManager;
 
-        Task.Run(localizationManager.Initialize);
+        // Unfortunately we need to block the thread to prevent any race conditions when initializing.
+        // Sorry not sorry 😂🙈
+        var t = localizationManager.Initialize();
+        t.Wait();
     }
 }
