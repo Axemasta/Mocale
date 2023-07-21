@@ -26,7 +26,7 @@ public class LocalizationManager : ILocalizationManager, INotifyPropertyChanged
     {
         mocaleConfigurationManager = Guard.Against.Null(mocaleConfigurationManager, nameof(mocaleConfigurationManager));
 
-        this.mocaleConfiguration = mocaleConfigurationManager.GetConfiguration();
+        this.mocaleConfiguration = mocaleConfigurationManager.Configuration;
         this.localizationProvider = Guard.Against.Null(localizationProvider, nameof(localizationProvider));
         this.logger = Guard.Against.Null(logger, nameof(logger));
         this.preferences = Guard.Against.Null(preferences, nameof(preferences));

@@ -1,10 +1,8 @@
 namespace Mocale.Abstractions;
 
-public interface IConfigurationManager<T>
+public interface IConfigurationManager<TConfig>
 {
-    T GetConfiguration();
-
-    void SetConfiguration(T configuration);
+    TConfig Configuration { get; set; }
 }
 
 public interface IConfigurationUpdateManager<TConfig>

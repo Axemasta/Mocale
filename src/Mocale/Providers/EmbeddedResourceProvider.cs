@@ -13,7 +13,7 @@ internal class EmbeddedResourceProvider : IInternalLocalizationProvider
         IConfigurationManager<IEmbeddedResourcesConfig> jsonConfigurationManager,
         ILogger<EmbeddedResourceProvider> logger)
     {
-        localConfig = jsonConfigurationManager.GetConfiguration();
+        localConfig = jsonConfigurationManager.Configuration;
         this.logger = logger;
     }
 

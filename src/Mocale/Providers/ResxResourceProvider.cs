@@ -13,8 +13,8 @@ internal class AppResourceProvider : IInternalLocalizationProvider
         IConfigurationManager<IAppResourcesConfig> appResourcesConfigurationManager,
         IConfigurationManager<IMocaleConfiguration> mocaleConfigurationManager)
     {
-        appResourcesConfig = appResourcesConfigurationManager.GetConfiguration();
-        mocaleConfiguration = mocaleConfigurationManager.GetConfiguration();
+        appResourcesConfig = appResourcesConfigurationManager.Configuration;
+        mocaleConfiguration = mocaleConfigurationManager.Configuration;
 
         resourceManager = new ResourceManager(appResourcesConfig.AppResourcesType);
     }
