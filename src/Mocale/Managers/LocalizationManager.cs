@@ -38,7 +38,7 @@ public class LocalizationManager : ILocalizationManager, INotifyPropertyChanged
         {
             if (!Localizations.ContainsKey(resourceKey))
             {
-                logger.LogWarning("Resource key not found '{0}'", resourceKey);
+                logger.LogWarning("Resource key not found '{ResourceKey}'", resourceKey);
 
                 if (!mocaleConfiguration.ShowMissingKeys)
                 {
@@ -61,7 +61,7 @@ public class LocalizationManager : ILocalizationManager, INotifyPropertyChanged
 
             if (values is null || !values.Any())
             {
-                logger.LogWarning("Unable to load culture {0}, no localizations found", culture.Name);
+                logger.LogWarning("Unable to load culture {CultureName}, no localizations found", culture.Name);
                 return false;
             }
 
@@ -73,13 +73,13 @@ public class LocalizationManager : ILocalizationManager, INotifyPropertyChanged
 
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(null));
 
-            logger.LogDebug("Updated localization culture to {0}", culture.Name);
+            logger.LogDebug("Updated localization culture to {CultureName}", culture.Name);
 
             return true;
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "An exception occurred loading culture: {0}", culture.Name);
+            logger.LogError(ex, "An exception occurred loading culture: {CultureName}", culture.Name);
 
             return false;
         }
@@ -111,18 +111,19 @@ public class LocalizationManager : ILocalizationManager, INotifyPropertyChanged
 
         if (string.IsNullOrEmpty(lastUsedCulture))
         {
-            logger.LogTrace("Setting Last Used Culture as: {0}", defaultCulture);
+            logger.LogTrace("Setting Last Used Culture as: {DefaultCulture}", defaultCulture);
             SetActiveCulture(defaultCulture);
             return defaultCulture;
         }
 
-        if (!lastUsedCulture.TryParseCultureInfo(out CultureInfo cultureInfo))
+        if (lastUsedCulture.TryParseCultureInfo(out var cultureInfo))
         {
-            logger.LogWarning("Unable to parse culture from preferences: {0}", lastUsedCulture);
-            return defaultCulture;
+            return cultureInfo;
         }
 
-        return cultureInfo;
+        logger.LogWarning("Unable to parse culture from preferences: {LastUsedCulture}", lastUsedCulture);
+        return defaultCulture;
+
     }
 
     private void SetActiveCulture(CultureInfo cultureInfo)
@@ -132,7 +133,7 @@ public class LocalizationManager : ILocalizationManager, INotifyPropertyChanged
         preferences.Set(Constants.LastUsedCultureKey, cultureString);
     }
 
-    private async Task InitializeInternal()
+    private Task InitializeInternal()
     {
         // TODO: Lookup selected culture
         var activeCulture =  GetActiveCulture();
@@ -145,6 +146,8 @@ public class LocalizationManager : ILocalizationManager, INotifyPropertyChanged
 
         Task.Run(() => CheckForTranslationUpdates(activeCulture))
             .Forget();
+
+        return Task.CompletedTask;
     }
 
     private async Task CheckForTranslationUpdates(CultureInfo cultureInfo)
