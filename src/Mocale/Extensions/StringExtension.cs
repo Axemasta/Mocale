@@ -1,11 +1,11 @@
 using System.Globalization;
 namespace Mocale.Extensions;
-#nullable enable
+
 internal static class StringExtension
 {
-    public static bool TryParseCultureInfo(this string cultureString, out CultureInfo? cultureInfo)
+    public static bool TryParseCultureInfo(this string cultureString, out CultureInfo cultureInfo)
     {
-        cultureInfo = null;
+        cultureInfo = null!;
 
         if (string.IsNullOrEmpty(cultureString))
         {
@@ -23,4 +23,3 @@ internal static class StringExtension
         }
     }
 }
-#nullable disable

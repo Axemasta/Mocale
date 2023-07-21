@@ -30,7 +30,7 @@ internal class EmbeddedResourceProvider : IInternalLocalizationProvider
 
         if (resources is null)
         {
-            logger.LogWarning("No embedded resources found in assembly {0}", localConfig.ResourcesAssembly);
+            logger.LogWarning("No embedded resources found in assembly {ResourceAssembly}", localConfig.ResourcesAssembly);
             return new Dictionary<string, string>();
         }
 
@@ -45,7 +45,7 @@ internal class EmbeddedResourceProvider : IInternalLocalizationProvider
 
         if (!localesFolderResources.Any())
         {
-            logger.LogWarning("No assembly resources found with prefix: {0}", folderPrefix);
+            logger.LogWarning("No assembly resources found with prefix: {FolderPrefix}", folderPrefix);
             return new Dictionary<string, string>();
         }
 
@@ -58,12 +58,12 @@ internal class EmbeddedResourceProvider : IInternalLocalizationProvider
             return ParseFile(cultureMatch, localConfig.ResourcesAssembly);
         }
 
-        logger.LogWarning("Unable to find resource for selected culture: {0}", cultureInfo.Name);
+        logger.LogWarning("Unable to find resource for selected culture: {CultureName}", cultureInfo.Name);
 
         return new Dictionary<string, string>();
     }
 
-    private bool FileMatchesCulture(string resourceName, CultureInfo culture)
+    private static bool FileMatchesCulture(string resourceName, CultureInfo culture)
     {
         // Cracking coding here 🍝
         var resourcePath = resourceName.Replace('.', '/');
@@ -76,18 +76,24 @@ internal class EmbeddedResourceProvider : IInternalLocalizationProvider
 
     private Dictionary<string, string> ParseFile(string filePath, Assembly assembly)
     {
-        using (var fileStream = assembly.GetManifestResourceStream(filePath))
-        {
-            try
-            {
-                return JsonSerializer.Deserialize<Dictionary<string, string>>(fileStream);
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "An exception occurred loading & parsing assembly resource {0}", filePath);
+        using var fileStream = assembly.GetManifestResourceStream(filePath);
 
-                return new Dictionary<string, string>();
-            }
+        if (fileStream is null)
+        {
+            logger.LogWarning("File stream was null for assembly resource: {FilePath}", filePath);
+            return new Dictionary<string, string>();
+        }
+
+        try
+        {
+            return JsonSerializer.Deserialize<Dictionary<string, string>>(fileStream)
+                ?? new Dictionary<string, string>();
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "An exception occurred loading & parsing assembly resource {FilePath}", filePath);
+
+            return new Dictionary<string, string>();
         }
     }
 }

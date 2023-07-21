@@ -1,4 +1,5 @@
 using Ardalis.GuardClauses;
+
 namespace Mocale.Managers;
 
 /// <summary>
@@ -11,7 +12,7 @@ internal class ConfigurationManager<TConfig> : IConfigurationManager<TConfig>, I
 
     internal ConfigurationManager(TConfig config)
     {
-        SetConfiguration(config);
+        this.config = Guard.Against.Null(config, nameof(config));
     }
 
     public TConfig GetConfiguration()

@@ -10,7 +10,7 @@ public class LocalizationManager : ILocalizationManager, INotifyPropertyChanged
     private readonly ILogger logger;
     private readonly IPreferences preferences;
 
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     public CultureInfo CurrentCulture { get; private set; }
 
@@ -30,6 +30,8 @@ public class LocalizationManager : ILocalizationManager, INotifyPropertyChanged
         this.localizationProvider = Guard.Against.Null(localizationProvider, nameof(localizationProvider));
         this.logger = Guard.Against.Null(logger, nameof(logger));
         this.preferences = Guard.Against.Null(preferences, nameof(preferences));
+
+        CurrentCulture = GetActiveCulture();
     }
 
     public object this[string resourceKey]
@@ -135,16 +137,11 @@ public class LocalizationManager : ILocalizationManager, INotifyPropertyChanged
 
     private Task InitializeInternal()
     {
-        // TODO: Lookup selected culture
-        var activeCulture =  GetActiveCulture();
-
-        CurrentCulture = activeCulture;
-
-        Localizations = localizationProvider.GetValuesForCulture(activeCulture);
+        Localizations = localizationProvider.GetValuesForCulture(CurrentCulture);
 
         // Check cache and go get up to date translations
 
-        Task.Run(() => CheckForTranslationUpdates(activeCulture))
+        Task.Run(() => CheckForTranslationUpdates(CurrentCulture))
             .Forget();
 
         return Task.CompletedTask;

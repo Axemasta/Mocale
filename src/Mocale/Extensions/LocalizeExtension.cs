@@ -5,9 +5,9 @@ public class LocalizeExtension : IMarkupExtension<BindingBase>
 {
     private readonly ILocalizationManager localizationManager;
 
-    public string Key { get; set; }
+    public string? Key { get; set; }
 
-    public IValueConverter Converter { get; set; }
+    public IValueConverter? Converter { get; set; }
 
     public LocalizeExtension()
         : this(MocaleLocator.LocalizationManager)
