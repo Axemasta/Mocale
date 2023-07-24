@@ -1,12 +1,15 @@
 using System.ComponentModel;
 using System.Globalization;
+using System.Text.RegularExpressions;
 using Ardalis.GuardClauses;
 using Microsoft.Extensions.Logging;
 namespace Mocale.Managers;
 
 public class LocalizationManager : ILocalizationManager, INotifyPropertyChanged
 {
+    private readonly IExternalLocalizationProvider externalLocalizationProvider;
     private readonly IMocaleConfiguration mocaleConfiguration;
+    private readonly IInternalLocalizationProvider localizationProvider;
     private readonly ILogger logger;
     private readonly IPreferences preferences;
 
@@ -16,9 +19,8 @@ public class LocalizationManager : ILocalizationManager, INotifyPropertyChanged
 
     private Dictionary<string, string> Localizations { get; set; } = new Dictionary<string, string>();
 
-    private readonly IInternalLocalizationProvider localizationProvider;
-
     public LocalizationManager(
+        IExternalLocalizationProvider externalLocalizationProvider,
         IConfigurationManager<IMocaleConfiguration> mocaleConfigurationManager,
         IInternalLocalizationProvider localizationProvider,
         ILogger<LocalizationManager> logger,
@@ -26,6 +28,7 @@ public class LocalizationManager : ILocalizationManager, INotifyPropertyChanged
     {
         mocaleConfigurationManager = Guard.Against.Null(mocaleConfigurationManager, nameof(mocaleConfigurationManager));
 
+        this.externalLocalizationProvider = Guard.Against.Null(externalLocalizationProvider, nameof(externalLocalizationProvider));
         this.mocaleConfiguration = mocaleConfigurationManager.Configuration;
         this.localizationProvider = Guard.Against.Null(localizationProvider, nameof(localizationProvider));
         this.logger = Guard.Against.Null(logger, nameof(logger));
@@ -54,12 +57,25 @@ public class LocalizationManager : ILocalizationManager, INotifyPropertyChanged
         }
     }
 
+    private async Task<Dictionary<string, string>?> LoadCultureSafe(CultureInfo cultureInfo)
+    {
+        var external = await externalLocalizationProvider.GetValuesForCultureAsync(cultureInfo);
+
+        if (external.Success)
+        {
+            return external.Localizations;
+        }
+
+        var values = localizationProvider.GetValuesForCulture(cultureInfo);
+
+        return values;
+    }
 
     public async Task<bool> SetCultureAsync(CultureInfo culture)
     {
         try
         {
-            var values = localizationProvider.GetValuesForCulture(culture);
+            var values = await LoadCultureSafe(culture);
 
             if (values is null || !values.Any())
             {
@@ -137,7 +153,8 @@ public class LocalizationManager : ILocalizationManager, INotifyPropertyChanged
 
     private Task InitializeInternal()
     {
-        Localizations = localizationProvider.GetValuesForCulture(CurrentCulture);
+        Localizations = localizationProvider.GetValuesForCulture(CurrentCulture)
+            ?? new Dictionary<string, string>();
 
         // Check cache and go get up to date translations
 
@@ -150,6 +167,16 @@ public class LocalizationManager : ILocalizationManager, INotifyPropertyChanged
     private async Task CheckForTranslationUpdates(CultureInfo cultureInfo)
     {
         await Task.Delay(5000);
+
+        var external = await externalLocalizationProvider.GetValuesForCultureAsync(cultureInfo);
+
+        if (!external.Success)
+        {
+            logger.LogWarning("Unable to load external translations for culture: {CultureInfo}", cultureInfo);
+            return;
+        }
+
+        Localizations = external.Localizations;
 
         Localizations.Add("LoadedTranslation", "THIS CAME LATER!");
 

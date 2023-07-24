@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Globalization;
 using System.Resources;
+using Mocale.Exceptions;
+
 namespace Mocale.Providers;
 
 internal class AppResourceProvider : IInternalLocalizationProvider
@@ -16,10 +18,25 @@ internal class AppResourceProvider : IInternalLocalizationProvider
         appResourcesConfig = appResourcesConfigurationManager.Configuration;
         mocaleConfiguration = mocaleConfigurationManager.Configuration;
 
+        if (appResourcesConfig.AppResourcesType is null)
+        {
+            throw new InitializationException("App Resource Type has not been set, this should be configured during startup");
+        }
+
         resourceManager = new ResourceManager(appResourcesConfig.AppResourcesType);
     }
 
-    public Dictionary<string, string> GetValuesForCulture(CultureInfo cultureInfo)
+    private static Dictionary<string, string> ConvertResourceSet(ResourceSet resourceSet)
+    {
+        // This cast wants to fight me and I can't figure out a nullable friendly way of doing this.
+        // Instead of wasting time on syntax, leave it here and figure it out later!
+#nullable disable
+        return resourceSet.Cast<DictionaryEntry>().ToDictionary(r => r.Key.ToString(), r => r.Value.ToString())
+            ?? new Dictionary<string, string>();
+#nullable enable
+    }
+
+    public Dictionary<string, string>? GetValuesForCulture(CultureInfo cultureInfo)
     {
         // https://stackoverflow.com/a/1970941/8828057
         var resourceSet = resourceManager.GetResourceSet(cultureInfo, true, false);
@@ -32,8 +49,12 @@ internal class AppResourceProvider : IInternalLocalizationProvider
             {
                 var defaultSet = resourceManager.GetResourceSet(CultureInfo.InvariantCulture, true, false);
 
-                return defaultSet.Cast<DictionaryEntry>()
-                    .ToDictionary(r => r.Key.ToString(), r => r.Value.ToString());
+                if (defaultSet is null)
+                {
+                    return null;
+                }
+
+                return ConvertResourceSet(defaultSet);
             }
 
             // Since we don't know about this culture, lets not return a default
@@ -41,7 +62,6 @@ internal class AppResourceProvider : IInternalLocalizationProvider
             return null;
         }
 
-        return resourceSet.Cast<DictionaryEntry>()
-            .ToDictionary(r => r.Key.ToString(), r => r.Value.ToString());
+        return ConvertResourceSet(resourceSet);
     }
 }

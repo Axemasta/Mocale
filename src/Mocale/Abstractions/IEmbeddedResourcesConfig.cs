@@ -11,7 +11,7 @@ internal interface IEmbeddedResourcesConfig
     /// <summary>
     /// Assembly that contains the resources
     /// </summary>
-    Assembly ResourcesAssembly { get; }
+    Assembly? ResourcesAssembly { get; }
 
     /// <summary>
     /// Whether the resources live inside the Maui Resources folder or relative to the assembly

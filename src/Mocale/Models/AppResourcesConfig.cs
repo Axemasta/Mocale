@@ -5,5 +5,5 @@ namespace Mocale.Models;
 /// </summary>
 public class AppResourcesConfig : IAppResourcesConfig
 {
-    public Type AppResourcesType { get; set; }
+    public Type? AppResourcesType { get; set; }
 }

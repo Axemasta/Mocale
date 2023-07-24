@@ -3,7 +3,7 @@ namespace Mocale;
 
 public class MocaleBuilder
 {
-    public IInternalLocalizationProvider LocalizationProvider { get; set; }
+    public IInternalLocalizationProvider? LocalizationProvider { get; set; }
 
     public required MauiAppBuilder AppBuilder { get; set; }
 

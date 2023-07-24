@@ -1,11 +1,46 @@
 using System.Globalization;
-using Mocale.Abstractions;
 namespace Mocale.Providers.Azure.Blob;
 
-internal class BlobLocalizationProvider : IExternalLocalizationProvider
+internal sealed class BlobLocalizationProvider : IExternalLocalizationProvider
 {
-    public Task<IExternalLocalizationResult> GetValuesForCultureAsync(CultureInfo cultureInfo)
+    public async Task<IExternalLocalizationResult> GetValuesForCultureAsync(CultureInfo cultureInfo)
     {
-        throw new NotImplementedException();
+        if (cultureInfo.ToString() == "en-GB")
+        {
+            return new ExternalLocalizationResult()
+            {
+                Success = true,
+                Localizations = new Dictionary<string, string>()
+                {
+                    { "CurrentLocaleName", "AzEnglish" },
+                    { "LocalizationCurrentProviderIs", "AzThe current localization provider is:" },
+                    { "LocalizationProviderName", "AzJson" },
+                    { "MocaleDescription", "AzLocalization framework for .NET Maui" },
+                    { "MocaleTitle", "AzMocale" },
+                }
+            };
+        }
+
+        if (cultureInfo.ToString() == "fr-FR")
+        {
+            return new ExternalLocalizationResult()
+            {
+                Success = true,
+                Localizations = new Dictionary<string, string>()
+                {
+                    { "CurrentLocaleName", "AzFrench" },
+                    { "LocalizationCurrentProviderIs", "AzLe fournisseur de localisation actuel est:" },
+                    { "LocalizationProviderName", "AzJson" },
+                    { "MocaleDescription", "AzFramework de localisation pour .NET Maui" },
+                    { "MocaleTitle", "AzMocale" },
+                }
+            };
+        }
+
+        return new ExternalLocalizationResult()
+        {
+            Success = false,
+            Localizations = new Dictionary<string, string>(),
+        };
     }
 }

@@ -1,6 +1,4 @@
 using System.Globalization;
-using Mocale.Abstractions;
-using MvvmHelpers;
 namespace Mocale.Samples.ViewModels;
 
 public class IntroductionPageViewModel : BaseViewModel

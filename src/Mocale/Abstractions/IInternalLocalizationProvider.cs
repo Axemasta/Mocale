@@ -13,5 +13,5 @@ public interface IInternalLocalizationProvider
     /// </summary>
     /// <param name="cultureInfo">The culture to get localizations for</param>
     /// <returns>The localizations as a key value pair</returns>
-    Dictionary<string, string> GetValuesForCulture(CultureInfo cultureInfo);
+    Dictionary<string, string>? GetValuesForCulture(CultureInfo cultureInfo);
 }

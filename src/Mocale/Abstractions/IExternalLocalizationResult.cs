@@ -2,7 +2,7 @@ namespace Mocale.Abstractions;
 
 public interface IExternalLocalizationResult
 {
-    bool Succeess { get; }
+    bool Success { get; }
 
     Dictionary<string, string> Localizations { get; }
 }

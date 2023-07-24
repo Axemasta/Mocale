@@ -1,6 +1,13 @@
 using System.ComponentModel;
 namespace Mocale;
 
+/*
+ * I'm not sure how to nullable refactor this service locator since its set in initialization so
+ * should be marked nullable however I dislike the side effect on the rest of the code using this that i now need to check
+ * the value before using it. This value will be set by the lib and always here, end of sentence :)
+ */
+#nullable disable
+
 /// <summary>
 /// Mocale Service Locator for services that need to fallback to a service locator pattern.
 /// The primary reason for this class is for XamlExtensions lacking access to the app's main service
@@ -17,10 +24,12 @@ namespace Mocale;
 /// </summary>
 public static class MocaleLocator
 {
+
     /// <summary>
     /// Localization Manager
     /// </summary>
     public static ILocalizationManager LocalizationManager { get; internal set; }
+
 
     /// <summary>
     /// Set custom instance of <see cref="ILocalizationManager" /> for test scenarios
@@ -32,3 +41,5 @@ public static class MocaleLocator
         LocalizationManager = instance;
     }
 }
+
+#nullable enable
