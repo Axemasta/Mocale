@@ -1,13 +1,13 @@
 namespace Mocale.DAL.Entities;
 
 [Table("UpdateHistory")]
-public class UpdateItem
+public class UpdateHistoryItem
 {
     [PrimaryKey]
     [AutoIncrement]
     public int Id { get; set; }
 
-    public required string CultureName { get; set; }
+    public string CultureName { get; set; }
 
-    public DateTime? LastUpdated { get; set; }
+    public DateTime LastUpdated { get; set; }
 }
