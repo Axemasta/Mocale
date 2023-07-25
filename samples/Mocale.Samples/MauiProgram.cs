@@ -1,5 +1,6 @@
 using System.Globalization;
 using Microsoft.Extensions.Logging;
+using Mocale.Cache.SQLite;
 using Mocale.Providers.Azure.Blob;
 using Mocale.Samples.ViewModels;
 using Mocale.Samples.Views;
@@ -23,6 +24,7 @@ public static class MauiProgram
                     //{
                     //    config.AppResourcesType = typeof(AppResources);
                     //})
+                    .UseSqliteCache()
                     .UseEmbeddedResources(config =>
                     {
                         config.ResourcesPath = "Locales";

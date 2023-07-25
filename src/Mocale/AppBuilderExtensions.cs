@@ -1,7 +1,3 @@
-using Mocale.DAL;
-using Mocale.DAL.Abstractions;
-using Mocale.DAL.Providers;
-using Mocale.DAL.Repositories;
 using Mocale.Exceptions;
 using Mocale.Managers;
 using Mocale.Wrappers;
@@ -36,13 +32,6 @@ public static class AppBuilderExtensions
         mauiAppBuilder.Services.AddSingleton<ILocalizationManager, LocalizationManager>();
         mauiAppBuilder.Services.AddSingleton<IMauiInitializeService, MocaleInitializeService>();
 
-        // - Caching
-        mauiAppBuilder.Services.AddTransient<ICacheUpdateManager, CacheUpdateManager>();
-        mauiAppBuilder.Services.AddSingleton<IDatabaseConnectionProvider, DatabaseConnectionProvider>();
-        mauiAppBuilder.Services.AddTransient<IDatabasePathProvider, DatabasePathProvider>();
-
-        mauiAppBuilder.Services.AddSingleton<ICacheRepository, CacheRepository>();
-
         if (!mocaleBuilder.LocalProviderRegistered)
         {
             throw new InitializationException($"No local provider has been registered, please call either {nameof(MocaleBuilderExtensions.UseAppResources)} or {nameof(MocaleBuilderExtensions.UseEmbeddedResources)} in order to use mocale");
@@ -53,6 +42,12 @@ public static class AppBuilderExtensions
         if (config.UseExternalProvider && !mocaleBuilder.ExternalProviderRegistered)
         {
             throw new InitializationException($"No external provider was registered when mocale was configured to use one. Please register an external provider or set {nameof(IMocaleConfiguration.UseExternalProvider)} to false.");
+        }
+
+        if (!mocaleBuilder.CacheProviderRegistered)
+        {
+            // TODO: Initialize in memory provider
+            throw new InitializationException("No cache provider has been registered. In the future there will be an in memory provider, for now please install and register the SQLite cache provider");
         }
 
         return mauiAppBuilder;

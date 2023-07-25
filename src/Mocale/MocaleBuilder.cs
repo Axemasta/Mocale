@@ -17,6 +17,8 @@ public class MocaleBuilder
 
     internal bool ExternalProviderRegistered { get; set; }
 
+    internal bool CacheProviderRegistered { get; set; }
+
     public MocaleBuilder WithConfiguration(Action<MocaleConfiguration> configureMocale)
     {
         var config = ConfigurationManager.Configuration as MocaleConfiguration

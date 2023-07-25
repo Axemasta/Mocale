@@ -23,7 +23,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Mocale\Mocale.csproj"/>
+    <ProjectReference Include="..\Mocale\Mocale.csproj" />
   </ItemGroup>
 
 </Project>

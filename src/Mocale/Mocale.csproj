@@ -26,11 +26,9 @@
     <InternalsVisibleTo Include="$(AssemblyName).Resx" />
     <InternalsVisibleTo Include="$(AssemblyName).Providers.AWS.S3" />
     <InternalsVisibleTo Include="$(AssemblyName).Providers.Azure.Blob" />
+    <InternalsVisibleTo Include="$(AssemblyName).Cache.SQLite" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Microsoft.Extensions.Logging.Abstractions" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Mocale.DAL\Mocale.DAL.csproj" />
   </ItemGroup>
 </Project>
