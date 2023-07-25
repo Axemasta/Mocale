@@ -3,7 +3,9 @@ namespace Mocale.Providers.Azure.Blob;
 
 internal sealed class BlobLocalizationProvider : IExternalLocalizationProvider
 {
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
     public async Task<IExternalLocalizationResult> GetValuesForCultureAsync(CultureInfo cultureInfo)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
     {
         if (cultureInfo.ToString() == "en-GB")
         {

@@ -1,5 +1,9 @@
+using Mocale.DAL;
+using Mocale.DAL.Abstractions;
+using Mocale.DAL.Repositories;
 using Mocale.Exceptions;
 using Mocale.Managers;
+using Mocale.Wrappers;
 namespace Mocale;
 
 /// <summary>
@@ -20,10 +24,27 @@ public static class AppBuilderExtensions
         // Invoke mocaleConfiguration action
         builder?.Invoke(mocaleBuilder);
 
+        // Register DI Services
+        // - Maui Dependencies
+        mauiAppBuilder.Services.AddSingleton(Preferences.Default);
+        mauiAppBuilder.Services.AddSingleton(FileSystem.Current);
+        mauiAppBuilder.Services.AddTransient<IDateTime, DateTimeWrapper>();
+
+        // - Localization
         mauiAppBuilder.Services.AddSingleton<IConfigurationManager<IMocaleConfiguration>>(mocaleBuilder.ConfigurationManager);
         mauiAppBuilder.Services.AddSingleton<ILocalizationManager, LocalizationManager>();
         mauiAppBuilder.Services.AddSingleton<IMauiInitializeService, MocaleInitializeService>();
-        mauiAppBuilder.Services.AddSingleton(Preferences.Default);
+
+        // - Caching
+        mauiAppBuilder.Services.AddTransient<ICacheUpdateManager, CacheUpdateManager>();
+        mauiAppBuilder.Services.AddSingleton<IDatabaseConnectionProvider, DatabaseConnectionProvider>();
+#if MACCATALYST
+        mauiAppBuilder.Services.AddTransient<IDatabasePathProvider, Mocale.DAL.Platforms.MacCatalyst.DatabasePathProvider>();
+#else
+        mauiAppBuilder.Services.AddTransient<IDatabasePathProvider, DAL.Providers.DatabasePathProvider>();
+#endif
+
+        mauiAppBuilder.Services.AddSingleton<ICacheRepository, CacheRepository>();
 
         if (!mocaleBuilder.LocalProviderRegistered)
         {

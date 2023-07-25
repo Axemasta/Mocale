@@ -33,30 +33,41 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-ios|AnyCPU'">
     <CreatePackage>false</CreatePackage>
+    <CodesignProvision>Automatic</CodesignProvision>
+    <CodesignKey>iPhone Developer</CodesignKey>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-ios|AnyCPU'">
+    <CreatePackage>false</CreatePackage>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-maccatalyst|AnyCPU'">
+    <CreatePackage>false</CreatePackage>
+    <CodesignKey>Mac Developer</CodesignKey>
+    <PackageSigningKey>3rd Party Mac Developer Installer</PackageSigningKey>
+    <CodesignEntitlements>Platforms\MacCatalyst\Entitlements.plist</CodesignEntitlements>
   </PropertyGroup>
   <ItemGroup>
     <!-- App Icon -->
-    <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4"/>
+    <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
 
     <!-- Splash Screen -->
-    <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128"/>
+    <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
 
     <!-- Images -->
-    <MauiFont Include="Resources\Fonts\*"/>
+    <MauiFont Include="Resources\Fonts\*" />
 
     <!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
-    <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)"/>
+    <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0"/>
-    <PackageReference Include="Refractored.MvvmHelpers" Version="1.6.2"/>
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
+    <PackageReference Include="Refractored.MvvmHelpers" Version="1.6.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Mocale.Providers.Aws.S3\Mocale.Providers.AWS.S3.csproj"/>
-    <ProjectReference Include="..\..\src\Mocale.Providers.Azure.Blob\Mocale.Providers.Azure.Blob.csproj"/>
-    <ProjectReference Include="..\..\src\Mocale\Mocale.csproj"/>
+    <ProjectReference Include="..\..\src\Mocale.Providers.Aws.S3\Mocale.Providers.AWS.S3.csproj" />
+    <ProjectReference Include="..\..\src\Mocale.Providers.Azure.Blob\Mocale.Providers.Azure.Blob.csproj" />
+    <ProjectReference Include="..\..\src\Mocale\Mocale.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -81,20 +92,20 @@
   </ItemGroup>
 
   <ItemGroup>
-    <MauiImage Remove="Resources\Images\dotnet_bot.svg"/>
+    <MauiImage Remove="Resources\Images\dotnet_bot.svg" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\Images\dotnet_bot.svg"/>
-    <BundleResource Include="Resources\Locales\en-GB.json"/>
-    <BundleResource Include="Resources\Locales\fr-FR.json"/>
+    <BundleResource Include="Resources\Images\dotnet_bot.svg" />
+    <BundleResource Include="Resources\Locales\en-GB.json" />
+    <BundleResource Include="Resources\Locales\fr-FR.json" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove="Resources\Locales\"/>
-    <None Remove="Resources\Locales\en-GB.json"/>
-    <None Remove="Resources\Locales\fr-FR.json"/>
+    <None Remove="Resources\Locales\" />
+    <None Remove="Resources\Locales\en-GB.json" />
+    <None Remove="Resources\Locales\fr-FR.json" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Resources\Locales\"/>
-    <EmbeddedResource Include="Resources\Locales\*.json"/>
+    <Folder Include="Resources\Locales\" />
+    <EmbeddedResource Include="Resources\Locales\*.json" />
   </ItemGroup>
 </Project>

@@ -22,15 +22,23 @@
     <CreatePackage>false</CreatePackage>
   </PropertyGroup>
   <ItemGroup>
-    <InternalsVisibleTo Include="$(AssemblyName).Json" />
-    <InternalsVisibleTo Include="$(AssemblyName).Resx" />
-    <InternalsVisibleTo Include="$(AssemblyName).Providers.AWS.S3" />
-    <InternalsVisibleTo Include="$(AssemblyName).Providers.Azure.Blob" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.9">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.9">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="sqlite-net-pcl" Version="1.8.116" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Repositories\" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove="Microsoft.Extensions.Logging.Abstractions" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Mocale.DAL\Mocale.DAL.csproj" />
+    <Folder Include="Repositories\" />
   </ItemGroup>
 </Project>
