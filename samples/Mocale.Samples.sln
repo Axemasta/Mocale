@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mocale.Samples", "Mocale.Samples\Mocale.Samples.csproj", "{77135462-4281-422C-90EF-AE89F9C3C7FE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Library", "Library", "{AEF022DA-558F-432C-A6D3-1520EABBD3B3}"
+	ProjectSection(SolutionItems) = preProject
+		..\src\directory.build.props = ..\src\directory.build.props
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{30608F13-5526-4C56-AB32-8123BC2A8D9C}"
 EndProject

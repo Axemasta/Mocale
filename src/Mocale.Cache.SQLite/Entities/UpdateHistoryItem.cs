@@ -1,5 +1,7 @@
 namespace Mocale.Cache.SQLite.Entities;
 
+#nullable disable
+
 [Table("UpdateHistory")]
 public class UpdateHistoryItem
 {
@@ -11,3 +13,5 @@ public class UpdateHistoryItem
 
     public DateTime LastUpdated { get; set; }
 }
+
+#nullable enable
