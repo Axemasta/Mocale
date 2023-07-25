@@ -1,5 +1,6 @@
 using Mocale.DAL;
 using Mocale.DAL.Abstractions;
+using Mocale.DAL.Providers;
 using Mocale.DAL.Repositories;
 using Mocale.Exceptions;
 using Mocale.Managers;
@@ -38,11 +39,7 @@ public static class AppBuilderExtensions
         // - Caching
         mauiAppBuilder.Services.AddTransient<ICacheUpdateManager, CacheUpdateManager>();
         mauiAppBuilder.Services.AddSingleton<IDatabaseConnectionProvider, DatabaseConnectionProvider>();
-#if MACCATALYST
-        mauiAppBuilder.Services.AddTransient<IDatabasePathProvider, Mocale.DAL.Platforms.MacCatalyst.DatabasePathProvider>();
-#else
-        mauiAppBuilder.Services.AddTransient<IDatabasePathProvider, DAL.Providers.DatabasePathProvider>();
-#endif
+        mauiAppBuilder.Services.AddTransient<IDatabasePathProvider, DatabasePathProvider>();
 
         mauiAppBuilder.Services.AddSingleton<ICacheRepository, CacheRepository>();
 
