@@ -7,18 +7,23 @@ namespace Mocale.Cache.SQLite.Managers;
 public class SqlCacheUpdateManager : ICacheUpdateManager
 {
     private readonly ICacheRepository cacheRepository;
-    //private readonly IConfigurationManager<IMocaleConfiguration> configurationManager;
     private readonly IDateTime dateTime;
     private readonly ILogger logger;
+
+    private readonly ISqliteConfig sqliteConfig;
 
     public SqlCacheUpdateManager(
         ICacheRepository cacheRepository,
         IDateTime dateTime,
-        ILogger<SqlCacheUpdateManager> logger)
+        ILogger<SqlCacheUpdateManager> logger,
+        IConfigurationManager<ISqliteConfig> sqliteConfigurationManager)
     {
         this.dateTime = Guard.Against.Null(dateTime, nameof(dateTime));
         this.logger = Guard.Against.Null(logger, nameof(logger));
         this.cacheRepository = Guard.Against.Null(cacheRepository, nameof(cacheRepository));
+
+        sqliteConfigurationManager = Guard.Against.Null(sqliteConfigurationManager, nameof(sqliteConfigurationManager));
+        this.sqliteConfig = sqliteConfigurationManager.Configuration;
     }
 
     #region Interface Implementations
@@ -33,8 +38,7 @@ public class SqlCacheUpdateManager : ICacheUpdateManager
             return true;
         }
 
-        // TODO: Configuration point for update intervals
-        var nextUpdateWindow = updateItem.LastUpdated.Add(TimeSpan.FromDays(1));
+        var nextUpdateWindow = updateItem.LastUpdated.Add(sqliteConfig.UpdateInterval);
 
         return nextUpdateWindow < dateTime.UtcNow;
     }

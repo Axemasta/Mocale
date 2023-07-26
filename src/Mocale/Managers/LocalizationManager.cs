@@ -1,93 +1,52 @@
-using System.ComponentModel;
 using System.Globalization;
 using Ardalis.GuardClauses;
 namespace Mocale.Managers;
 
-public class LocalizationManager : ILocalizationManager, INotifyPropertyChanged
+public class LocalizationManager : ILocalizationManager
 {
-    private readonly IExternalLocalizationProvider externalLocalizationProvider;
     private readonly IMocaleConfiguration mocaleConfiguration;
-    private readonly IInternalLocalizationProvider localizationProvider;
     private readonly ILogger logger;
     private readonly IPreferences preferences;
-
-    public event PropertyChangedEventHandler? PropertyChanged;
+    private readonly ITranslationResolver translationResolver;
+    private readonly ITranslationUpdater translationUpdater;
 
     public CultureInfo CurrentCulture { get; private set; }
 
-    private Dictionary<string, string> Localizations { get; set; } = new Dictionary<string, string>();
-
     public LocalizationManager(
-        IExternalLocalizationProvider externalLocalizationProvider,
         IConfigurationManager<IMocaleConfiguration> mocaleConfigurationManager,
-        IInternalLocalizationProvider localizationProvider,
         ILogger<LocalizationManager> logger,
-        IPreferences preferences)
+        IPreferences preferences,
+        ITranslationResolver translationResolver,
+        ITranslationUpdater translationUpdater)
     {
         mocaleConfigurationManager = Guard.Against.Null(mocaleConfigurationManager, nameof(mocaleConfigurationManager));
 
-        this.externalLocalizationProvider = Guard.Against.Null(externalLocalizationProvider, nameof(externalLocalizationProvider));
-        this.mocaleConfiguration = mocaleConfigurationManager.Configuration;
-        this.localizationProvider = Guard.Against.Null(localizationProvider, nameof(localizationProvider));
+        mocaleConfiguration = mocaleConfigurationManager.Configuration;
         this.logger = Guard.Against.Null(logger, nameof(logger));
         this.preferences = Guard.Against.Null(preferences, nameof(preferences));
+        this.translationResolver = Guard.Against.Null(translationResolver, nameof(translationResolver));
+        this.translationUpdater = Guard.Against.Null(translationUpdater, nameof(this.translationUpdater));
 
         CurrentCulture = GetActiveCulture();
-    }
-
-    public object this[string resourceKey]
-    {
-        get
-        {
-            if (!Localizations.ContainsKey(resourceKey))
-            {
-                logger.LogWarning("Resource key not found '{ResourceKey}'", resourceKey);
-
-                if (!mocaleConfiguration.ShowMissingKeys)
-                {
-                    return string.Empty;
-                }
-
-                return mocaleConfiguration.NotFoundSymbol + resourceKey + mocaleConfiguration.NotFoundSymbol;
-            }
-
-            return Localizations[resourceKey];
-        }
-    }
-
-    private async Task<Dictionary<string, string>?> LoadCultureSafe(CultureInfo cultureInfo)
-    {
-        var external = await externalLocalizationProvider.GetValuesForCultureAsync(cultureInfo);
-
-        if (external.Success)
-        {
-            return external.Localizations;
-        }
-
-        var values = localizationProvider.GetValuesForCulture(cultureInfo);
-
-        return values;
     }
 
     public async Task<bool> SetCultureAsync(CultureInfo culture)
     {
         try
         {
-            var values = await LoadCultureSafe(culture);
+            var result = await translationResolver.LoadTranslations(culture);
 
-            if (values is null || !values.Any())
+            if (!result.Loaded)
             {
                 logger.LogWarning("Unable to load culture {CultureName}, no localizations found", culture.Name);
                 return false;
             }
 
-            Localizations = values;
-
             CurrentCulture = culture;
 
-            SetActiveCulture(culture);
+            translationUpdater.UpdateTranslations(culture, result.Translations);
 
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(null));
+            SetActiveCulture(culture);
 
             logger.LogDebug("Updated localization culture to {CultureName}", culture.Name);
 
@@ -139,7 +98,6 @@ public class LocalizationManager : ILocalizationManager, INotifyPropertyChanged
 
         logger.LogWarning("Unable to parse culture from preferences: {LastUsedCulture}", lastUsedCulture);
         return defaultCulture;
-
     }
 
     private void SetActiveCulture(CultureInfo cultureInfo)
@@ -151,13 +109,21 @@ public class LocalizationManager : ILocalizationManager, INotifyPropertyChanged
 
     private Task InitializeInternal()
     {
-        Localizations = localizationProvider.GetValuesForCulture(CurrentCulture)
-            ?? new Dictionary<string, string>();
+        var localTranslations = translationResolver.LoadLocalTranslations(CurrentCulture);
 
-        // Check cache and go get up to date translations
+        if (localTranslations.Loaded)
+        {
+            translationUpdater.UpdateTranslations(CurrentCulture, localTranslations.Translations);
+        }
 
-        Task.Run(() => CheckForTranslationUpdates(CurrentCulture))
-            .Forget();
+        if (localTranslations.Source is TranslationSource.Internal or TranslationSource.ColdCache)
+        {
+            logger.LogInformation("External translations can be updated, checking for newer copy...");
+
+            // Check cache and go get up to date translations
+            Task.Run(() => CheckForTranslationUpdates(CurrentCulture))
+                .Forget();
+        }
 
         return Task.CompletedTask;
     }
@@ -166,20 +132,17 @@ public class LocalizationManager : ILocalizationManager, INotifyPropertyChanged
     {
         await Task.Delay(5000);
 
-        var external = await externalLocalizationProvider.GetValuesForCultureAsync(cultureInfo);
+        var external = await translationResolver.LoadTranslations(cultureInfo);
 
-        if (!external.Success)
+        if (!external.Loaded)
         {
             logger.LogWarning("Unable to load external translations for culture: {CultureInfo}", cultureInfo);
             return;
         }
 
-        Localizations = external.Localizations;
+        // So we can test better
+        external.Translations.Add("LoadedTranslation", "THIS CAME LATER!");
 
-        Localizations.Add("LoadedTranslation", "THIS CAME LATER!");
-
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(null));
-
-        // This will become available 5 seconds after the app loads
+        translationUpdater.UpdateTranslations(cultureInfo, external.Translations);
     }
 }

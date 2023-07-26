@@ -28,17 +28,17 @@ public static class MocaleLocator
     /// <summary>
     /// Localization Manager
     /// </summary>
-    public static ILocalizationManager LocalizationManager { get; internal set; }
+    public static ITranslatorManager TranslatorManager { get; internal set; }
 
 
     /// <summary>
-    /// Set custom instance of <see cref="ILocalizationManager" /> for test scenarios
+    /// Set custom instance of <see cref="ITranslatorManager" /> for test scenarios
     /// </summary>
     /// <param name="instance"></param>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static void SetInstance(ILocalizationManager instance)
+    public static void SetInstance(ITranslatorManager instance)
     {
-        LocalizationManager = instance;
+        TranslatorManager = instance;
     }
 }
 

@@ -31,6 +31,8 @@ public static class AppBuilderExtensions
         mauiAppBuilder.Services.AddSingleton<IConfigurationManager<IMocaleConfiguration>>(mocaleBuilder.ConfigurationManager);
         mauiAppBuilder.Services.AddSingleton<ILocalizationManager, LocalizationManager>();
         mauiAppBuilder.Services.AddSingleton<IMauiInitializeService, MocaleInitializeService>();
+        mauiAppBuilder.Services.AddSingleton<ITranslatorManager, TranslatorManager>();
+        mauiAppBuilder.Services.AddSingleton<ITranslationUpdater, TranslatorManager>();
 
         if (!mocaleBuilder.LocalProviderRegistered)
         {

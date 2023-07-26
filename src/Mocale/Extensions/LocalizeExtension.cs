@@ -1,22 +1,23 @@
+using Ardalis.GuardClauses;
 namespace Mocale.Extensions;
 
 [ContentProperty(nameof(Key))]
 public class LocalizeExtension : IMarkupExtension<BindingBase>
 {
-    private readonly ILocalizationManager localizationManager;
+    private readonly ITranslatorManager translatorManager;
 
     public string? Key { get; set; }
 
     public IValueConverter? Converter { get; set; }
 
     public LocalizeExtension()
-        : this(MocaleLocator.LocalizationManager)
+        : this(MocaleLocator.TranslatorManager)
     {
     }
 
-    public LocalizeExtension(ILocalizationManager localizationManager)
+    public LocalizeExtension(ITranslatorManager translatorManager)
     {
-        this.localizationManager = localizationManager;
+        this.translatorManager = Guard.Against.Null(translatorManager, nameof(translatorManager));
     }
 
     public BindingBase ProvideValue(IServiceProvider serviceProvider)
@@ -25,7 +26,7 @@ public class LocalizeExtension : IMarkupExtension<BindingBase>
         {
             Mode = BindingMode.OneWay,
             Path = $"[{Key}]",
-            Source = localizationManager,
+            Source = translatorManager,
             Converter = Converter,
         };
     }
