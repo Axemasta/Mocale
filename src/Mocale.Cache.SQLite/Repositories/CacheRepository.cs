@@ -1,22 +1,20 @@
 using System.Globalization;
+using Microsoft.Extensions.Logging;
 
 namespace Mocale.Cache.SQLite.Repositories;
 
-public class CacheRepository : ICacheRepository
+public class CacheRepository : RepositoryBase, ICacheRepository
 {
-    #region Fields
-
-    private readonly SQLiteConnection databaseConnection;
-
-    #endregion Fields
-
     #region Constructors
 
-    public CacheRepository(IDatabaseConnectionProvider databaseConnectionProvider)
+    public CacheRepository(
+        IDatabaseConnectionProvider databaseConnectionProvider,
+        ILogger<CacheRepository> logger)
+        : base(
+            databaseConnectionProvider,
+            logger)
     {
-        this.databaseConnection = databaseConnectionProvider.GetDatabaseConnection();
-
-        databaseConnection.CreateTable<UpdateHistoryItem>();
+        Connection.CreateTable<UpdateHistoryItem>();
     }
 
     #endregion Constructors
@@ -25,21 +23,21 @@ public class CacheRepository : ICacheRepository
 
     public bool AddItem(UpdateHistoryItem updateItem)
     {
-        var rows = databaseConnection.Insert(updateItem);
+        var rows = Connection.Insert(updateItem);
 
         return rows == 1;
     }
 
     public bool AddOrUpdateItem(CultureInfo cultureInfo, DateTime lastUpdated)
     {
-        var existingItem = databaseConnection.Table<UpdateHistoryItem>()
+        var existingItem = Connection.Table<UpdateHistoryItem>()
             .FirstOrDefault(e => e.CultureName == cultureInfo.Name);
 
         if (existingItem is not null)
         {
             existingItem.LastUpdated = lastUpdated;
 
-            var rows = databaseConnection.Update(existingItem);
+            var rows = Connection.Update(existingItem);
 
             return rows == 1;
         }
@@ -51,7 +49,7 @@ public class CacheRepository : ICacheRepository
                 LastUpdated = lastUpdated,
             };
 
-            var rows = databaseConnection.Insert(entity);
+            var rows = Connection.Insert(entity);
 
             return rows == 1;
         }
@@ -59,17 +57,17 @@ public class CacheRepository : ICacheRepository
 
     public bool DeleteAll()
     {
-        var count = databaseConnection.Table<UpdateHistoryItem>()
+        var count = Connection.Table<UpdateHistoryItem>()
             .Count();
 
-        var rows = databaseConnection.DeleteAll<UpdateHistoryItem>();
+        var rows = Connection.DeleteAll<UpdateHistoryItem>();
 
         return rows == count;
     }
 
     public bool DeleteItem(CultureInfo cultureInfo)
     {
-        var itemToDelete = databaseConnection.Table<UpdateHistoryItem>()
+        var itemToDelete = Connection.Table<UpdateHistoryItem>()
             .FirstOrDefault(e => e.CultureName == cultureInfo.Name);
 
         if (itemToDelete is null)
@@ -77,20 +75,20 @@ public class CacheRepository : ICacheRepository
             return false;
         }
 
-        var rows = databaseConnection.Delete(itemToDelete);
+        var rows = Connection.Delete(itemToDelete);
 
         return rows == 1;
     }
 
     public UpdateHistoryItem? GetItem(CultureInfo cultureInfo)
     {
-        return databaseConnection.Table<UpdateHistoryItem>()
+        return Connection.Table<UpdateHistoryItem>()
             .FirstOrDefault(e => e.CultureName == cultureInfo.Name);
     }
 
     public bool UpdateItem(UpdateHistoryItem updateItem)
     {
-        var rows = databaseConnection.Update(updateItem);
+        var rows = Connection.Update(updateItem);
 
         return rows == 1;
     }

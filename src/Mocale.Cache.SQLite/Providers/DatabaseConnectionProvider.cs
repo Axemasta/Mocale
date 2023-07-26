@@ -3,8 +3,15 @@ namespace Mocale.Cache.SQLite.Providers;
 
 public class DatabaseConnectionProvider : IDatabaseConnectionProvider
 {
+    #region Fields
+
+    private readonly Lazy<SQLiteConnection> connectionLazy;
     private readonly IDatabasePathProvider databasePathProvider;
     private readonly ILogger logger;
+
+    #endregion
+
+    #region Constructors
 
     public DatabaseConnectionProvider(
         IDatabasePathProvider databasePathProvider,
@@ -12,9 +19,16 @@ public class DatabaseConnectionProvider : IDatabaseConnectionProvider
     {
         this.databasePathProvider = Guard.Against.Null(databasePathProvider, nameof(databasePathProvider));
         this.logger = Guard.Against.Null(logger, nameof(logger));
+
+        // This could cause issues if we need to rebuild the connection...
+        this.connectionLazy = new Lazy<SQLiteConnection>(BuildConnection, LazyThreadSafetyMode.ExecutionAndPublication);
     }
 
-    public SQLiteConnection GetDatabaseConnection()
+    #endregion Constructors
+
+    #region Methods
+
+    private SQLiteConnection BuildConnection()
     {
         var databasePath = databasePathProvider.GetDatabasePath();
 
@@ -25,4 +39,15 @@ public class DatabaseConnectionProvider : IDatabaseConnectionProvider
             SQLiteOpenFlags.Create | SQLiteOpenFlags.FullMutex | SQLiteOpenFlags.ReadWrite,
             true);
     }
+
+    #endregion Methods
+
+    #region Interface Implementations
+
+    public SQLiteConnection GetDatabaseConnection()
+    {
+        return connectionLazy.Value;
+    }
+
+    #endregion Interface Implementations
 }

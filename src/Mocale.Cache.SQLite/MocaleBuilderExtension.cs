@@ -1,9 +1,7 @@
 using Mocale.Abstractions;
-using Mocale.Cache.SQLite.Abstractions;
 using Mocale.Cache.SQLite.Managers;
 using Mocale.Cache.SQLite.Providers;
 using Mocale.Cache.SQLite.Repositories;
-using Mocale.Exceptions;
 using Mocale.Managers;
 namespace Mocale.Cache.SQLite;
 
@@ -13,7 +11,7 @@ public static class MocaleBuilderExtension
     {
         // TODO: Does this even need config?
 
-        var config = new SqliteConfig()
+        var config = new SqliteConfig
         {
             DatabaseDirectory = FileSystem.AppDataDirectory,
         };
@@ -25,7 +23,9 @@ public static class MocaleBuilderExtension
         builder.AppBuilder.Services.AddTransient<ICacheUpdateManager, SqlCacheUpdateManager>();
         builder.AppBuilder.Services.AddSingleton<IDatabaseConnectionProvider, DatabaseConnectionProvider>();
         builder.AppBuilder.Services.AddTransient<IDatabasePathProvider, DatabasePathProvider>();
+        builder.AppBuilder.Services.AddSingleton<ILocalisationCacheManager, LocalisationCacheManager>();
         builder.AppBuilder.Services.AddSingleton<ICacheRepository, CacheRepository>();
+        builder.AppBuilder.Services.AddSingleton<ITranslationsRepository, TranslationsRepository>();
 
         builder.CacheProviderRegistered = true;
 

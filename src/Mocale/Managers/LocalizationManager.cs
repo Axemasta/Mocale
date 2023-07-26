@@ -5,7 +5,6 @@ namespace Mocale.Managers;
 
 public class LocalizationManager : ILocalizationManager, INotifyPropertyChanged
 {
-    private readonly ICacheUpdateManager cacheUpdateManager;
     private readonly IExternalLocalizationProvider externalLocalizationProvider;
     private readonly IMocaleConfiguration mocaleConfiguration;
     private readonly IInternalLocalizationProvider localizationProvider;
@@ -19,7 +18,6 @@ public class LocalizationManager : ILocalizationManager, INotifyPropertyChanged
     private Dictionary<string, string> Localizations { get; set; } = new Dictionary<string, string>();
 
     public LocalizationManager(
-        ICacheUpdateManager cacheUpdateManager,
         IExternalLocalizationProvider externalLocalizationProvider,
         IConfigurationManager<IMocaleConfiguration> mocaleConfigurationManager,
         IInternalLocalizationProvider localizationProvider,

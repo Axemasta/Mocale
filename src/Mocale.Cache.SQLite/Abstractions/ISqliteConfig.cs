@@ -14,4 +14,9 @@ public interface ISqliteConfig
     /// The database directory: FileSystem.AppDataDirectory
     /// </summary>
     string DatabaseDirectory { get; }
+
+    /// <summary>
+    /// The interval in which the cache should be updated
+    /// </summary>
+    TimeSpan UpdateInterval { get; }
 }
