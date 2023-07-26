@@ -35,9 +35,52 @@ public class TranslationResolver : ITranslationResolver
     #region Interface Implementations
 
     /// <inheritdoc/>
-    public Task<TranslationLoadResult> LoadTranslations(CultureInfo cultureInfo)
+    public async Task<TranslationLoadResult> LoadTranslations(CultureInfo cultureInfo)
     {
-        throw new NotImplementedException();
+        if (!cacheUpdateManager.CanUpdateCache(cultureInfo))
+        {
+            // We have up to date local copy of cache
+            var cacheTranslations = localisationCacheManager.GetCachedLocalizations(cultureInfo);
+
+            if (cacheTranslations is not null)
+            {
+                return new TranslationLoadResult()
+                {
+                    Loaded = true,
+                    Source = TranslationSource.WarmCache,
+                    Translations = cacheTranslations,
+                };
+            }
+        }
+
+        logger.LogDebug("Updating translations for culture: {CultureName} from external provider", cultureInfo.Name);
+
+        var externalResult = await externalLocalizationProvider.GetValuesForCultureAsync(cultureInfo);
+
+        if (!externalResult.Success)
+        {
+            logger.LogWarning("No external translations were loaded for culture: {CultureName}", cultureInfo.Name);
+
+            return new TranslationLoadResult()
+            {
+                Loaded = false,
+                Source = TranslationSource.External,
+            };
+        }
+
+        var saved = localisationCacheManager.SaveCachedLocalizations(cultureInfo, externalResult.Localizations);
+
+        if (!saved)
+        {
+            logger.LogWarning("Translations were updated for culture: {CultureName}, however they were not saved to cache", cultureInfo.Name);
+        }
+
+        return new TranslationLoadResult()
+        {
+            Loaded = true,
+            Source = TranslationSource.External,
+            Translations = externalResult.Localizations,
+        };
     }
 
     public TranslationLoadResult LoadLocalTranslations(CultureInfo cultureInfo)
