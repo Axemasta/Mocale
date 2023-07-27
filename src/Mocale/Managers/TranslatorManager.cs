@@ -7,7 +7,6 @@ public class TranslatorManager : ITranslatorManager, ITranslationUpdater, INotif
 {
     #region Fields
 
-
     private readonly ILogger logger;
     private readonly IMocaleConfiguration mocaleConfiguration;
 
@@ -30,7 +29,7 @@ public class TranslatorManager : ITranslatorManager, ITranslationUpdater, INotif
         this.logger = Guard.Against.Null(logger, nameof(logger));
 
         mocaleConfigurationManager = Guard.Against.Null(mocaleConfigurationManager, nameof(mocaleConfigurationManager));
-        this.mocaleConfiguration = mocaleConfigurationManager.Configuration;
+        mocaleConfiguration = mocaleConfigurationManager.Configuration;
     }
 
     #endregion Constructors
@@ -44,8 +43,6 @@ public class TranslatorManager : ITranslatorManager, ITranslationUpdater, INotif
     #region Interface Implementations
 
     #region - ITranslatorManager
-
-
 
     public string? Translate(string key)
     {

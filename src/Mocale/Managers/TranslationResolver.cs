@@ -32,10 +32,9 @@ public class TranslationResolver : ITranslationResolver
 
     #endregion Constructors
 
-    #region Interface Implementations
+    #region Methods
 
-    /// <inheritdoc/>
-    public async Task<TranslationLoadResult> LoadTranslations(CultureInfo cultureInfo)
+    private async Task<TranslationLoadResult> LoadTranslationsInternal(CultureInfo cultureInfo)
     {
         if (!cacheUpdateManager.CanUpdateCache(cultureInfo))
         {
@@ -44,7 +43,7 @@ public class TranslationResolver : ITranslationResolver
 
             if (cacheTranslations is not null)
             {
-                return new TranslationLoadResult()
+                return new TranslationLoadResult
                 {
                     Loaded = true,
                     Source = TranslationSource.WarmCache,
@@ -61,7 +60,7 @@ public class TranslationResolver : ITranslationResolver
         {
             logger.LogWarning("No external translations were loaded for culture: {CultureName}", cultureInfo.Name);
 
-            return new TranslationLoadResult()
+            return new TranslationLoadResult
             {
                 Loaded = false,
                 Source = TranslationSource.External,
@@ -75,12 +74,35 @@ public class TranslationResolver : ITranslationResolver
             logger.LogWarning("Translations were updated for culture: {CultureName}, however they were not saved to cache", cultureInfo.Name);
         }
 
-        return new TranslationLoadResult()
+        return new TranslationLoadResult
         {
             Loaded = true,
             Source = TranslationSource.External,
             Translations = externalResult.Localizations,
         };
+    }
+
+    #endregion Method
+
+    #region Interface Implementations
+
+    /// <inheritdoc />
+    public async Task<TranslationLoadResult> LoadTranslations(CultureInfo cultureInfo)
+    {
+        try
+        {
+            return await LoadTranslationsInternal(cultureInfo);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "An exception occurred loading translations for culture: {CultureName}", cultureInfo.Name);
+
+            return new TranslationLoadResult
+            {
+                Loaded = false,
+                Source = TranslationSource.External,
+            };
+        }
     }
 
     public TranslationLoadResult LoadLocalTranslations(CultureInfo cultureInfo)
@@ -91,7 +113,7 @@ public class TranslationResolver : ITranslationResolver
 
         if (internalTranslations is not null && cachedTranslations is null)
         {
-            return new TranslationLoadResult()
+            return new TranslationLoadResult
             {
                 Loaded = true,
                 Source = TranslationSource.Internal,
@@ -101,7 +123,7 @@ public class TranslationResolver : ITranslationResolver
 
         if (internalTranslations is null || cachedTranslations is null)
         {
-            return new TranslationLoadResult()
+            return new TranslationLoadResult
             {
                 Loaded = false,
                 Source = TranslationSource.Internal,
@@ -130,7 +152,7 @@ public class TranslationResolver : ITranslationResolver
             ? TranslationSource.ColdCache
             : TranslationSource.WarmCache;
 
-        return new TranslationLoadResult()
+        return new TranslationLoadResult
         {
             Loaded = true,
             Source = cacheTemperature,

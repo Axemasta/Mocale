@@ -26,7 +26,7 @@ public class TranslationsRepository : RepositoryBase, ITranslationsRepository
 
         foreach (var translation in translations)
         {
-            entities.Add(new TranslationItem()
+            entities.Add(new TranslationItem
             {
                 CultureName = cultureInfo.Name,
                 Key = translation.Key,
@@ -41,7 +41,7 @@ public class TranslationsRepository : RepositoryBase, ITranslationsRepository
 
     #region Interface Implementations
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public Dictionary<string, string>? GetTranslations(CultureInfo cultureInfo)
     {
         try
@@ -65,53 +65,61 @@ public class TranslationsRepository : RepositoryBase, ITranslationsRepository
         }
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public bool AddTranslations(CultureInfo cultureInfo, Dictionary<string, string> translations)
     {
-        // Check existing
-        var currentEntities = Connection.Table<TranslationItem>()
-            .Where(t => t.CultureName == cultureInfo.Name)
-            .ToList();
-
-        var transactionHistory = new List<bool>();
-
-        var newValues = translations.Where(t => currentEntities.All(c => c.Key != t.Key))
-            .ToList();
-
-        if (newValues.Any())
+        try
         {
-            var entities = CreateEntities(cultureInfo, translations);
+            // Check existing
+            var currentEntities = Connection.Table<TranslationItem>()
+                .Where(t => t.CultureName == cultureInfo.Name)
+                .ToList();
 
-            var rows = Connection.Insert(entities);
+            var transactionHistory = new List<bool>();
 
-            transactionHistory.Add(rows == entities.Count);
+            var newValues = translations.Where(t => currentEntities.All(c => c.Key != t.Key))
+                .ToList();
+
+            if (newValues.Any())
+            {
+                var entities = CreateEntities(cultureInfo, translations);
+
+                var rows = Connection.InsertAll(entities);
+
+                transactionHistory.Add(rows == entities.Count);
+            }
+
+            // var deletedValues = currentEntities.Where(t => translations.All(c => c.Key != t.Key))
+            //     .ToList();
+            //
+            // if (deletedValues.Any())
+            // {
+            //     var rows = Connection.Delete(deletedValues);
+            //
+            //     transactionHistory.Add(rows == deletedValues.Count);
+            // }
+
+            // var updatedValues = translations.Where(t => currentEntities.All(c => c.Key == t.Key))
+            //     .ToList();
+            //
+            // if (updatedValues.Any())
+            // {
+            //     var rows = Connection.Delete(deletedValues);
+            //
+            //     transactionHistory.Add(rows == deletedValues.Count);
+            // }
+
+            return transactionHistory.All(t => t);
         }
-
-        // var deletedValues = currentEntities.Where(t => translations.All(c => c.Key != t.Key))
-        //     .ToList();
-        //
-        // if (deletedValues.Any())
-        // {
-        //     var rows = Connection.Delete(deletedValues);
-        //
-        //     transactionHistory.Add(rows == deletedValues.Count);
-        // }
-
-        // var updatedValues = translations.Where(t => currentEntities.All(c => c.Key == t.Key))
-        //     .ToList();
-        //
-        // if (updatedValues.Any())
-        // {
-        //     var rows = Connection.Delete(deletedValues);
-        //
-        //     transactionHistory.Add(rows == deletedValues.Count);
-        // }
-
-        return transactionHistory.All(t => t);
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "An exception occurred adding translations to the database for culture: {CultureName}", cultureInfo.Name);
+            return false;
+        }
     }
 
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public bool DeleteTranslations(CultureInfo cultureInfo)
     {
         try
