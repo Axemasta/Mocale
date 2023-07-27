@@ -116,6 +116,8 @@ public class LocalizationManager : ILocalizationManager
             translationUpdater.UpdateTranslations(CurrentCulture, localTranslations.Translations);
         }
 
+        logger.LogTrace("Loaded local translations from source: {TranslationSource}", localTranslations.Source);
+
         if (localTranslations.Source is TranslationSource.Internal or TranslationSource.ColdCache)
         {
             logger.LogInformation("External translations can be updated, checking for newer copy...");
