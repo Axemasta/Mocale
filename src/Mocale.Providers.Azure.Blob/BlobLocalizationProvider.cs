@@ -93,12 +93,6 @@ internal sealed class BlobLocalizationProvider : IExternalLocalizationProvider
         }
     }
 
-    private Dictionary<string, string>? ParseFileContents(string fileContents)
-    {
-        // TODO: Support resx
-        return JsonSerializer.Deserialize<Dictionary<string, string>>(fileContents);
-    }
-
     #endregion Methods
 
     #region Interface Implementations

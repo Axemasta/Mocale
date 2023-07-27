@@ -44,7 +44,7 @@ public class LocalizationManager : ILocalizationManager
 
             CurrentCulture = culture;
 
-            translationUpdater.UpdateTranslations(culture, result.Translations);
+            translationUpdater.UpdateTranslations(culture, result.Translations, result.Source);
 
             SetActiveCulture(culture);
 
@@ -113,7 +113,7 @@ public class LocalizationManager : ILocalizationManager
 
         if (localTranslations.Loaded)
         {
-            translationUpdater.UpdateTranslations(CurrentCulture, localTranslations.Translations);
+            translationUpdater.UpdateTranslations(CurrentCulture, localTranslations.Translations, localTranslations.Source);
         }
 
         logger.LogTrace("Loaded local translations from source: {TranslationSource}", localTranslations.Source);
@@ -142,6 +142,6 @@ public class LocalizationManager : ILocalizationManager
             return;
         }
 
-        translationUpdater.UpdateTranslations(cultureInfo, external.Translations);
+        translationUpdater.UpdateTranslations(cultureInfo, external.Translations, TranslationSource.External);
     }
 }

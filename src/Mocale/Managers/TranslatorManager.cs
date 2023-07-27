@@ -16,7 +16,9 @@ public class TranslatorManager : ITranslatorManager, ITranslationUpdater, INotif
 
     public CultureInfo? CurrentCulture { get; private set; }
 
-    private Dictionary<string, string> Localizations { get; set; } = new Dictionary<string, string>();
+    private Dictionary<string, string> ExternalLocalizations { get; set; } = new Dictionary<string, string>();
+
+    private Dictionary<string, string> InternalLocalizations { get; set; } = new Dictionary<string, string>();
 
     #endregion Properties
 
@@ -46,31 +48,51 @@ public class TranslatorManager : ITranslatorManager, ITranslationUpdater, INotif
 
     public string? Translate(string key)
     {
-        if (!Localizations.ContainsKey(key))
+        if (ExternalLocalizations.TryGetValue(key, out var externalTranslation))
         {
-            logger.LogWarning("Resource key not found '{ResourceKey}'", key);
-
-            if (!mocaleConfiguration.ShowMissingKeys)
-            {
-                return string.Empty;
-            }
-
-            return mocaleConfiguration.NotFoundSymbol + key + mocaleConfiguration.NotFoundSymbol;
+            return externalTranslation;
         }
 
-        return Localizations[key];
+        if (InternalLocalizations.TryGetValue(key, out var internalTranslation))
+        {
+            logger.LogDebug("Key: {Key} was found in Internal Localizations", key);
+            return internalTranslation;
+        }
+
+        logger.LogWarning("Resource key not found '{ResourceKey}'", key);
+
+        if (!mocaleConfiguration.ShowMissingKeys)
+        {
+            return string.Empty;
+        }
+
+        return mocaleConfiguration.NotFoundSymbol + key + mocaleConfiguration.NotFoundSymbol;
     }
 
     #endregion - ITranslatorManager
 
     #region - ITranslationUpdater
 
-    public void UpdateTranslations(CultureInfo cultureInfo, Dictionary<string, string> translations)
+    public void UpdateTranslations(CultureInfo cultureInfo, Dictionary<string, string> translations, TranslationSource source)
     {
         CurrentCulture = cultureInfo;
 
-        Localizations.Clear();
-        Localizations = translations;
+        switch (source)
+        {
+            case TranslationSource.External:
+            {
+                ExternalLocalizations.Clear();
+                ExternalLocalizations = translations;
+                break;
+            }
+
+            default:
+            {
+                InternalLocalizations.Clear();
+                InternalLocalizations = translations;
+                break;
+            }
+        }
 
         RaisePropertyChanged();
     }
