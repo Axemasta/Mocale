@@ -47,7 +47,7 @@ public class TranslationsRepository : RepositoryBase, ITranslationsRepository
         try
         {
             var entities = Connection.Table<TranslationItem>()
-                .Where(t => t.CultureName.Equals(cultureInfo.Name, StringComparison.Ordinal))
+                .Where(t => t.CultureName == cultureInfo.Name)
                 .ToList();
 
             if (entities is null || !entities.Any())
@@ -70,7 +70,7 @@ public class TranslationsRepository : RepositoryBase, ITranslationsRepository
     {
         // Check existing
         var currentEntities = Connection.Table<TranslationItem>()
-            .Where(t => t.CultureName.Equals(cultureInfo.Name, StringComparison.Ordinal))
+            .Where(t => t.CultureName == cultureInfo.Name)
             .ToList();
 
         var transactionHistory = new List<bool>();
@@ -117,7 +117,7 @@ public class TranslationsRepository : RepositoryBase, ITranslationsRepository
         try
         {
             var entities = Connection.Table<TranslationItem>()
-                .Where(t => t.CultureName.Equals(cultureInfo.Name, StringComparison.Ordinal))
+                .Where(t => t.CultureName == cultureInfo.Name)
                 .ToList();
 
             if (entities is null || !entities.Any())
@@ -140,6 +140,4 @@ public class TranslationsRepository : RepositoryBase, ITranslationsRepository
     }
 
     #endregion Interface Implementations
-
-
 }
