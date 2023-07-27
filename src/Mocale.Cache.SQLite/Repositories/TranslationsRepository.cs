@@ -82,32 +82,47 @@ public class TranslationsRepository : RepositoryBase, ITranslationsRepository
 
             if (newValues.Any())
             {
-                var entities = CreateEntities(cultureInfo, translations);
+                var newTranslations = translations.Where(t => currentEntities.All(c => c.Key != t.Key))
+                    .ToDictionary(d => d.Key, d => d.Value);
+
+                var entities = CreateEntities(cultureInfo, newTranslations);
 
                 var rows = Connection.InsertAll(entities);
 
                 transactionHistory.Add(rows == entities.Count);
             }
 
-            // var deletedValues = currentEntities.Where(t => translations.All(c => c.Key != t.Key))
-            //     .ToList();
-            //
-            // if (deletedValues.Any())
-            // {
-            //     var rows = Connection.Delete(deletedValues);
-            //
-            //     transactionHistory.Add(rows == deletedValues.Count);
-            // }
+            var deletedValues = currentEntities.Where(t => translations.All(c => c.Key != t.Key))
+                .ToList();
 
-            // var updatedValues = translations.Where(t => currentEntities.All(c => c.Key == t.Key))
-            //     .ToList();
-            //
-            // if (updatedValues.Any())
-            // {
-            //     var rows = Connection.Delete(deletedValues);
-            //
-            //     transactionHistory.Add(rows == deletedValues.Count);
-            // }
+            if (deletedValues.Any())
+            {
+                var rows = 0;
+
+                foreach (var valueToDelete in deletedValues)
+                {
+                    rows += Connection.Delete(valueToDelete);
+                }
+
+                transactionHistory.Add(rows == deletedValues.Count);
+            }
+
+            var updatedValues = currentEntities.Where(t => translations.Any(c => c.Key == t.Key && c.Value != t.Value))
+                .ToList();
+
+            if (updatedValues.Any())
+            {
+                foreach (var translation in updatedValues)
+                {
+                    var newValue = translations.FirstOrDefault(t => t.Key == translation.Key);
+
+                    translation.Value = newValue.Value;
+                }
+
+                var rows = Connection.UpdateAll(updatedValues);
+
+                transactionHistory.Add(rows == updatedValues.Count);
+            }
 
             return transactionHistory.All(t => t);
         }

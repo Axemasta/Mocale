@@ -5,6 +5,8 @@ namespace Mocale.Cache.SQLite.Entities;
 [Table("Translations")]
 public class TranslationItem
 {
+    [PrimaryKey]
+    [AutoIncrement]
     public int Id { get; set; }
 
     public string CultureName { get; set; }

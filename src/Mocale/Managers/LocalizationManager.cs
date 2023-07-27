@@ -140,9 +140,6 @@ public class LocalizationManager : ILocalizationManager
             return;
         }
 
-        // So we can test better
-        external.Translations.Add("LoadedTranslation", "THIS CAME LATER!");
-
         translationUpdater.UpdateTranslations(cultureInfo, external.Translations);
     }
 }
