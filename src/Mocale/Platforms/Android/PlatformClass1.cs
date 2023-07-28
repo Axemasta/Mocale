@@ -1,7 +1,7 @@
 namespace Mocale
 {
     // All the code in this file is only included on Android.
-    public class PlatformClass1
+    internal class PlatformClass1
     {
     }
 }

@@ -1,28 +1,32 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
+
 <ContentPage
+    Title="{mocale:Localize MocaleTitle}"
     x:Class="Mocale.Samples.Views.IntroductionPage"
+    x:DataType="vm:IntroductionPageViewModel"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:converters="clr-namespace:Mocale.Samples.Converter"
     xmlns:mocale="http://axemasta.com/schemas/2022/mocale"
     xmlns:vm="clr-namespace:Mocale.Samples.ViewModels"
-    Title="{mocale:Localize MocaleTitle}"
-    x:DataType="vm:IntroductionPageViewModel">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
     <ContentPage.Resources>
         <ResourceDictionary>
             <converters:LanguageEmojiConverter x:Key="LanguageEmojiConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
-    <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="10">
+    <VerticalStackLayout
+        HorizontalOptions="Center"
+        Spacing="10"
+        VerticalOptions="Center">
         <Label Text="{mocale:Localize Key=CurrentLocaleName, Converter={StaticResource LanguageEmojiConverter}}" />
 
         <Label>
             <Label.FormattedText>
                 <FormattedString>
-                    <Span Text="{mocale:Localize LocalizationCurrentProviderIs}"/>
-                    <Span Text=" "/>
-                    <Span Text="{mocale:Localize LocalizationProviderName}"/>
+                    <Span Text="{mocale:Localize LocalizationCurrentProviderIs}" />
+                    <Span Text=" " />
+                    <Span Text="{mocale:Localize LocalizationProviderName}" />
                 </FormattedString>
 
             </Label.FormattedText>
@@ -31,5 +35,7 @@
         <Label Text="{mocale:Localize MocaleDescription}" />
 
         <Picker ItemsSource="{Binding Locales}" SelectedItem="{Binding SelectedLocale}" />
+
+        <Label Text="{mocale:Localize LoadedTranslation}" />
     </VerticalStackLayout>
 </ContentPage>

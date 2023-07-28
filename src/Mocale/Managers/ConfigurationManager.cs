@@ -1,5 +1,4 @@
 using Ardalis.GuardClauses;
-using Mocale.Abstractions;
 
 namespace Mocale.Managers;
 
@@ -7,27 +6,17 @@ namespace Mocale.Managers;
 /// Simple Singleton Style Class For Storing Configuration Objects
 /// </summary>
 /// <typeparam name="TConfig"></typeparam>
-internal class ConfigurationManager<TConfig> : IConfigurationManager<TConfig>, IConfigurationUpdateManager<TConfig>
+public class ConfigurationManager<TConfig> : IConfigurationManager<TConfig>, IConfigurationUpdateManager<TConfig>
 {
-    private TConfig config;
+    public TConfig Configuration { get; set; }
 
-    internal ConfigurationManager(TConfig config)
+    public ConfigurationManager(TConfig config)
     {
-        SetConfiguration(config);
-    }
-
-    public TConfig GetConfiguration()
-    {
-        return config;
-    }
-
-    public void SetConfiguration(TConfig configuration)
-    {
-        this.config = Guard.Against.Null(configuration, nameof(configuration));
+        Configuration = Guard.Against.Null(config, nameof(config));
     }
 
     public void UpdateConfiguration(Action<TConfig> configuration)
     {
-        configuration(this.config);
+        configuration(Configuration);
     }
 }

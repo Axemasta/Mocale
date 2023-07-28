@@ -1,41 +1,45 @@
 using System.ComponentModel;
-using Mocale.Abstractions;
-using Mocale.Managers;
-
 namespace Mocale;
 
+/*
+ * I'm not sure how to nullable refactor this service locator since its set in initialization so
+ * should be marked nullable however I dislike the side effect on the rest of the code using this that i now need to check
+ * the value before using it. This value will be set by the lib and always here, end of sentence :)
+ */
+#nullable disable
+
 /// <summary>
-/// Mocale Service Locator for services that need to fallback to a service locator pattern
+/// Mocale Service Locator for services that need to fallback to a service locator pattern.
+/// The primary reason for this class is for XamlExtensions lacking access to the app's main service
+/// provider.
+/// See issue:
+/// https://github.com/dotnet/maui/issues/8824
+/// When the ability to peek the apps main service provider from markup extensions becomes available,
+/// this service locator will be obsolete.
+/// I've tried to make this not hang off statically stored instances as much as possible, at runtime
+/// the app
+/// will use the service provider and not store any state. During a test you can set a custom instance
+/// to
+/// mock any functionality required.
 /// </summary>
 public static class MocaleLocator
 {
-    private static ILocalizationManager customInstance;
 
     /// <summary>
-    /// Get the current localization manager instance.
-    /// <para/>
-    /// Only use this locator if you class cannot acquire an instance of <see cref="ILocalizationManager"/> via
-    /// constructor injection ie:
-    /// <list type="bullet">
-    /// <item><description>Converter</description></item>
-    /// <item><description>Markup Extension</description></item>
-    /// </list>
-    /// etc
+    /// Localization Manager
     /// </summary>
-    /// <returns></returns>
-    public static ILocalizationManager GetLocalizationManager()
-    {
-        // A future nice to have would be an analyzer to warn this usage unless the class is IValueConverter etc
-        return customInstance ?? LocalizationManager.Instance;
-    }
+    public static ITranslatorManager TranslatorManager { get; internal set; }
+
 
     /// <summary>
-    /// Set custom instance of <see cref="ILocalizationManager"/> for test scenarios
+    /// Set custom instance of <see cref="ITranslatorManager" /> for test scenarios
     /// </summary>
     /// <param name="instance"></param>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static void SetInstance(ILocalizationManager instance)
+    public static void SetInstance(ITranslatorManager instance)
     {
-        customInstance = instance;
+        TranslatorManager = instance;
     }
 }
+
+#nullable enable

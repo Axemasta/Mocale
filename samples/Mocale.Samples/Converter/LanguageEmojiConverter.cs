@@ -1,20 +1,24 @@
 using System.Globalization;
 using Mocale.Abstractions;
-
 namespace Mocale.Samples.Converter;
 
-internal class LanguageEmojiConverter : IValueConverter
+internal sealed class LanguageEmojiConverter : IValueConverter
 {
-    private readonly ILocalizationManager localizationManager;
+    private readonly ITranslatorManager translatorManager;
 
     public LanguageEmojiConverter()
     {
-        localizationManager = MocaleLocator.GetLocalizationManager();
+        translatorManager = MocaleLocator.TranslatorManager;
     }
 
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        var currentCulture = localizationManager.CurrentCulture;
+        var currentCulture = translatorManager.CurrentCulture;
+
+        if (currentCulture is null)
+        {
+            return null;
+        }
 
         return GetFlag(currentCulture.EnglishName);
     }
@@ -24,7 +28,7 @@ internal class LanguageEmojiConverter : IValueConverter
         throw new NotImplementedException();
     }
 
-    public string GetFlag(string country)
+    private static string GetFlag(string country)
     {
         // Adapted from
         // https://itnext.io/convert-country-name-to-flag-emoji-in-c-the-net-ecosystem-115f714d3ef9
@@ -43,5 +47,8 @@ internal class LanguageEmojiConverter : IValueConverter
         return flag;
     }
 
-    public string IsoCountryCodeToFlagEmoji(string countryCode) => string.Concat(countryCode.ToUpper().Select(x => char.ConvertFromUtf32(x + 0x1F1A5)));
+    private static string IsoCountryCodeToFlagEmoji(string countryCode)
+    {
+        return string.Concat(countryCode.ToUpperInvariant().Select(x => char.ConvertFromUtf32(x + 0x1F1A5)));
+    }
 }
