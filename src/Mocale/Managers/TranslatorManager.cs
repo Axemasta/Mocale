@@ -16,9 +16,9 @@ public class TranslatorManager : ITranslatorManager, ITranslationUpdater, INotif
 
     public CultureInfo? CurrentCulture { get; private set; }
 
-    private Dictionary<string, string> ExternalLocalizations { get; set; } = new Dictionary<string, string>();
+    private Dictionary<string, string> PreferredLocalizations { get; set; } = new Dictionary<string, string>();
 
-    private Dictionary<string, string> InternalLocalizations { get; set; } = new Dictionary<string, string>();
+    private Dictionary<string, string> BackupLocalizations { get; set; } = new Dictionary<string, string>();
 
     #endregion Properties
 
@@ -48,14 +48,14 @@ public class TranslatorManager : ITranslatorManager, ITranslationUpdater, INotif
 
     public string? Translate(string key)
     {
-        if (ExternalLocalizations.TryGetValue(key, out var externalTranslation))
+        if (PreferredLocalizations.TryGetValue(key, out var externalTranslation))
         {
             return externalTranslation;
         }
 
-        if (InternalLocalizations.TryGetValue(key, out var internalTranslation))
+        if (BackupLocalizations.TryGetValue(key, out var internalTranslation))
         {
-            logger.LogDebug("Key: {Key} was found in Internal Localizations", key);
+            logger.LogDebug("Key: {Key} was found in backup localizations", key);
             return internalTranslation;
         }
 
@@ -81,15 +81,17 @@ public class TranslatorManager : ITranslatorManager, ITranslationUpdater, INotif
         {
             case TranslationSource.External:
             {
-                ExternalLocalizations.Clear();
-                ExternalLocalizations = translations;
+                PreferredLocalizations.Clear();
+                PreferredLocalizations = translations;
                 break;
             }
 
-            default:
+            case TranslationSource.WarmCache:
+            case TranslationSource.Internal:
+            case TranslationSource.ColdCache:
             {
-                InternalLocalizations.Clear();
-                InternalLocalizations = translations;
+                BackupLocalizations.Clear();
+                BackupLocalizations = translations;
                 break;
             }
         }

@@ -42,6 +42,13 @@ public class LocalizationManager : ILocalizationManager
                 return false;
             }
 
+            var localTranslations = translationResolver.LoadLocalTranslations(culture);
+
+            if (localTranslations.Loaded)
+            {
+                translationUpdater.UpdateTranslations(culture, localTranslations.Translations, localTranslations.Source);
+            }
+
             CurrentCulture = culture;
 
             translationUpdater.UpdateTranslations(culture, result.Translations, result.Source);
@@ -132,8 +139,6 @@ public class LocalizationManager : ILocalizationManager
 
     private async Task CheckForTranslationUpdates(CultureInfo cultureInfo)
     {
-        await Task.Delay(5000);
-
         var external = await translationResolver.LoadTranslations(cultureInfo);
 
         if (!external.Loaded)

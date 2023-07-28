@@ -56,7 +56,7 @@ public class TranslationResolver : ITranslationResolver
 
         var externalResult = await externalLocalizationProvider.GetValuesForCultureAsync(cultureInfo);
 
-        if (!externalResult.Success)
+        if (!externalResult.Success || externalResult.Localizations is null)
         {
             logger.LogWarning("No external translations were loaded for culture: {CultureName}", cultureInfo.Name);
 
