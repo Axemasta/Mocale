@@ -30,6 +30,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cache", "Cache", "{004F32CB
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mocale.Cache.SQLite", "..\src\Mocale.Cache.SQLite\Mocale.Cache.SQLite.csproj", "{569A30B2-8E58-4F64-9582-69DCC4B2F651}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mocale.Generators", "..\src\Mocale.Generators\Mocale.Generators.csproj", "{A69AF34C-5586-4E70-97CE-E4A93F114A33}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,6 +60,10 @@ Global
 		{569A30B2-8E58-4F64-9582-69DCC4B2F651}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{569A30B2-8E58-4F64-9582-69DCC4B2F651}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{569A30B2-8E58-4F64-9582-69DCC4B2F651}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A69AF34C-5586-4E70-97CE-E4A93F114A33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A69AF34C-5586-4E70-97CE-E4A93F114A33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A69AF34C-5586-4E70-97CE-E4A93F114A33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A69AF34C-5586-4E70-97CE-E4A93F114A33}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -70,6 +76,7 @@ Global
 		{3CAEC7AE-82D2-46DC-9B52-2BC99B3A8AA8} = {0B693BD4-B0C5-4448-9784-8839869C7371}
 		{004F32CB-6F9A-411D-8A88-3CE2666F3488} = {AEF022DA-558F-432C-A6D3-1520EABBD3B3}
 		{569A30B2-8E58-4F64-9582-69DCC4B2F651} = {004F32CB-6F9A-411D-8A88-3CE2666F3488}
+		{A69AF34C-5586-4E70-97CE-E4A93F114A33} = {AEF022DA-558F-432C-A6D3-1520EABBD3B3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {61F7FB11-1E47-470C-91E2-47F8143E1572}
