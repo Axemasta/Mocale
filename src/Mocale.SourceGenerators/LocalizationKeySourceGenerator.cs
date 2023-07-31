@@ -1,6 +1,7 @@
 using System.Collections.Immutable;
 using System.Text;
 using System.Text.Json;
+using Humanizer;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 namespace Mocale.SourceGenerators;
@@ -45,7 +46,7 @@ public class LocalizationKeySourceGenerator : IIncrementalGenerator
 
         var source = GenerateSource(ns, constants);
 
-        context.AddSource("Translations.g.cs", SourceText.From(source, Encoding.UTF8));
+        context.AddSource("MocaleTranslationKeys.g.cs", SourceText.From(source, Encoding.UTF8));
     }
 
     private static string GenerateSource(string generatedNamespace, Dictionary<string, string> constantsToGenerate)
@@ -58,8 +59,7 @@ public class LocalizationKeySourceGenerator : IIncrementalGenerator
 
         foreach (var kvp in constantsToGenerate)
         {
-            // TODO: Camelize this key
-            var camelKey = kvp.Key;
+            var pascalKey = kvp.Key.Pascalize();
 
             // TODO: Handle auto accessibility translations
             // if (camelKey.EndsWith("Accessibility", StringComparison.Ordinal))
@@ -72,7 +72,7 @@ public class LocalizationKeySourceGenerator : IIncrementalGenerator
             //     continue;
             // }
 
-            var template = string.Format(constantTemplate, camelKey, kvp.Value);
+            var template = string.Format(constantTemplate, pascalKey, kvp.Value);
 
             var comment = string.Format(commentTemplate, kvp.Value);
 
