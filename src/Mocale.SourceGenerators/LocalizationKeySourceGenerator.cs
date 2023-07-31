@@ -47,9 +47,16 @@ public class LocalizationKeySourceGenerator : IIncrementalGenerator
             {
                 var translations = JsonSerializer.Deserialize<Dictionary<string, string>>(translationJson);
 
+                if (translations is null)
+                {
+                    continue;
+                }
+
                 foreach(var translation in translations)
                 {
-                    uniqueKeys.Add(translation.Key);
+                    var sanitizedKey = SanitizeKey(translation.Key);
+
+                    uniqueKeys.Add(sanitizedKey);
                 }
             }
             catch (Exception ex)
@@ -61,6 +68,27 @@ public class LocalizationKeySourceGenerator : IIncrementalGenerator
         }
 
         return uniqueKeys.ToList();
+    }
+
+    private static string SanitizeKey(string dirtyKey)
+    {
+        // https://stackoverflow.com/a/11396038
+        var removeChars = new HashSet<char>(" ?&^$#@!()+-,:;<>’\'-*.");
+        var result = new StringBuilder(dirtyKey.Length);
+
+        foreach (var c in dirtyKey)
+        {
+            if (!removeChars.Contains(c)) // prevent dirty chars
+            {
+                result.Append(c);
+            }
+            else
+            {
+                result.Append('_');
+            }
+        }
+
+        return result.ToString().Pascalize();
     }
 
     private static void GenerateCode(SourceProductionContext context, (ImmutableArray<string> Translations, string? AssemblyName) args)
