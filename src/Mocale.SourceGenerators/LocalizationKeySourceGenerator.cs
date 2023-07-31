@@ -1,9 +1,11 @@
 using System.Collections.Immutable;
 using System.Text;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using Humanizer;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
+
 namespace Mocale.SourceGenerators;
 
 [Generator]
@@ -13,10 +15,9 @@ public class LocalizationKeySourceGenerator : IIncrementalGenerator
     {
         var assemblyName = context.CompilationProvider.Select(static (c, _) => c.AssemblyName);
 
-        // TODO: Read all locale json files
         // TODO: Provide easy way to bundle as ER & Additional File
         var constants = context.AdditionalTextsProvider
-            .Where(text => text.Path.EndsWith("en-GB.json", StringComparison.OrdinalIgnoreCase))
+            .Where(FileMatches)
             .Select((text, token) => text.GetText(token)?.ToString())
             .Where(text => text is not null)!
             .Collect<string>();
@@ -26,40 +27,74 @@ public class LocalizationKeySourceGenerator : IIncrementalGenerator
         context.RegisterSourceOutput(combined, GenerateCode);
     }
 
-    private static void GenerateCode(SourceProductionContext context, (ImmutableArray<string> Constants, string? AssemblyName) args)
+    private bool FileMatches(AdditionalText text)
     {
-        if (!args.Constants.Any())
+        var fileName = Path.GetFileNameWithoutExtension(text.Path);
+        var extension = Path.GetExtension(text.Path);
+
+        var match = Regex.IsMatch(fileName, "^[A-Za-z]{2,4}([_-][A-Za-z]{4})?([_-]([A-Za-z]{2}|[0-9]{3}))?$");
+
+        return match && extension.Equals(".json", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static List<string> GetTranslationUniqueKeys(ImmutableArray<string> translationsJson)
+    {
+        var uniqueKeys = new HashSet<string>();
+
+        foreach (var translationJson in translationsJson)
+        {
+            try
+            {
+                var translations = JsonSerializer.Deserialize<Dictionary<string, string>>(translationJson);
+
+                foreach(var translation in translations)
+                {
+                    uniqueKeys.Add(translation.Key);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An exception occurred processing translation json:");
+                Console.WriteLine(translationJson);
+                Console.WriteLine(ex);
+            }
+        }
+
+        return uniqueKeys.ToList();
+    }
+
+    private static void GenerateCode(SourceProductionContext context, (ImmutableArray<string> Translations, string? AssemblyName) args)
+    {
+        if (!args.Translations.Any())
         {
             return;
         }
 
-        var constantsJson = args.Constants.First();
+        var translationKeys = GetTranslationUniqueKeys(args.Translations);
 
-        var constants = JsonSerializer.Deserialize<Dictionary<string, string>>(constantsJson);
-
-        if (constants is null)
+        if (!translationKeys.Any())
         {
             return;
         }
 
-        var ns = args.AssemblyName ?? "GeneratedConstants";
+        var ns = args.AssemblyName ?? "Mocale.Generated";
 
-        var source = GenerateSource(ns, constants);
+        var source = GenerateSource(ns, translationKeys);
 
         context.AddSource("MocaleTranslationKeys.g.cs", SourceText.From(source, Encoding.UTF8));
     }
 
-    private static string GenerateSource(string generatedNamespace, Dictionary<string, string> constantsToGenerate)
+    private static string GenerateSource(string generatedNamespace, List<string> keysToGenerate)
     {
         // Build up the source code
         var constantTemplate = "public const string {0} = \"{1}\";";
-        var commentTemplate = "/// Looks up a localized string similar to: {0}.";
+        var commentTemplate = "/// Looks up a localized string using key {0}.";
 
         var formattedProperties = new Dictionary<string, string>();
 
-        foreach (var kvp in constantsToGenerate)
+        foreach (var key in keysToGenerate)
         {
-            var pascalKey = kvp.Key.Pascalize();
+            var pascalKey = key.Pascalize();
 
             // TODO: Handle auto accessibility translations
             // if (camelKey.EndsWith("Accessibility", StringComparison.Ordinal))
@@ -72,9 +107,9 @@ public class LocalizationKeySourceGenerator : IIncrementalGenerator
             //     continue;
             // }
 
-            var template = string.Format(constantTemplate, pascalKey, kvp.Value);
+            var template = string.Format(constantTemplate, pascalKey, key);
 
-            var comment = string.Format(commentTemplate, kvp.Value);
+            var comment = string.Format(commentTemplate, key);
 
             formattedProperties.Add(template, comment);
         }
