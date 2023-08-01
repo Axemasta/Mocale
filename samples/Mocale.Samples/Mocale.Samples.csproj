@@ -66,6 +66,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Mocale.Cache.SQLite\Mocale.Cache.SQLite.csproj" />
+    <ProjectReference Include="..\..\src\Mocale.SourceGenerators\Mocale.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\..\src\Mocale.Providers.Aws.S3\Mocale.Providers.AWS.S3.csproj" />
     <ProjectReference Include="..\..\src\Mocale.Providers.Azure.Blob\Mocale.Providers.Azure.Blob.csproj" />
     <ProjectReference Include="..\..\src\Mocale\Mocale.csproj" />
@@ -97,16 +98,10 @@
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\Images\dotnet_bot.svg" />
-    <BundleResource Include="Resources\Locales\en-GB.json" />
-    <BundleResource Include="Resources\Locales\fr-FR.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="Resources\Locales\" />
-    <None Remove="Resources\Locales\en-GB.json" />
-    <None Remove="Resources\Locales\fr-FR.json" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\Locales\" />
     <EmbeddedResource Include="Resources\Locales\*.json" />
+    <AdditionalFiles Include="Resources\Locales\*.json" />
   </ItemGroup>
 </Project>

@@ -24,7 +24,10 @@ public static class MauiProgram
                     //{
                     //    config.AppResourcesType = typeof(AppResources);
                     //})
-                    .UseSqliteCache()
+                    .UseSqliteCache(config =>
+                    {
+                        config.UpdateInterval = TimeSpan.FromDays(7);
+                    })
                     .UseEmbeddedResources(config =>
                     {
                         config.ResourcesPath = "Locales";

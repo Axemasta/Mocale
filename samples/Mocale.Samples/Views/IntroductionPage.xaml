@@ -1,12 +1,13 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 
 <ContentPage
-    Title="{mocale:Localize MocaleTitle}"
+    Title="{mocale:Localize Key={x:Static keys:TranslationKeys.MocaleTitle}}"
     x:Class="Mocale.Samples.Views.IntroductionPage"
     x:DataType="vm:IntroductionPageViewModel"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:converters="clr-namespace:Mocale.Samples.Converter"
     xmlns:mocale="http://axemasta.com/schemas/2022/mocale"
+    xmlns:keys="clr-namespace:Mocale.Translations"
     xmlns:vm="clr-namespace:Mocale.Samples.ViewModels"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
@@ -19,20 +20,20 @@
         HorizontalOptions="Center"
         Spacing="10"
         VerticalOptions="Center">
-        <Label Text="{mocale:Localize Key=CurrentLocaleName, Converter={StaticResource LanguageEmojiConverter}}" />
+        <Label Text="{mocale:Localize Key={x:Static keys:TranslationKeys.CurrentLocaleName}, Converter={StaticResource LanguageEmojiConverter}}" />
 
         <Label>
             <Label.FormattedText>
                 <FormattedString>
-                    <Span Text="{mocale:Localize LocalizationCurrentProviderIs}" />
+                    <Span Text="{mocale:Localize Key={x:Static keys:TranslationKeys.LocalizationCurrentProviderIs}}" />
                     <Span Text=" " />
-                    <Span Text="{mocale:Localize LocalizationProviderName}" />
+                    <Span Text="{mocale:Localize Key={x:Static keys:TranslationKeys.LocalizationProviderName}}" />
                 </FormattedString>
 
             </Label.FormattedText>
         </Label>
 
-        <Label Text="{mocale:Localize MocaleDescription}" />
+        <Label Text="{mocale:Localize Key={x:Static keys:TranslationKeys.MocaleDescription}}" />
 
         <Picker ItemsSource="{Binding Locales}" SelectedItem="{Binding SelectedLocale}" />
 

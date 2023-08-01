@@ -1,0 +1,10 @@
+{
+  "CurrentLocaleName": "English",
+  "LocalizationCurrentProviderIs": "The current localization provider is:",
+  "LocalizationProviderName": "Json",
+  "MocaleDescription": "Localization framework for .NET Maui",
+  "MocaleTitle": "Mocale",
+  "nonCamelTitle": "ThisIsCamel",
+  "Hello World": "Hello World",
+  "Acme.Com": "www.acme.com"
+}

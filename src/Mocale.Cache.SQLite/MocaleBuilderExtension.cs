@@ -7,14 +7,14 @@ namespace Mocale.Cache.SQLite;
 
 public static class MocaleBuilderExtension
 {
-    public static MocaleBuilder UseSqliteCache(this MocaleBuilder builder)
+    public static MocaleBuilder UseSqliteCache(this MocaleBuilder builder, Action<SqliteConfig> configureSql)
     {
-        // TODO: Does this even need config?
-
         var config = new SqliteConfig
         {
             DatabaseDirectory = FileSystem.AppDataDirectory,
         };
+
+        configureSql(config);
 
         var configurationManager = new ConfigurationManager<ISqliteConfig>(config);
 
