@@ -5,7 +5,7 @@ Localization framework for .NET Maui
 
 ## Installation
 
-TODO: Build nuget
+TODO: I will be building a Github Actions pipeline to create the packages
 
 
 
@@ -226,11 +226,93 @@ Once registered using the host builder, the library will automatically initialis
 
 ### Xaml
 
-TODO
+Reference mocale as an xml namespace:
+
+```xml
+xmlns:mocale="http://axemasta.com/schemas/2022/mocale"
+```
+
+Use the provided markup extension:
+
+```xml
+<Label Text="{mocale:Localize MocaleDescription}" />
+```
+
+Provide an `IValueConverter`:
+
+```xml
+<Label Text="{mocale:Localize Key=CurrentLocaleName, Converter={StaticResource LanguageEmojiConverter}}" />
+```
+
+
+
+Use the source generated key definitions ([see below for more details](# Source Generators)):
+
+```xml
+xmlns:keys="Acme.MauiApp"
+```
+
+```xml
+<Label Text="{mocale:Localize {x:Static keys:TranslationKeys.MocaleDescription}}"/>
+```
+
+
 
 ### Codebehind / ViewModel
 
-TODO
+#### Translations
+
+> I will be updating this to provide a more testable way to retrieve translations in the viewmodel layer
+
+In your class add `ITranslatorManager`:
+
+```csharp
+private readonly ITranslatorManager translatorManager;
+
+public MyViewModel(ITranslatorManager translatorManager)
+{
+	this.translatorManager = translatorManager;
+}
+```
+
+Use the methods provided to translate:
+
+```csharp
+private void DoSomething()
+{
+	var appTitle = translatorManager.Translate("AppTitle");
+}
+```
+
+
+
+#### Change Culture
+
+In your class add `ILocalizationManager`:
+
+```csharp
+private readonly ILocalizationManager localizationManager;
+
+public MyViewModel(ILocalizationManager localizationManager)
+{
+	this.localizationManager = localizationManager;
+}
+```
+
+Call `SetCultureAsync` to attempt to change culture:
+
+```csharp
+private async Task ChangeCultureToFrench()
+{
+	var french = new CultureInfo("fr-FR");
+	
+	var changed = await localizationManager.SetCultureAsync(french);
+	
+	Console.WriteLine($"Changed to french: {changed}");
+}
+```
+
+
 
 ## Source Generators
 
@@ -287,7 +369,7 @@ You can use these classes in Xaml or C# to perform translations:
 Xaml:
 
 ```xml
-<Label Text="{mocale:Translation {x:Static keys:TranslationKeys.LabelTitle}}"/>
+<Label Text="{mocale:Localize {x:Static keys:TranslationKeys.LabelTitle}}"/>
 ```
 
 C#:
