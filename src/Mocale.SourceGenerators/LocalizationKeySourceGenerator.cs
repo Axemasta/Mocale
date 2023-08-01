@@ -37,9 +37,10 @@ public class LocalizationKeySourceGenerator : IIncrementalGenerator
         return match && extension.Equals(".json", StringComparison.OrdinalIgnoreCase);
     }
 
-    private static List<string> GetTranslationUniqueKeys(ImmutableArray<string> translationsJson)
+    private static Dictionary<string, string> GetTranslationUniqueKeys(ImmutableArray<string> translationsJson)
     {
-        var uniqueKeys = new HashSet<string>();
+        // TODO: we need sanitized keys to to preserve the json key value...
+        var uniqueKeys = new Dictionary<string, string>();
 
         foreach (var translationJson in translationsJson)
         {
@@ -56,7 +57,10 @@ public class LocalizationKeySourceGenerator : IIncrementalGenerator
                 {
                     var sanitizedKey = SanitizeKey(translation.Key);
 
-                    uniqueKeys.Add(sanitizedKey);
+                    if (!uniqueKeys.ContainsKey(sanitizedKey))
+                    {
+                        uniqueKeys.Add(sanitizedKey, translation.Key);
+                    }
                 }
             }
             catch (Exception ex)
@@ -67,7 +71,7 @@ public class LocalizationKeySourceGenerator : IIncrementalGenerator
             }
         }
 
-        return uniqueKeys.ToList();
+        return uniqueKeys;
     }
 
     private static string SanitizeKey(string dirtyKey)
@@ -81,10 +85,6 @@ public class LocalizationKeySourceGenerator : IIncrementalGenerator
             if (!removeChars.Contains(c)) // prevent dirty chars
             {
                 result.Append(c);
-            }
-            else
-            {
-                result.Append('_');
             }
         }
 
@@ -112,7 +112,7 @@ public class LocalizationKeySourceGenerator : IIncrementalGenerator
         context.AddSource("MocaleTranslationKeys.g.cs", SourceText.From(source, Encoding.UTF8));
     }
 
-    private static string GenerateSource(string generatedNamespace, List<string> keysToGenerate)
+    private static string GenerateSource(string generatedNamespace, Dictionary<string, string> keysToGenerate)
     {
         // Build up the source code
         var constantTemplate = "public const string {0} = \"{1}\";";
@@ -122,8 +122,6 @@ public class LocalizationKeySourceGenerator : IIncrementalGenerator
 
         foreach (var key in keysToGenerate)
         {
-            var pascalKey = key.Pascalize();
-
             // TODO: Handle auto accessibility translations
             // if (camelKey.EndsWith("Accessibility", StringComparison.Ordinal))
             // {
@@ -135,9 +133,9 @@ public class LocalizationKeySourceGenerator : IIncrementalGenerator
             //     continue;
             // }
 
-            var template = string.Format(constantTemplate, pascalKey, key);
+            var template = string.Format(constantTemplate, key.Key, key.Value);
 
-            var comment = string.Format(commentTemplate, key);
+            var comment = string.Format(commentTemplate, key.Value);
 
             formattedProperties.Add(template, comment);
         }
@@ -175,7 +173,6 @@ public static class TranslationKeys
             i++;
         }
 
-        sb.AppendLine();
         sb.AppendLine("}");
 
         return sb.ToString();
