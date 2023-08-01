@@ -13,8 +13,6 @@ public class LocalizationKeySourceGenerator : IIncrementalGenerator
 {
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        var assemblyName = context.CompilationProvider.Select(static (c, _) => c.AssemblyName);
-
         // TODO: Provide easy way to bundle as ER & Additional File
         var constants = context.AdditionalTextsProvider
             .Where(FileMatches)
@@ -22,9 +20,7 @@ public class LocalizationKeySourceGenerator : IIncrementalGenerator
             .Where(text => text is not null)!
             .Collect<string>();
 
-        var combined = constants.Combine(assemblyName);
-
-        context.RegisterSourceOutput(combined, GenerateCode);
+        context.RegisterSourceOutput(constants, GenerateCode);
     }
 
     private bool FileMatches(AdditionalText text)
@@ -91,15 +87,13 @@ public class LocalizationKeySourceGenerator : IIncrementalGenerator
         return result.ToString().Pascalize();
     }
 
-    private static void GenerateCode(SourceProductionContext context, (ImmutableArray<string> Translations, string? AssemblyName) args)
+    private static void GenerateCode(SourceProductionContext context, ImmutableArray<string> translations)
     {
-        var translationKeys = GetTranslationUniqueKeys(args.Translations.ToList());
+        var translationKeys = GetTranslationUniqueKeys(translations.ToList());
 
-        var ns = args.AssemblyName ?? "Mocale";
+        const string translationNamespace = "Mocale.Translations";
 
-        ns += ".Translations";
-
-        var source = GenerateSource(ns, translationKeys);
+        var source = GenerateSource(translationNamespace, translationKeys);
 
         context.AddSource("MocaleTranslationKeys.g.cs", SourceText.From(source, Encoding.UTF8));
     }

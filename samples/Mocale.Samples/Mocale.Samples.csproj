@@ -98,16 +98,10 @@
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\Images\dotnet_bot.svg" />
-    <BundleResource Include="Resources\Locales\en-GB.json" />
-    <BundleResource Include="Resources\Locales\fr-FR.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="Resources\Locales\" />
-    <None Remove="Resources\Locales\en-GB.json" />
-    <None Remove="Resources\Locales\fr-FR.json" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\Locales\" />
     <EmbeddedResource Include="Resources\Locales\*.json" />
+    <AdditionalFiles Include="Resources\Locales\*.json" />
   </ItemGroup>
 </Project>
