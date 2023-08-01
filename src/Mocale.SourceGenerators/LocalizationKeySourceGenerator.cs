@@ -37,7 +37,7 @@ public class LocalizationKeySourceGenerator : IIncrementalGenerator
         return match && extension.Equals(".json", StringComparison.OrdinalIgnoreCase);
     }
 
-    private static Dictionary<string, string> GetTranslationUniqueKeys(ImmutableArray<string> translationsJson)
+    private static Dictionary<string, string> GetTranslationUniqueKeys(List<string> translationsJson)
     {
         // TODO: we need sanitized keys to to preserve the json key value...
         var uniqueKeys = new Dictionary<string, string>();
@@ -93,19 +93,11 @@ public class LocalizationKeySourceGenerator : IIncrementalGenerator
 
     private static void GenerateCode(SourceProductionContext context, (ImmutableArray<string> Translations, string? AssemblyName) args)
     {
-        if (!args.Translations.Any())
-        {
-            return;
-        }
+        var translationKeys = GetTranslationUniqueKeys(args.Translations.ToList());
 
-        var translationKeys = GetTranslationUniqueKeys(args.Translations);
+        var ns = args.AssemblyName ?? "Mocale";
 
-        if (!translationKeys.Any())
-        {
-            return;
-        }
-
-        var ns = args.AssemblyName ?? "Mocale.Generated";
+        ns += ".Translations";
 
         var source = GenerateSource(ns, translationKeys);
 
