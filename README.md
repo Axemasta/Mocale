@@ -64,7 +64,15 @@ Internal providers provide the solid foundation for your localizations. These us
 
 #### Embedded Resource Provider
 
-This will use Json to load localizations that have been registered as an `EmbeddedResource`.
+This will use Json to load localizations that have been registered as an `EmbeddedResource`:
+
+```xml
+<ItemGroup>
+  <EmbeddedResource Include="Resources\Locales\*.json" />
+</ItemGroup>
+```
+
+
 
 ```
 var builder = MauiApp.CreateBuilder();
@@ -230,30 +238,23 @@ Reference mocale as an xml namespace:
 
 ```xml
 xmlns:mocale="http://axemasta.com/schemas/2022/mocale"
+xmlns:keys="clr-namespace:Mocale.Translations"
 ```
+
+> Note keys will be generated in the namespace `Mocale.Translations`, but they will be included within your apps assembly, therefore an assembly reference is not required.
 
 Use the provided markup extension:
 
 ```xml
 <Label Text="{mocale:Localize MocaleDescription}" />
+<Label Text="{mocale:Localize Key={x:Static keys:TranslationKeys.MocaleDescription}}" />
 ```
 
 Provide an `IValueConverter`:
 
 ```xml
 <Label Text="{mocale:Localize Key=CurrentLocaleName, Converter={StaticResource LanguageEmojiConverter}}" />
-```
-
-
-
-Use the source generated key definitions ([see below for more details](# Source Generators)):
-
-```xml
-xmlns:keys="Acme.MauiApp"
-```
-
-```xml
-<Label Text="{mocale:Localize {x:Static keys:TranslationKeys.MocaleDescription}}"/>
+<Label Text="{mocale:Localize Key={x:Static keys:TranslationKeys.CurrentLocaleName}, Converter={StaticResource LanguageEmojiConverter}}" />
 ```
 
 
@@ -327,11 +328,10 @@ To get this source generator to work:
 - Reference all your Locale Json files as `C# Analyzer Additional Files`:
   ```xml
   <ItemGroup>
-    <AdditionalFiles Include="Locales\en-GB.json" />
-    <AdditionalFiles Include="Locales\fr-FR.json" />
+    <AdditionalFiles Include="Resources\Locales\*.json" />
   </ItemGroup>
   ```
-
+  
 - Build solution (to run the generator)
 
 - A new class named `TranslationKeys` will be generated under the namespace of the assembly referencing the generator.
@@ -369,7 +369,7 @@ You can use these classes in Xaml or C# to perform translations:
 Xaml:
 
 ```xml
-<Label Text="{mocale:Localize {x:Static keys:TranslationKeys.LabelTitle}}"/>
+<Label Text="{mocale:Localize Key={x:Static keys:TranslationKeys.LabelTitle}}"/>
 ```
 
 C#:
@@ -389,3 +389,4 @@ These are features not yet currently in Mocale which I intend to add in the near
 - Support for different types of locale file (aka `resx`, `json`), currently json is assumed
 - Support for multiple external providers
 - Add a more MVVM friendly mechanism to resolve translations (such as a `ITranslationProvider` where you request a number of keys & get localizations back)
+- Resolve translation keys within the mocale `XmlnsDefinition`, I did try this but couldn't get it working.
