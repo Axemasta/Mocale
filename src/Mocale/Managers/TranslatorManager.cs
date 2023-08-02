@@ -66,32 +66,37 @@ public class TranslatorManager : ITranslatorManager, ITranslationUpdater, INotif
             return string.Empty;
         }
 
-        return mocaleConfiguration.NotFoundSymbol + key + mocaleConfiguration.NotFoundSymbol;
+        return mocaleConfiguration.NotFoundSymbol + key + StringExtension.Reverse(mocaleConfiguration.NotFoundSymbol);
     }
 
     #endregion - ITranslatorManager
 
     #region - ITranslationUpdater
 
-    public void UpdateTranslations(CultureInfo cultureInfo, Dictionary<string, string> translations, TranslationSource source)
+    public void UpdateTranslations(Localization localization, TranslationSource source)
     {
-        CurrentCulture = cultureInfo;
+        if (!Equals(CurrentCulture, localization.CultureInfo))
+        {
+            CurrentCulture = localization.CultureInfo;
+            PreferredLocalizations.Clear();
+            BackupLocalizations.Clear();
+        }
+
+        CurrentCulture = localization.CultureInfo;
 
         switch (source)
         {
             case TranslationSource.External:
+            case TranslationSource.WarmCache:
+            case TranslationSource.ColdCache:
             {
-                PreferredLocalizations.Clear();
-                PreferredLocalizations = translations;
+                PreferredLocalizations.AddOrUpdateValues(localization.Translations);
                 break;
             }
 
-            case TranslationSource.WarmCache:
             case TranslationSource.Internal:
-            case TranslationSource.ColdCache:
             {
-                BackupLocalizations.Clear();
-                BackupLocalizations = translations;
+                BackupLocalizations.AddOrUpdateValues(localization.Translations);
                 break;
             }
         }

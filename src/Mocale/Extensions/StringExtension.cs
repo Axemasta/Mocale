@@ -22,4 +22,12 @@ internal static class StringExtension
             return false;
         }
     }
+
+    internal static string Reverse(string s)
+    {
+        // https://stackoverflow.com/a/228060/8828057
+        var charArray = s.ToCharArray();
+        Array.Reverse(charArray);
+        return new string(charArray);
+    }
 }
