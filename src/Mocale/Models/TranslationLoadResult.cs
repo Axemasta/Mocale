@@ -6,5 +6,5 @@ public class TranslationLoadResult
 
     public TranslationSource Source { get; set; }
 
-    public Dictionary<string, string> Translations { get; set; } = new Dictionary<string, string>();
+    public Localization Localization { get; set; }
 }

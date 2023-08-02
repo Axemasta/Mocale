@@ -47,7 +47,11 @@ public class TranslationResolver : ITranslationResolver
                 {
                     Loaded = true,
                     Source = TranslationSource.WarmCache,
-                    Translations = cacheTranslations,
+                    Localization = new Localization()
+                    {
+                        CultureInfo = cultureInfo,
+                        Translations = cacheTranslations,
+                    },
                 };
             }
         }
@@ -78,7 +82,11 @@ public class TranslationResolver : ITranslationResolver
         {
             Loaded = true,
             Source = TranslationSource.External,
-            Translations = externalResult.Localizations,
+            Localization = new Localization()
+            {
+                CultureInfo = cultureInfo,
+                Translations = externalResult.Localizations,
+            },
         };
     }
 
@@ -117,7 +125,11 @@ public class TranslationResolver : ITranslationResolver
             {
                 Loaded = true,
                 Source = TranslationSource.Internal,
-                Translations = internalTranslations,
+                Localization = new Localization()
+                {
+                    CultureInfo = cultureInfo,
+                    Translations = internalTranslations,
+                },
             };
         }
 
@@ -156,7 +168,11 @@ public class TranslationResolver : ITranslationResolver
         {
             Loaded = true,
             Source = cacheTemperature,
-            Translations = cachedTranslations,
+            Localization = new Localization()
+            {
+                CultureInfo = cultureInfo,
+                Translations = cachedTranslations,
+            },
         };
     }
 
