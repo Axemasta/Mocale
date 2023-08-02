@@ -66,7 +66,7 @@ public class TranslatorManager : ITranslatorManager, ITranslationUpdater, INotif
             return string.Empty;
         }
 
-        return mocaleConfiguration.NotFoundSymbol + key + mocaleConfiguration.NotFoundSymbol;
+        return mocaleConfiguration.NotFoundSymbol + key + StringExtension.Reverse(mocaleConfiguration.NotFoundSymbol);
     }
 
     #endregion - ITranslatorManager
