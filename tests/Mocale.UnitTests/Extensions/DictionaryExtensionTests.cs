@@ -14,7 +14,6 @@ public class DictionaryExtensionTests
             { "Key Two", "Value Two" },
         };
 
-
         // Act
         current.AddOrUpdateValues(updated);
 
