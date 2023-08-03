@@ -12,7 +12,7 @@ on:
 jobs:
   build:
 
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v3
@@ -28,3 +28,5 @@ jobs:
       run: dotnet test --no-build --verbosity normal --collect:"XPlat Code Coverage"
     - name: Code Coverage Summary
       uses: irongut/CodeCoverageSummary@v1.3.0
+      with:
+        filename: coverage.cobertura.xml
