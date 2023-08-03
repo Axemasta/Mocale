@@ -5,7 +5,7 @@ name: .NET
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "actions" ]
   pull_request:
     branches: [ "main" ]
 
@@ -25,4 +25,6 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test --no-build --verbosity normal --collect:"XPlat Code Coverage"
+    - name: Code Coverage Summary
+      uses: irongut/CodeCoverageSummary@v1.3.0
