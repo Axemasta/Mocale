@@ -30,4 +30,5 @@ jobs:
       uses: 5monkeys/cobertura-action@v13
       with:
         path: coverage.cobertura.xml
+        minimum_coverage: 5
 
