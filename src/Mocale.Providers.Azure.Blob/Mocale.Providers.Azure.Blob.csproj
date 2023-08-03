@@ -8,6 +8,22 @@
     <UseMaui>true</UseMaui>
     <SingleProject>true</SingleProject>
 
+    <AssemblyName>Mocale.Providers.Azure.Blob</AssemblyName>
+    <RootNamespace>Mocale.Providers.Azure.Blob</RootNamespace>
+    <PackageId>Mocale.Providers.Azure.Blob</PackageId>
+    <Summary>Azure Blob Storage Provider For Mocale</Summary>
+    <PackageTag>maui,mocale,localization,localisation,translation,azure,blob,storage,provider,mocaleprovider</PackageTag>
+    <Title>Mocale.Providers.Azure.Blob</Title>
+    <Description>Azure blob storage external provider for Mocale. This package provides the ability to query azure blob storage for localization files to be used in your maui application.</Description>
+    <Authors>Axemasta</Authors>
+    <Owners>Axemasta</Owners>
+    <NeutralLanguage>en</NeutralLanguage>
+    <RepositoryUrl>https://github.com/Axemasta/Mocale</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageProjectUrl>https://github.com/Axemasta/Mocale</PackageProjectUrl>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">14.2</SupportedOSPlatformVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">14.0</SupportedOSPlatformVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
@@ -21,12 +37,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Mocale\Mocale.csproj" />
+    <ProjectReference Include="..\Mocale\Mocale.csproj"/>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Azure.Core" Version="1.34.0" />
-    <PackageReference Include="Azure.Storage.Blobs" Version="12.17.0" />
+    <PackageReference Include="Azure.Core" Version="1.34.0"/>
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.17.0"/>
   </ItemGroup>
 
 </Project>
