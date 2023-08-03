@@ -4,8 +4,6 @@
 name: Mocale CI
 
 on:
-  push:
-    branches: [ "actions" ]
   pull_request:
     branches: [ "main" ]
 
@@ -26,11 +24,15 @@ jobs:
       run: dotnet build --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal --collect:"XPlat Code Coverage"
-    - name: Publish Code Coverage
+    - name: Publish Code Coverage To PR
       uses: 5monkeys/cobertura-action@v13
       with:
-        path: tests/*/coverage.cobertura.xml
+        path: tests/Mocale.UnitTests/TestResults/*/coverage.cobertura.xml
         minimum_coverage: 5
         show_line: true
         show_branch: true
         show_missing: true
+    - uses: actions/upload-artifact@v3
+      with:
+        name: coverage-report
+        path: tests/Mocale.UnitTests/TestResults/*/coverage.cobertura.xml
