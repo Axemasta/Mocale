@@ -5,6 +5,30 @@ VisualStudioVersion = 17.4.33103.184
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mocale", "src\Mocale\Mocale.csproj", "{47B03DBF-E0C7-432E-8F30-7A3637C4FFD2}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DF99028D-7FA5-48DD-BB21-8C122750596E}"
+	ProjectSection(SolutionItems) = preProject
+		src\directory.build.props = src\directory.build.props
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Providers", "Providers", "{D3CFAD31-519D-41F6-80AA-38E209378B59}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cache", "Cache", "{40F3C130-0713-4EE4-BA11-93AAD3EF6DFA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{2265BFF6-B4BE-401C-BBBD-8C3CBDE63645}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mocale.UnitTests", "tests\Mocale.UnitTests\Mocale.UnitTests.csproj", "{F40DDD6B-5621-4E0E-A4EB-EB7D37C31A00}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mocale.Providers.Azure.Blob", "src\Mocale.Providers.Azure.Blob\Mocale.Providers.Azure.Blob.csproj", "{F93DC9AA-7C46-423D-9DA0-C0F82C2FEAA6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mocale.Providers.AWS.S3", "src\Mocale.Providers.AWS.S3\Mocale.Providers.AWS.S3.csproj", "{857B40AB-FFA9-4AF3-A27A-3F1CC66130E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mocale.Cache.SQLite", "src\Mocale.Cache.SQLite\Mocale.Cache.SQLite.csproj", "{39A66F28-2521-4838-825F-7601632CD0B1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Generators", "Generators", "{98375271-AB1B-4201-817F-350BBF4F9E9F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mocale.SourceGenerators", "src\Mocale.SourceGenerators\Mocale.SourceGenerators.csproj", "{3CC5AC06-A29D-4C08-B73F-6A9EC9158125}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,11 +39,38 @@ Global
 		{47B03DBF-E0C7-432E-8F30-7A3637C4FFD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{47B03DBF-E0C7-432E-8F30-7A3637C4FFD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{47B03DBF-E0C7-432E-8F30-7A3637C4FFD2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F40DDD6B-5621-4E0E-A4EB-EB7D37C31A00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F40DDD6B-5621-4E0E-A4EB-EB7D37C31A00}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F40DDD6B-5621-4E0E-A4EB-EB7D37C31A00}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F40DDD6B-5621-4E0E-A4EB-EB7D37C31A00}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F93DC9AA-7C46-423D-9DA0-C0F82C2FEAA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F93DC9AA-7C46-423D-9DA0-C0F82C2FEAA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F93DC9AA-7C46-423D-9DA0-C0F82C2FEAA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F93DC9AA-7C46-423D-9DA0-C0F82C2FEAA6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{857B40AB-FFA9-4AF3-A27A-3F1CC66130E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{857B40AB-FFA9-4AF3-A27A-3F1CC66130E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{857B40AB-FFA9-4AF3-A27A-3F1CC66130E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{857B40AB-FFA9-4AF3-A27A-3F1CC66130E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39A66F28-2521-4838-825F-7601632CD0B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39A66F28-2521-4838-825F-7601632CD0B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39A66F28-2521-4838-825F-7601632CD0B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39A66F28-2521-4838-825F-7601632CD0B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3CC5AC06-A29D-4C08-B73F-6A9EC9158125}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CC5AC06-A29D-4C08-B73F-6A9EC9158125}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CC5AC06-A29D-4C08-B73F-6A9EC9158125}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3CC5AC06-A29D-4C08-B73F-6A9EC9158125}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FC5F4A1E-D3E2-4CF1-8B5F-AC382FA68DF3}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F40DDD6B-5621-4E0E-A4EB-EB7D37C31A00} = {2265BFF6-B4BE-401C-BBBD-8C3CBDE63645}
+		{F93DC9AA-7C46-423D-9DA0-C0F82C2FEAA6} = {D3CFAD31-519D-41F6-80AA-38E209378B59}
+		{857B40AB-FFA9-4AF3-A27A-3F1CC66130E8} = {D3CFAD31-519D-41F6-80AA-38E209378B59}
+		{39A66F28-2521-4838-825F-7601632CD0B1} = {40F3C130-0713-4EE4-BA11-93AAD3EF6DFA}
+		{3CC5AC06-A29D-4C08-B73F-6A9EC9158125} = {98375271-AB1B-4201-817F-350BBF4F9E9F}
 	EndGlobalSection
 EndGlobal
