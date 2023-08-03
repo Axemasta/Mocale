@@ -8,6 +8,22 @@
     <UseMaui>true</UseMaui>
     <SingleProject>true</SingleProject>
 
+    <AssemblyName>Mocale</AssemblyName>
+    <RootNamespace>Mocale</RootNamespace>
+    <PackageId>Mocale</PackageId>
+    <Summary>Localization framework for .NET Maui</Summary>
+    <PackageTag>maui,mocale,localization,localisation,translation</PackageTag>
+    <Title>Mocale</Title>
+    <Description>Localization framework for .NET Maui with support for over the air localization updates from external data sources.</Description>
+    <Authors>Axemasta</Authors>
+    <Owners>Axemasta</Owners>
+    <NeutralLanguage>en</NeutralLanguage>
+    <RepositoryUrl>https://github.com/Axemasta/Mocale</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageProjectUrl>https://github.com/Axemasta/Mocale</PackageProjectUrl>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">14.2</SupportedOSPlatformVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">14.0</SupportedOSPlatformVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
@@ -17,16 +33,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <InternalsVisibleTo Include="$(AssemblyName).Json" />
-    <InternalsVisibleTo Include="$(AssemblyName).Resx" />
-    <InternalsVisibleTo Include="$(AssemblyName).Providers.AWS.S3" />
-    <InternalsVisibleTo Include="$(AssemblyName).Providers.Azure.Blob" />
-    <InternalsVisibleTo Include="$(AssemblyName).Cache.SQLite" />
-    <InternalsVisibleTo Include="$(AssemblyName).UnitTests" />
+    <InternalsVisibleTo Include="$(AssemblyName).Json"/>
+    <InternalsVisibleTo Include="$(AssemblyName).Resx"/>
+    <InternalsVisibleTo Include="$(AssemblyName).Providers.AWS.S3"/>
+    <InternalsVisibleTo Include="$(AssemblyName).Providers.Azure.Blob"/>
+    <InternalsVisibleTo Include="$(AssemblyName).Cache.SQLite"/>
+    <InternalsVisibleTo Include="$(AssemblyName).UnitTests"/>
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Microsoft.Extensions.Logging.Abstractions" />
+    <None Remove="Microsoft.Extensions.Logging.Abstractions"/>
   </ItemGroup>
 
 </Project>

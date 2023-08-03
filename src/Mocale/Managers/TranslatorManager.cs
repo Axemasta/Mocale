@@ -82,8 +82,6 @@ public class TranslatorManager : ITranslatorManager, ITranslationUpdater, INotif
             BackupLocalizations.Clear();
         }
 
-        CurrentCulture = localization.CultureInfo;
-
         switch (source)
         {
             case TranslationSource.External:
@@ -99,6 +97,9 @@ public class TranslatorManager : ITranslatorManager, ITranslationUpdater, INotif
                 BackupLocalizations.AddOrUpdateValues(localization.Translations);
                 break;
             }
+
+            default:
+                break;
         }
 
         RaisePropertyChanged();

@@ -6,5 +6,5 @@ public class TranslationLoadResult
 
     public TranslationSource Source { get; set; }
 
-    public Localization Localization { get; set; }
+    public required Localization Localization { get; set; }
 }
