@@ -7,7 +7,8 @@ public class Localization
 
     public Dictionary<string, string> Translations { get; set; } = new Dictionary<string, string>();
 
-    public static Localization Invariant => new Localization()
+    // This is to get around nullable
+    public static Localization Invariant => new()
     {
         CultureInfo = new CultureInfo(""),
     };

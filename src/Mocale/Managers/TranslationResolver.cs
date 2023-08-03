@@ -68,6 +68,7 @@ public class TranslationResolver : ITranslationResolver
             {
                 Loaded = false,
                 Source = TranslationSource.External,
+                Localization = Localization.Invariant,
             };
         }
 
@@ -109,6 +110,7 @@ public class TranslationResolver : ITranslationResolver
             {
                 Loaded = false,
                 Source = TranslationSource.External,
+                Localization = Localization.Invariant,
             };
         }
     }
@@ -139,6 +141,7 @@ public class TranslationResolver : ITranslationResolver
             {
                 Loaded = false,
                 Source = TranslationSource.Internal,
+                Localization = Localization.Invariant,
             };
         }
 
