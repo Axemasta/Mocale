@@ -23,6 +23,7 @@ jobs:
       run: dotnet build --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal --collect:"XPlat Code Coverage"
+      if: github.event_name == 'pull_request'
     - name: Publish Code Coverage To PR
       uses: 5monkeys/cobertura-action@v13
       with:
@@ -31,3 +32,9 @@ jobs:
         show_line: true
         show_branch: true
         show_missing: true
+      if: github.event_name == 'pull_request'
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        path: src/**/*.nupkg
+      if: github.event_name != 'pull_request'
