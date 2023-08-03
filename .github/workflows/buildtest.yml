@@ -31,4 +31,6 @@ jobs:
       with:
         path: tests/*/coverage.cobertura.xml
         minimum_coverage: 5
-
+        show_line: true
+        show_branch: true
+        show_missing: true
