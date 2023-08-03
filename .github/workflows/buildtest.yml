@@ -32,7 +32,3 @@ jobs:
         show_line: true
         show_branch: true
         show_missing: true
-    - uses: actions/upload-artifact@v3
-      with:
-        name: coverage-report
-        path: tests/Mocale.UnitTests/TestResults/*/coverage.cobertura.xml
