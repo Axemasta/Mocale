@@ -88,15 +88,15 @@ jobs:
         custom_tag: ${{ env.VERSION_NAME }}
         github_token: ${{ secrets.GITHUB_TOKEN }}
 
-    # - uses: ncipollo/release-action@main
-    #   name: Create Release
-    #   with:
-    #     artifacts: ${{ inputs.artifacts }}
-    #     artifactErrorsFailBuild: ${{ inputs.artifactErrorsFailBuild }}
-    #     draft: true
-    #     generateReleaseNotes: false
-    #     name: ${{ inputs.release-title }}
-    #     tag: ${{ env.VERSION_NAME }}
-    #     prerelease: ${{ env.IS_PRERELEASE }}
+    - uses: ncipollo/release-action@main
+      name: Create Release
+      with:
+        artifacts: ${{ inputs.artifacts }}
+        artifactErrorsFailBuild: ${{ inputs.artifactErrorsFailBuild }}
+        draft: true
+        generateReleaseNotes: false
+        name: ${{ inputs.release-title }}
+        tag: ${{ env.VERSION_NAME }}
+        prerelease: ${{ env.IS_PRERELEASE }}
 
     # Deploy To NuGet
