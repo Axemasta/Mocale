@@ -35,6 +35,7 @@ jobs:
       with:
         name: ${{ inputs.artifact-name }}
         path: Artifacts/
+        workflow: mocale-ci.yml
 
     - name: Process NuGet Version
       shell: pwsh
