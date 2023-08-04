@@ -29,7 +29,9 @@ on:
 jobs:
   github-release:
     runs-on: ubuntu-latest
-
+    env:
+      IS_PRERELEASE: true
+      VERSION_NAME: 0.0.1
     steps:
     - uses: actions/checkout@v3
 
@@ -75,15 +77,22 @@ jobs:
             echo "IS_PRERELEASE=true" >> "$GITHUB_ENV"
         } else {
           echo "IS_PRERELEASE=false" >> "$GITHUB_ENV"
-
         }
 
         echo "VERSION_NAME=$ArtifactName" >> "$GITHUB_ENV"
+
+        Write-Host "ArtifactName = $ArtifactName"
+        Write-Host "Is PreRelease = $IsPreRelease"
 
         Write-Host "Env Variables After:"
         echo $Env:IS_PRERELEASE
         echo $Env:VERSION_NAME
 
+    - name: Use the value
+      id: step_two
+      run: |
+
+        echo "${{ env.VERSION_NAME }}" # This will output 'yellow'
     # - name: Bump version and push tag
     #   id: tag_version
     #   uses: mathieudutour/github-tag-action@v6.1
