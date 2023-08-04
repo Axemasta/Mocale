@@ -26,11 +26,6 @@ on:
         description: Whether to fail the build if there are errors in the artifact.
         default: true
 
-
-env:
-  IS_PRERELEASE: true
-  VERSION_NAME: "0.0.1"
-
 jobs:
   github-release:
     runs-on: ubuntu-latest
@@ -77,12 +72,13 @@ jobs:
         }
 
         if ($IsPreRelease) {
-            echo "IS_PRERELEASE=true" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+            echo "IS_PRERELEASE=true" >> "$GITHUB_ENV"
         } else {
-          echo "IS_PRERELEASE=false" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          echo "IS_PRERELEASE=false" >> "$GITHUB_ENV"
+
         }
 
-        echo "VERSION_NAME=$ArtifactName" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        echo "VERSION_NAME=$ArtifactName" >> "$GITHUB_ENV"
 
         Write-Host "Env Variables After:"
         echo $Env:IS_PRERELEASE
