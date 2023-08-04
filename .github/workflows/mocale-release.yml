@@ -27,6 +27,10 @@ on:
         default: true
 
 
+env:
+  IS_PRERELEASE: true
+  VERSION_NAME: "0.0.1"
+
 jobs:
   github-release:
     runs-on: ubuntu-latest
@@ -68,22 +72,19 @@ jobs:
             $IsPreRelease = $true
         }
 
-        Write-Host "Artifact name: $($ArtifactName)"
-        Write-Host "Is pre release: $($IsPreRelease)"
-
         if ($IsPreRelease) {
-            echo "IS_PRERELEASE=true"
+            echo "IS_PRERELEASE=true >> $GITHUB_ENV"
         } else {
-          echo "IS_PRERELEASE=false"
+          echo "IS_PRERELEASE=false >> $GITHUB_ENV"
         }
 
-        echo "VERSION_NAME=$($ArtifactName)"
+        echo "VERSION_NAME=$($ArtifactName) >> $GITHUB_ENV"
 
     - name: Bump version and push tag
       id: tag_version
       uses: mathieudutour/github-tag-action@v6.1
       with:
-        custom_tag: ${{ steps.process-version.outputs.VERSION_NAME }}
+        custom_tag: ${{ env.VERSION_NAME }}
         github_token: ${{ secrets.GITHUB_TOKEN }}
 
     - uses: ncipollo/release-action@main
@@ -94,7 +95,7 @@ jobs:
         draft: true
         generateReleaseNotes: false
         name: ${{ inputs.release-title }}
-        tag: ${{ steps.process-version.outputs.VERSION_NAME }}
-        prerelease: ${{ steps.process-version.outputs.IS_PRERELEASE }}
+        tag: ${{ env.VERSION_NAME }}
+        prerelease: ${{ env.IS_PRERELEASE }}
 
     # Deploy To NuGet
