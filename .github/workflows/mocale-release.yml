@@ -1,0 +1,81 @@
+name: Mocale Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      artifact-name:
+        type: string
+        description: The name of the artifact.
+        default: drop
+      artifacts:
+        type: string
+        description: The path to the artifacts.
+        default: "Artifacts/*.nupkg"
+      release-title:
+        type: string
+        description: The title of the release.
+        default: "Release"
+        required: true
+      release-notes:
+        type: string
+        description: The notes for the release.
+        default: "Notes..."
+        required: true
+      artifactErrorsFailBuild:
+        type: boolean
+        description: Whether to fail the build if there are errors in the artifact.
+        default: true
+
+jobs:
+  github-release:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/download-artifact@v2
+      with:
+        name: ${{ inputs.artifact-name }}
+        path: Artifacts/
+
+    - name: Process NuGet Version
+      shell: pwsh
+      working-directory: Artifacts/
+      id: process-version
+      run: |
+        $ Artifact = Get-ChildItem -Recurse | Where-Object { $_.Name.EndsWith('.nupkg') -and $_.Name.BeginsWith('Mocale.') }
+
+        $ArtifactName = $Artifact.Name
+        $ArtifactName = $ArtifactName.Replace("Mocale.", "")
+        $ArtifactName = $ArtifactName.Replace(".nupkg", "")
+
+        $IsPreRelease = $false
+
+        if ($ArtifactName.EndsWith("-pre")) {
+            $IsPreRelease = $true
+        }
+
+        if ($IsPreRelease) {
+            Write-Host "::set-output name=is-preview::true\n"
+        } else {
+            Write-Host "::set-output name=is-preview::false\n"
+        }
+
+        Write-Host "::set-output name=version-name::v$ArtifactName\n"
+
+    - name: Bump version and push tag
+      id: tag_version
+      uses: mathieudutour/github-tag-action@v6.1
+      with:
+        tag: ${{ steps.process-version.outputs.version-name }}
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+
+    - uses: ncipollo/release-action@main
+      name: Create Release
+      with:
+        artifacts: ${{ inputs.artifacts }}
+        artifactErrorsFailBuild: ${{ inputs.artifactErrorsFailBuild }}
+        draft: true
+        generateReleaseNotes: false
+        name: ${{ inputs.release-title }}
+        prerelease: ${{ steps.process-version.outputs.is-preview }}
+
+    # Deploy To NuGet
