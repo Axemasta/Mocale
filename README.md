@@ -1,11 +1,21 @@
 # Mocale
+
+![Build status](https://img.shields.io/github/actions/workflow/status/axemasta/mocale/mocale-ci.yml)
+
 Localization framework for .NET Maui
 
 
 
 ## Installation
 
-TODO: I will be building a Github Actions pipeline to create the packages
+The following packages are available via NuGet
+
+| Package                                                      | NuGet                                                        |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| [Mocale](https://www.nuget.org/packages/Mocale/)             | ![Mocale NuGet Shield](https://img.shields.io/nuget/v/mocale) |
+| [Mocale.Cache.SQLite](https://www.nuget.org/packages/Mocale.Cache.SQLite/) | ![Mocale.Cache.SQLite NuGet Shield](https://img.shields.io/nuget/v/mocale.cache.sqlite) |
+| [Mocale.Providers.Azure.Blob](https://www.nuget.org/packages/Mocale.Providers.Azure.Blob/) | ![Mocale.Providers.Azure.Blob NuGet Shield](https://img.shields.io/nuget/v/mocale.providers.azure.blob) |
+| [Mocale.SourceGenerators](https://www.nuget.org/packages/Mocale.SourceGenerators/) | ![Mocale.SourceGenerators NuGet Shield](https://img.shields.io/nuget/v/mocale.sourcegenerators) |
 
 
 
