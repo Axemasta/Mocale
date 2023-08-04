@@ -91,7 +91,7 @@ jobs:
         artifacts: ${{ inputs.artifacts }}
         artifactErrorsFailBuild: ${{ inputs.artifactErrorsFailBuild }}
         draft: true
-        generateReleaseNotes: false
+        generateReleaseNotes: true
         name: ${{ env.RELEASE_TITLE }}
         tag: ${{ env.VERSION_NAME }}
         prerelease: ${{ env.IS_PRERELEASE }}
