@@ -38,5 +38,6 @@ jobs:
     - name: Upload Artifacts
       uses: actions/upload-artifact@v3
       with:
+        name: drop
         path: src/**/*.nupkg
       if: github.event_name != 'pull_request'
