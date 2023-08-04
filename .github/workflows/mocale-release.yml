@@ -65,10 +65,6 @@ jobs:
 
         $IsPreRelease = $false
 
-        Write-Host "Env Variables Before:"
-        echo $Env:IS_PRERELEASE
-        echo $Env:VERSION_NAME
-
         if ($ArtifactName.EndsWith("-pre")) {
             $IsPreRelease = $true
         }
@@ -85,23 +81,12 @@ jobs:
         Write-Host "ArtifactName = $ArtifactName"
         Write-Host "Is PreRelease = $IsPreRelease"
 
-        Write-Host "Env Variables After:"
-        echo $Env:IS_PRERELEASE
-        echo $Env:VERSION_NAME
-
-    - name: Use the value
-      id: step_two
-      run: |
-        echo "${{ env.action_state }}"
-        echo "${{ env.VERSION_NAME }}"
-        echo "${{ env.IS_PRERELEASE }}"
-
-    # - name: Bump version and push tag
-    #   id: tag_version
-    #   uses: mathieudutour/github-tag-action@v6.1
-    #   with:
-    #     custom_tag: ${{ env.VERSION_NAME }}
-    #     github_token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Bump version and push tag
+      id: tag_version
+      uses: mathieudutour/github-tag-action@v6.1
+      with:
+        custom_tag: ${{ env.VERSION_NAME }}
+        github_token: ${{ secrets.GITHUB_TOKEN }}
 
     # - uses: ncipollo/release-action@main
     #   name: Create Release
