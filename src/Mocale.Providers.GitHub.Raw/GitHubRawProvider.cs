@@ -24,15 +24,14 @@ internal class GitHubRawProvider : IExternalLocalizationProvider
 
     public GitHubRawProvider(
         IConfigurationManager<IGithubRawConfig> githubConfigurationManager,
-        IHttpClientFactory httpClientFactory,
+        HttpClient httpClient,
         ILogger<GitHubRawProvider> logger)
     {
         githubConfigurationManager = Guard.Against.Null(githubConfigurationManager, nameof(githubConfigurationManager));
 
         this.githubConfig = githubConfigurationManager.Configuration;
+        this.httpClient = Guard.Against.Null(httpClient, nameof(httpClient));
         this.logger = Guard.Against.Null(logger, nameof(logger));
-
-        httpClient = httpClientFactory.CreateClient("Mocale.Providers.GitHub.Raw");
     }
 
     #endregion Constructors
