@@ -350,6 +350,10 @@ public class LocalizationManagerTests : FixtureBase<ILocalizationManager>
         // Act
         var initialized = await Sut.Initialize();
 
+        // Small delay to reduce test flake on CI due to fire & forget call
+        // maybe this is tech debt?
+        await Task.Delay(50);
+
         // Assert
         Assert.True(initialized);
 
