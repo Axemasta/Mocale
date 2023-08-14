@@ -3,5 +3,6 @@
   "LocalizationCurrentProviderIs": "Le fournisseur de localisation actuel est:",
   "LocalizationProviderName": "Json",
   "MocaleDescription": "Framework de localisation pour .NET Maui",
-  "MocaleTitle": "Mocale"
+  "MocaleTitle": "Mocale",
+  "ExternalPrefixExplanation": "Strings prefixed with GR_ indicate they have been pulled from the external provider (GitHub.Raw), when the local cache expires if these values change, so will the text displayed!"
 }

@@ -29,6 +29,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Generators", "Generators", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mocale.SourceGenerators", "src\Mocale.SourceGenerators\Mocale.SourceGenerators.csproj", "{3CC5AC06-A29D-4C08-B73F-6A9EC9158125}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mocale.Providers.GitHub.Raw", "src\Mocale.Providers.GitHub.Raw\Mocale.Providers.GitHub.Raw.csproj", "{F97214BB-15F0-449B-88F1-CABE89ACB3F8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,6 +61,10 @@ Global
 		{3CC5AC06-A29D-4C08-B73F-6A9EC9158125}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3CC5AC06-A29D-4C08-B73F-6A9EC9158125}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3CC5AC06-A29D-4C08-B73F-6A9EC9158125}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F97214BB-15F0-449B-88F1-CABE89ACB3F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F97214BB-15F0-449B-88F1-CABE89ACB3F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F97214BB-15F0-449B-88F1-CABE89ACB3F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F97214BB-15F0-449B-88F1-CABE89ACB3F8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -72,5 +78,6 @@ Global
 		{857B40AB-FFA9-4AF3-A27A-3F1CC66130E8} = {D3CFAD31-519D-41F6-80AA-38E209378B59}
 		{39A66F28-2521-4838-825F-7601632CD0B1} = {40F3C130-0713-4EE4-BA11-93AAD3EF6DFA}
 		{3CC5AC06-A29D-4C08-B73F-6A9EC9158125} = {98375271-AB1B-4201-817F-350BBF4F9E9F}
+		{F97214BB-15F0-449B-88F1-CABE89ACB3F8} = {D3CFAD31-519D-41F6-80AA-38E209378B59}
 	EndGlobalSection
 EndGlobal

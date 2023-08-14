@@ -19,6 +19,7 @@
     <VerticalStackLayout
         HorizontalOptions="Center"
         Spacing="10"
+        Padding="20, 0"
         VerticalOptions="Center">
         <Label Text="{mocale:Localize Key={x:Static keys:TranslationKeys.CurrentLocaleName}, Converter={StaticResource LanguageEmojiConverter}}" />
 
@@ -38,5 +39,11 @@
         <Picker ItemsSource="{Binding Locales}" SelectedItem="{Binding SelectedLocale}" />
 
         <Label Text="{mocale:Localize LoadedTranslation}" />
+
+        <Label
+            Margin="0,20,0,0"
+            FontAttributes="Italic"
+            FontSize="Small"
+            Text="{mocale:Localize Key={x:Static keys:TranslationKeys.ExternalPrefixExplanation}}"/>
     </VerticalStackLayout>
 </ContentPage>
