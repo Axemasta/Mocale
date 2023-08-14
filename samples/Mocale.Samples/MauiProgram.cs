@@ -33,7 +33,7 @@ public static class MauiProgram
                     {
                         config.Username = "Axemasta";
                         config.Repository = "Mocale";
-                        config.Branch = "github-provider";
+                        config.Branch = "main";
                         config.LocaleDirectory = "samples/Locales/";
                     });
             })
