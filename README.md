@@ -15,6 +15,7 @@ The following packages are available via NuGet
 | [Mocale](https://www.nuget.org/packages/Mocale/)             | [![Mocale NuGet Shield](https://img.shields.io/nuget/v/mocale)](https://www.nuget.org/packages/Mocale/) |
 | [Mocale.Cache.SQLite](https://www.nuget.org/packages/Mocale.Cache.SQLite/) | [![Mocale.Cache.SQLite NuGet Shield](https://img.shields.io/nuget/v/mocale.cache.sqlite)](https://www.nuget.org/packages/Mocale.Cache.SQLite/) |
 | [Mocale.Providers.Azure.Blob](https://www.nuget.org/packages/Mocale.Providers.Azure.Blob/) | [![Mocale.Providers.Azure.Blob NuGet Shield](https://img.shields.io/nuget/v/mocale.providers.azure.blob)](https://www.nuget.org/packages/Mocale.Providers.Azure.Blob/) |
+| [Mocale.Providers.GitHub.Raw](https://www.nuget.org/packages/Mocale.Providers.Github.Raw/) | [![Mocale.Providers.GitHub.Raw NuGet Shield](https://img.shields.io/nuget/v/mocale.providers.github.raw)](https://www.nuget.org/packages/Mocale.Providers.Github.Raw/) |
 | [Mocale.SourceGenerators](https://www.nuget.org/packages/Mocale.SourceGenerators/) | [![Mocale.SourceGenerators NuGet Shield](https://img.shields.io/nuget/v/mocale.sourcegenerators)](https://www.nuget.org/packages/Mocale.SourceGenerators/) |
 
 
