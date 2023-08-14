@@ -15,6 +15,7 @@ public static class MocaleBuilderExtension
 
         builder.AppBuilder.Services.AddSingleton<IConfigurationManager<IGithubRawConfig>>(configurationManager);
         builder.AppBuilder.Services.AddSingleton<IExternalLocalizationProvider, GitHubRawProvider>();
+        builder.AppBuilder.Services.AddHttpClient();
 
         return builder;
     }

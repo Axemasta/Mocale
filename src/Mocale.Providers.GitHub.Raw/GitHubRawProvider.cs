@@ -1,5 +1,9 @@
+using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Net.Http;
 using System.Text.Json;
+using System.Threading.Tasks;
 using Ardalis.GuardClauses;
 using Mocale.Helper;
 using Mocale.Providers.GitHub.Raw.Helpers;
@@ -12,18 +16,23 @@ internal class GitHubRawProvider : IExternalLocalizationProvider
     private readonly IGithubRawConfig githubConfig;
     private readonly ILogger logger;
 
+    private readonly HttpClient httpClient;
+
     #endregion Fields
 
     #region Constructors
 
     public GitHubRawProvider(
         IConfigurationManager<IGithubRawConfig> githubConfigurationManager,
+        IHttpClientFactory httpClientFactory,
         ILogger<GitHubRawProvider> logger)
     {
         githubConfigurationManager = Guard.Against.Null(githubConfigurationManager, nameof(githubConfigurationManager));
 
         this.githubConfig = githubConfigurationManager.Configuration;
         this.logger = Guard.Against.Null(logger, nameof(logger));
+
+        httpClient = httpClientFactory.CreateClient("Mocale.Providers.GitHub.Raw");
     }
 
     #endregion Constructors
@@ -37,8 +46,6 @@ internal class GitHubRawProvider : IExternalLocalizationProvider
 
     private async Task<IExternalLocalizationResult> QueryResourceUrlForLocalizations(Uri resourceUri)
     {
-        using var httpClient = new HttpClient();
-
         try
         {
             var response = await httpClient.GetAsync(resourceUri);
