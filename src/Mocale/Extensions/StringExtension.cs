@@ -7,20 +7,19 @@ internal static class StringExtension
     {
         cultureInfo = null!;
 
-        if (string.IsNullOrEmpty(cultureString))
+        if (string.IsNullOrEmpty(cultureString) || !DoesCultureExist(cultureString))
         {
             return false;
         }
 
-        try
-        {
-            cultureInfo = new CultureInfo(cultureString);
-            return true;
-        }
-        catch
-        {
-            return false;
-        }
+        cultureInfo = new CultureInfo(cultureString);
+        return true;
+    }
+
+    // https://stackoverflow.com/a/16476935/8828057
+    private static bool DoesCultureExist(string cultureName)
+    {
+        return CultureInfo.GetCultures(CultureTypes.AllCultures).Any(culture => string.Equals(culture.Name, cultureName, StringComparison.CurrentCultureIgnoreCase));
     }
 
     internal static string Reverse(string s)
