@@ -1,6 +1,7 @@
+using Mocale.Providers.GitHub.Raw.Abstractions;
 namespace Mocale.Providers.GitHub.Raw.Models;
 
-public class GithubRawConfig
+public class GithubRawConfig : IGithubRawConfig
 {
     public string Username { get; set; } = string.Empty;
 
