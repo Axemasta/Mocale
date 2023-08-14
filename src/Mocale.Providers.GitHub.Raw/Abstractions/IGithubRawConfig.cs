@@ -8,5 +8,5 @@ public interface IGithubRawConfig
 
     string Branch { get; }
 
-    string? LocaleDirectory { get; }
+    string LocaleDirectory { get; }
 }

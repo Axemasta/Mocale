@@ -1,6 +1,8 @@
 using System.Globalization;
+using System.Text.Json;
 using Ardalis.GuardClauses;
 using Mocale.Helper;
+using Mocale.Providers.GitHub.Raw.Helpers;
 namespace Mocale.Providers.GitHub.Raw;
 
 internal class GitHubRawProvider : IExternalLocalizationProvider
@@ -26,38 +28,69 @@ internal class GitHubRawProvider : IExternalLocalizationProvider
 
     #endregion Constructors
 
-    public async Task<IExternalLocalizationResult> GetValuesForCultureAsync(CultureInfo cultureInfo)
+    private Uri GetResourceUrl(CultureInfo cultureInfo)
     {
         var fileName = ExternalResourceHelper.GetExpectedJsonFileName(cultureInfo, null);
 
-        var baseUrl = "https://raw.githubusercontent.com/Axemasta/Mocale/github-provider/samples/Locales/";
+        return RawUrlBuilder.BuildResourceUrl(githubConfig.Username, githubConfig.Repository, githubConfig.Branch, githubConfig.LocaleDirectory, fileName);
+    }
 
-        var fullUrl = Path.Combine(baseUrl, fileName);
-
+    private async Task<IExternalLocalizationResult> QueryResourceUrlForLocalizations(Uri resourceUri)
+    {
         using var httpClient = new HttpClient();
 
         try
         {
-            var response = await httpClient.GetAsync(fullUrl);
+            var response = await httpClient.GetAsync(resourceUri);
 
             if (!response.IsSuccessStatusCode)
             {
                 // Handle Error
+                logger.LogWarning("Api call failed with status code: {StatusCode}, for resource url: {ResourceUrl}", (int)response.StatusCode, resourceUri);
+
+                return new ExternalLocalizationResult()
+                {
+                    Success = false,
+                };
             }
 
-            var content = await response.Content.ReadAsStringAsync();
+            await using var resourceStream = await response.Content.ReadAsStreamAsync();
 
-            Console.WriteLine(content);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
+            var localizations = await JsonSerializer.DeserializeAsync<Dictionary<string, string>>(resourceStream);
 
-        return new ExternalLocalizationResult()
+            if (localizations is null)
+            {
+                logger.LogWarning($"Api call succeeded but resource could not be deserialized as {nameof(Dictionary<string, string>)}");
+
+                return new ExternalLocalizationResult()
+                {
+                    Success = false,
+                };
+            }
+
+            return new ExternalLocalizationResult()
+            {
+                Success = true,
+                Localizations = localizations,
+            };
+        }
+        catch (Exception ex)
         {
-            Success = false,
-        };
+            logger.LogError(ex, "An exception occurred quering raw resource: {ResourceUrl}", resourceUri);
+
+            return new ExternalLocalizationResult()
+            {
+                Success = false,
+            };
+        }
+    }
+
+    public async Task<IExternalLocalizationResult> GetValuesForCultureAsync(CultureInfo cultureInfo)
+    {
+        var fileName = ExternalResourceHelper.GetExpectedJsonFileName(cultureInfo, null);
+
+        var resourceUrl = RawUrlBuilder.BuildResourceUrl(githubConfig.Username, githubConfig.Repository, githubConfig.Branch, githubConfig.LocaleDirectory, fileName);
+
+        return await QueryResourceUrlForLocalizations(resourceUrl);
     }
 }

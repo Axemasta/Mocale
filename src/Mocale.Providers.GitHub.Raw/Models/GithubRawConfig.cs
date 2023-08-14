@@ -9,5 +9,5 @@ public class GithubRawConfig : IGithubRawConfig
 
     public string Branch { get; set; } = "main";
 
-    public string? LocaleDirectory { get; set; }
+    public string LocaleDirectory { get; set; } = string.Empty;
 }
