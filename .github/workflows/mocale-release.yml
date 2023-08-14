@@ -97,4 +97,5 @@ jobs:
         prerelease: ${{ env.IS_PRERELEASE }}
         body: ${{ inputs.release-notes }}
 
-    # Deploy To NuGet
+    - name: Publish NuGet
+      run: nuget push ${{ inputs.artifacts }} -Source 'https://api.nuget.org/v3/index.json' -ApiKey ${{ secrets.NUGET_API_KEY }}
