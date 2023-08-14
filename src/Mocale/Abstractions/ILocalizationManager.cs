@@ -5,7 +5,7 @@ public interface ILocalizationManager
 {
     CultureInfo CurrentCulture { get; }
 
-    Task Initialize();
+    Task<bool> Initialize();
 
     Task<bool> SetCultureAsync(CultureInfo culture);
 }

@@ -4,30 +4,25 @@ namespace Mocale.Managers;
 
 public class LocalizationManager : ILocalizationManager
 {
-    private readonly IMocaleConfiguration mocaleConfiguration;
+    private readonly ICurrentCultureManager currentCultureManager;
     private readonly ILogger logger;
-    private readonly IPreferences preferences;
     private readonly ITranslationResolver translationResolver;
     private readonly ITranslationUpdater translationUpdater;
 
     public CultureInfo CurrentCulture { get; private set; }
 
     public LocalizationManager(
-        IConfigurationManager<IMocaleConfiguration> mocaleConfigurationManager,
+        ICurrentCultureManager currentCultureManager,
         ILogger<LocalizationManager> logger,
-        IPreferences preferences,
         ITranslationResolver translationResolver,
         ITranslationUpdater translationUpdater)
     {
-        mocaleConfigurationManager = Guard.Against.Null(mocaleConfigurationManager, nameof(mocaleConfigurationManager));
-
-        mocaleConfiguration = mocaleConfigurationManager.Configuration;
+        this.currentCultureManager = Guard.Against.Null(currentCultureManager, nameof(currentCultureManager));
         this.logger = Guard.Against.Null(logger, nameof(logger));
-        this.preferences = Guard.Against.Null(preferences, nameof(preferences));
         this.translationResolver = Guard.Against.Null(translationResolver, nameof(translationResolver));
         this.translationUpdater = Guard.Against.Null(translationUpdater, nameof(this.translationUpdater));
 
-        CurrentCulture = GetActiveCulture();
+        CurrentCulture = currentCultureManager.GetActiveCulture();
     }
 
     public async Task<bool> SetCultureAsync(CultureInfo culture)
@@ -49,11 +44,9 @@ public class LocalizationManager : ILocalizationManager
                 translationUpdater.UpdateTranslations(localTranslations.Localization, localTranslations.Source);
             }
 
-            CurrentCulture = culture;
-
             translationUpdater.UpdateTranslations(result.Localization, result.Source);
 
-            SetActiveCulture(culture);
+            currentCultureManager.SetActiveCulture(culture);
 
             logger.LogDebug("Updated localization culture to {CultureName}", culture.Name);
 
@@ -67,61 +60,30 @@ public class LocalizationManager : ILocalizationManager
         }
     }
 
-    public async Task Initialize()
+    public async Task<bool> Initialize()
     {
         try
         {
-            await InitializeInternal();
+            return await InitializeInternal();
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "An exception occurred initializing LocalizationManager");
+            return false;
         }
     }
 
-    private CultureInfo GetActiveCulture()
-    {
-        var defaultCulture = mocaleConfiguration.DefaultCulture;
-
-        if (!mocaleConfiguration.SaveCultureChanged)
-        {
-            return defaultCulture;
-        }
-
-        // Load Here
-        var lastUsedCulture = preferences.Get(Constants.LastUsedCultureKey, string.Empty);
-
-        if (string.IsNullOrEmpty(lastUsedCulture))
-        {
-            logger.LogTrace("Setting Last Used Culture as: {DefaultCulture}", defaultCulture);
-            SetActiveCulture(defaultCulture);
-            return defaultCulture;
-        }
-
-        if (lastUsedCulture.TryParseCultureInfo(out var cultureInfo))
-        {
-            return cultureInfo;
-        }
-
-        logger.LogWarning("Unable to parse culture from preferences: {LastUsedCulture}", lastUsedCulture);
-        return defaultCulture;
-    }
-
-    private void SetActiveCulture(CultureInfo cultureInfo)
-    {
-        var cultureString = cultureInfo.ToString();
-
-        preferences.Set(Constants.LastUsedCultureKey, cultureString);
-    }
-
-    private Task InitializeInternal()
+    private Task<bool> InitializeInternal()
     {
         var localTranslations = translationResolver.LoadLocalTranslations(CurrentCulture);
 
-        if (localTranslations.Loaded)
+        if (!localTranslations.Loaded)
         {
-            translationUpdater.UpdateTranslations(localTranslations.Localization, localTranslations.Source);
+            logger.LogWarning("Unable to load translations for culture: {CultureName}", CurrentCulture.Name);
+            return Task.FromResult(false);
         }
+
+        translationUpdater.UpdateTranslations(localTranslations.Localization, localTranslations.Source);
 
         logger.LogTrace("Loaded local translations from source: {TranslationSource}", localTranslations.Source);
 
@@ -134,7 +96,7 @@ public class LocalizationManager : ILocalizationManager
                 .Forget();
         }
 
-        return Task.CompletedTask;
+        return Task.FromResult(true);
     }
 
     private async Task CheckForTranslationUpdates(CultureInfo cultureInfo)
