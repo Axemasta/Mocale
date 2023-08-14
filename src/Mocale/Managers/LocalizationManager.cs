@@ -43,8 +43,14 @@ public class LocalizationManager : ILocalizationManager
             {
                 translationUpdater.UpdateTranslations(localTranslations.Localization, localTranslations.Source);
             }
+            else
+            {
+                logger.LogInformation("No internal translations found for culture: {CultureName}, consider adding them as a backup", culture.Name);
+            }
 
             translationUpdater.UpdateTranslations(result.Localization, result.Source);
+
+            CurrentCulture = culture;
 
             currentCultureManager.SetActiveCulture(culture);
 
