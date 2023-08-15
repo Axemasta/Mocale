@@ -1,10 +1,10 @@
 using System.Collections.Immutable;
 using System.Text;
-using System.Text.Json;
 using System.Text.RegularExpressions;
 using Humanizer;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
+using Newtonsoft.Json;
 
 namespace Mocale.SourceGenerators;
 
@@ -42,7 +42,7 @@ public class LocalizationKeySourceGenerator : IIncrementalGenerator
         {
             try
             {
-                var translations = JsonSerializer.Deserialize<Dictionary<string, string>>(translationJson);
+                var translations = JsonConvert.DeserializeObject<Dictionary<string, string>>(translationJson);
 
                 if (translations is null)
                 {
