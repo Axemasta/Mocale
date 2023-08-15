@@ -15,13 +15,6 @@
     <PackageTag>maui,mocale,localization,localisation,translation</PackageTag>
     <Title>Mocale</Title>
     <Description>Localization framework for .NET Maui with support for over the air localization updates from external data sources.</Description>
-    <Authors>Axemasta</Authors>
-    <Owners>Axemasta</Owners>
-    <NeutralLanguage>en</NeutralLanguage>
-    <RepositoryUrl>https://github.com/Axemasta/Mocale</RepositoryUrl>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageProjectUrl>https://github.com/Axemasta/Mocale</PackageProjectUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">14.2</SupportedOSPlatformVersion>

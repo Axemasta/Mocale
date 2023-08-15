@@ -15,15 +15,8 @@
         <PackageTag>maui,mocale,localization,localisation,translation,github,raw,githubraw,provider,mocaleprovider</PackageTag>
         <Title>Mocale.Providers.GitHub.Raw</Title>
         <Description>GitHub raw external provider for Mocale. This package will attempt to use the configured GitHub repository to download localizations to be used in your maui application.</Description>
-        <Authors>Axemasta</Authors>
-        <Owners>Axemasta</Owners>
-        <NeutralLanguage>en</NeutralLanguage>
-        <RepositoryUrl>https://github.com/Axemasta/Mocale</RepositoryUrl>
-        <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-        <PackageProjectUrl>https://github.com/Axemasta/Mocale</PackageProjectUrl>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-      
+
         <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">14.2</SupportedOSPlatformVersion>
         <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">14.0</SupportedOSPlatformVersion>
         <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
