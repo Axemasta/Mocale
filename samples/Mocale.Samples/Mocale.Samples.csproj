@@ -53,7 +53,11 @@
     <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
 
     <!-- Images -->
-    <MauiFont Include="Resources\Fonts\*" />
+		<MauiImage Include="Resources\Images\*" />
+		<MauiImage Update="Resources\Images\dotnet_bot.svg" BaseSize="168,208" />
+
+		<!-- Custom Fonts -->
+		<MauiFont Include="Resources\Fonts\*" />
 
     <!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
     <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
@@ -94,12 +98,6 @@
     </MauiXaml>
   </ItemGroup>
 
-  <ItemGroup>
-    <MauiImage Remove="Resources\Images\dotnet_bot.svg" />
-  </ItemGroup>
-  <ItemGroup>
-    <BundleResource Include="Resources\Images\dotnet_bot.svg" />
-  </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\Locales\" />
     <EmbeddedResource Include="Resources\Locales\*.json" />

@@ -19,7 +19,7 @@ internal static class StringExtension
     // https://stackoverflow.com/a/16476935/8828057
     private static bool DoesCultureExist(string cultureName)
     {
-        return CultureInfo.GetCultures(CultureTypes.AllCultures).Any(culture => string.Equals(culture.Name, cultureName, StringComparison.CurrentCultureIgnoreCase));
+        return CultureInfo.GetCultures(CultureTypes.AllCultures).Any(culture => string.Equals(culture.Name, cultureName, StringComparison.OrdinalIgnoreCase));
     }
 
     internal static string Reverse(string s)

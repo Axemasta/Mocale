@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 
 <ContentPage
     Title="{mocale:Localize Key={x:Static keys:TranslationKeys.MocaleTitle}}"
@@ -16,34 +16,42 @@
             <converters:LanguageEmojiConverter x:Key="LanguageEmojiConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
-    <VerticalStackLayout
-        HorizontalOptions="Center"
-        Spacing="10"
-        Padding="20, 0"
-        VerticalOptions="Center">
-        <Label Text="{mocale:Localize Key={x:Static keys:TranslationKeys.CurrentLocaleName}, Converter={StaticResource LanguageEmojiConverter}}" />
 
-        <Label>
-            <Label.FormattedText>
-                <FormattedString>
-                    <Span Text="{mocale:Localize Key={x:Static keys:TranslationKeys.LocalizationCurrentProviderIs}}" />
-                    <Span Text=" " />
-                    <Span Text="{mocale:Localize Key={x:Static keys:TranslationKeys.LocalizationProviderName}}" />
-                </FormattedString>
+    <ScrollView>
+        <VerticalStackLayout
+            HorizontalOptions="Center"
+            Spacing="10"
+            Padding="20, 20, 20, 0"
+            VerticalOptions="StartAndExpand">
+            <Image Source="mocale_logo_color.png" HorizontalOptions="Center" HeightRequest="200" />
 
-            </Label.FormattedText>
-        </Label>
+            <Label
+                Text="{mocale:Localize Key={x:Static keys:TranslationKeys.CurrentLocaleName}, Converter={StaticResource LanguageEmojiConverter}}" />
 
-        <Label Text="{mocale:Localize Key={x:Static keys:TranslationKeys.MocaleDescription}}" />
+            <Label>
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span
+                            Text="{mocale:Localize Key={x:Static keys:TranslationKeys.LocalizationCurrentProviderIs}}" />
+                        <Span Text=" " />
+                        <Span Text="{mocale:Localize Key={x:Static keys:TranslationKeys.LocalizationProviderName}}" />
+                    </FormattedString>
 
-        <Picker ItemsSource="{Binding Locales}" SelectedItem="{Binding SelectedLocale}" />
+                </Label.FormattedText>
+            </Label>
 
-        <Label Text="{mocale:Localize LoadedTranslation}" />
+            <Label Text="{mocale:Localize Key={x:Static keys:TranslationKeys.MocaleDescription}}" />
 
-        <Label
-            Margin="0,20,0,0"
-            FontAttributes="Italic"
-            FontSize="Small"
-            Text="{mocale:Localize Key={x:Static keys:TranslationKeys.ExternalPrefixExplanation}}"/>
-    </VerticalStackLayout>
+            <Picker ItemsSource="{Binding Locales}" SelectedItem="{Binding SelectedLocale}" />
+
+            <Label Text="{mocale:Localize LoadedTranslation}" />
+
+            <Label
+                Margin="0,20,0,0"
+                FontAttributes="Italic"
+                FontSize="Small"
+                Text="{mocale:Localize Key={x:Static keys:TranslationKeys.ExternalPrefixExplanation}}" />
+        </VerticalStackLayout>
+
+    </ScrollView>
 </ContentPage>

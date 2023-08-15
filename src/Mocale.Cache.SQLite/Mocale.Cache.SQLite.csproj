@@ -15,13 +15,6 @@
     <PackageTag>maui,mocale,localization,localisation,translation,cache,sqlite</PackageTag>
     <Title>Mocale.Cache.SQLite</Title>
     <Description>Caching implementation for Mocale. This cache provider utilizes a SQLite database to store translations and other details important for Mocales library functions.</Description>
-    <Authors>Axemasta</Authors>
-    <Owners>Axemasta</Owners>
-    <NeutralLanguage>en</NeutralLanguage>
-    <RepositoryUrl>https://github.com/Axemasta/Mocale</RepositoryUrl>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageProjectUrl>https://github.com/Axemasta/Mocale</PackageProjectUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">14.2</SupportedOSPlatformVersion>

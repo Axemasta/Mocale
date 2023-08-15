@@ -1,5 +1,7 @@
 # Mocale
 
+![Mocale Logo](assets/Mocale_Inverted_Color_Crop.png)
+
 ![Build status](https://img.shields.io/github/actions/workflow/status/axemasta/mocale/mocale-ci.yml)
 
 Localization framework for .NET Maui
@@ -9,6 +11,8 @@ Localization framework for .NET Maui
 ## Installation
 
 The following packages are available via NuGet
+
+<img src="assets/mocale_icon_light_rounded.png" width="100"> <img src="assets/mocale_icon_dark_rounded.png" width="100">
 
 | Package                                                      | NuGet                                                        |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |

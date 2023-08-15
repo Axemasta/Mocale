@@ -16,13 +16,6 @@
     <PackageTag>maui,mocale,localization,localisation,translation,source,generator,generators,sourcegenerator,sourcegenerators</PackageTag>
     <Title>Mocale.SourceGenerators</Title>
     <Description>Source generators to assist and enhance Mocale library functions.</Description>
-    <Authors>Axemasta</Authors>
-    <Owners>Axemasta</Owners>
-    <NeutralLanguage>en</NeutralLanguage>
-    <RepositoryUrl>https://github.com/Axemasta/Mocale</RepositoryUrl>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageProjectUrl>https://github.com/Axemasta/Mocale</PackageProjectUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
