@@ -5,7 +5,6 @@ using Humanizer;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 using Newtonsoft.Json;
-
 namespace Mocale.SourceGenerators;
 
 [Generator]
@@ -33,10 +32,19 @@ public class LocalizationKeySourceGenerator : IIncrementalGenerator
         return match && extension.Equals(".json", StringComparison.OrdinalIgnoreCase);
     }
 
-    private static Dictionary<string, string> GetTranslationUniqueKeys(List<string> translationsJson)
+    private static Dictionary<string, string> GetTranslationUniqueKeys(List<string> translationsJson, SourceProductionContext context)
     {
         // TODO: we need sanitized keys to to preserve the json key value...
         var uniqueKeys = new Dictionary<string, string>();
+
+        if (translationsJson.Count < 1)
+        {
+            context.Report(Diagnostics.Warnings.NoLocalizationFilesDetected);
+        }
+        else
+        {
+            context.Report(Diagnostics.Information.ProcessingFiles);
+        }
 
         foreach (var translationJson in translationsJson)
         {
@@ -46,10 +54,11 @@ public class LocalizationKeySourceGenerator : IIncrementalGenerator
 
                 if (translations is null)
                 {
+                    context.Report(Diagnostics.Warnings.FileNotJsonLocalization, translationJson);
                     continue;
                 }
 
-                foreach(var translation in translations)
+                foreach (var translation in translations)
                 {
                     var sanitizedKey = SanitizeKey(translation.Key);
 
@@ -61,9 +70,7 @@ public class LocalizationKeySourceGenerator : IIncrementalGenerator
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An exception occurred processing translation json:");
-                Console.WriteLine(translationJson);
-                Console.WriteLine(ex);
+                context.Report(Diagnostics.Errors.ParsingException, ex, translationJson);
             }
         }
 
@@ -89,7 +96,7 @@ public class LocalizationKeySourceGenerator : IIncrementalGenerator
 
     private static void GenerateCode(SourceProductionContext context, ImmutableArray<string> translations)
     {
-        var translationKeys = GetTranslationUniqueKeys(translations.ToList());
+        var translationKeys = GetTranslationUniqueKeys(translations.ToList(), context);
 
         const string translationNamespace = "Mocale.Translations";
 

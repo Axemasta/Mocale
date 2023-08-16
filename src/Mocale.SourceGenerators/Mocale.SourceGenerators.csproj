@@ -17,17 +17,25 @@
     <Title>Mocale.SourceGenerators</Title>
     <Description>Source generators to assist and enhance Mocale library functions.</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+
+    <NoWarn>RS2007</NoWarn>
   </PropertyGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="AnalyzerReleases.Shipped.md"/>
+    <AdditionalFiles Include="AnalyzerReleases.Unshipped.md"/>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.6.0" PrivateAssets="all"/>
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4" PrivateAssets="all"/>
-    <PackageReference Include="Humanizer.Core" Version="2.10.1" PrivateAssets="all" GeneratePathProperty="true"/>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" PrivateAssets="all" GeneratePathProperty="true" />
+    <PackageReference Include="Humanizer.Core" Version="2.14.1" PrivateAssets="all" GeneratePathProperty="true"/>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" PrivateAssets="all" GeneratePathProperty="true"/>
 
     <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
 
-    <None Include="$(PkgNewtonsoft_Json)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    <None Include="$(PkgNewtonsoft_Json)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
+    <None Include="$(PkgHumanizer_Core)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
   </ItemGroup>
 
   <PropertyGroup>
@@ -40,5 +48,4 @@
       <TargetPathWithTargetPlatformMoniker Include="$(PkgNewtonsoft_Json)\lib\netstandard2.0\Newtonsoft.Json.dll" IncludeRuntimeDependency="false"/>
     </ItemGroup>
   </Target>
-
 </Project>
