@@ -5,7 +5,6 @@ using Humanizer;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 using Newtonsoft.Json;
-
 namespace Mocale.SourceGenerators;
 
 [Generator]
