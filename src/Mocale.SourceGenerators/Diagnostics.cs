@@ -3,6 +3,12 @@ namespace Mocale.SourceGenerators;
 
 internal static class Diagnostics
 {
+    /*
+     * I am using diagnostics to perform logging, after some research it seemed like this was one of the easier approaches...
+     *
+     * If what i am doing here is sacrilege, please raise an issue and let me know of a better way to add diagnostics to the generators 😇
+     */
+
     public static class Errors
     {
         private static DiagnosticDescriptor Create(string id, string text)
