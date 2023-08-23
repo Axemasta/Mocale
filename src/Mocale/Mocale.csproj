@@ -12,7 +12,7 @@
     <RootNamespace>Mocale</RootNamespace>
     <PackageId>Mocale</PackageId>
     <Summary>Localization framework for .NET Maui</Summary>
-    <PackageTag>maui,mocale,localization,localisation,translation</PackageTag>
+    <PackageTags>maui,mocale,localization,localisation,translation</PackageTags>
     <Title>Mocale</Title>
     <Description>Localization framework for .NET Maui with support for over the air localization updates from external data sources.</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>

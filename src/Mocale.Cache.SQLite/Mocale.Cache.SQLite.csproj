@@ -12,7 +12,7 @@
     <RootNamespace>Mocale.Cache.SQLite</RootNamespace>
     <PackageId>Mocale.Cache.SQLite</PackageId>
     <Summary>Caching implementation for Mocale.</Summary>
-    <PackageTag>maui,mocale,localization,localisation,translation,cache,sqlite</PackageTag>
+    <PackageTags>maui,mocale,localization,localisation,translation,cache,sqlite</PackageTags>
     <Title>Mocale.Cache.SQLite</Title>
     <Description>Caching implementation for Mocale. This cache provider utilizes a SQLite database to store translations and other details important for Mocales library functions.</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>

@@ -13,7 +13,7 @@
     <RootNamespace>Mocale.SourceGenerators</RootNamespace>
     <PackageId>Mocale.SourceGenerators</PackageId>
     <Summary>Source Generators to assist with Mocale library functions</Summary>
-    <PackageTag>maui,mocale,localization,localisation,translation,source,generator,generators,sourcegenerator,sourcegenerators</PackageTag>
+    <PackageTags>maui,mocale,localization,localisation,translation,source,generator,generators,sourcegenerator,sourcegenerators</PackageTags>
     <Title>Mocale.SourceGenerators</Title>
     <Description>Source generators to assist and enhance Mocale library functions.</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>

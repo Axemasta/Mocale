@@ -12,7 +12,7 @@
         <RootNamespace>Mocale.Providers.Github.Raw</RootNamespace>
         <PackageId>Mocale.Providers.Github.Raw</PackageId>
         <Summary>GitHub Raw Provider For Mocale</Summary>
-        <PackageTag>maui,mocale,localization,localisation,translation,github,raw,githubraw,provider,mocaleprovider</PackageTag>
+        <PackageTags>maui,mocale,localization,localisation,translation,github,raw,githubraw,provider,mocaleprovider</PackageTags>
         <Title>Mocale.Providers.GitHub.Raw</Title>
         <Description>GitHub raw external provider for Mocale. This package will attempt to use the configured GitHub repository to download localizations to be used in your maui application.</Description>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -24,11 +24,11 @@
         <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
         <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
     </PropertyGroup>
-  
+
     <ItemGroup>
       <ProjectReference Include="..\Mocale\Mocale.csproj" />
     </ItemGroup>
-  
+
     <ItemGroup>
       <PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
     </ItemGroup>
