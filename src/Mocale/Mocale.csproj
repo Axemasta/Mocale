@@ -26,11 +26,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <InternalsVisibleTo Include="$(AssemblyName).Providers.AWS.S3"/>
-    <InternalsVisibleTo Include="$(AssemblyName).Providers.Azure.Blob"/>
-    <InternalsVisibleTo Include="$(AssemblyName).Providers.GitHub.Raw"/>
-    <InternalsVisibleTo Include="$(AssemblyName).Cache.SQLite"/>
-    <InternalsVisibleTo Include="$(AssemblyName).UnitTests"/>
+    <InternalsVisibleTo Include="$(AssemblyName).Providers.AWS.S3" />
+    <InternalsVisibleTo Include="$(AssemblyName).Providers.Azure.Blob" />
+    <InternalsVisibleTo Include="$(AssemblyName).Providers.GitHub.Raw" />
+    <InternalsVisibleTo Include="$(AssemblyName).Cache.SQLite" />
+    <InternalsVisibleTo Include="$(AssemblyName).UnitTests" />
   </ItemGroup>
 
 </Project>

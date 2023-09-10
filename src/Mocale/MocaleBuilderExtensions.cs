@@ -1,5 +1,7 @@
 using Mocale.Exceptions;
+using Mocale.Helper;
 using Mocale.Managers;
+using Mocale.Parsers;
 using Mocale.Providers;
 namespace Mocale;
 
@@ -69,5 +71,30 @@ public static class MocaleBuilderExtensions
 
         builder.ExternalProviderRegistered = true;
         builder.ExternalProviderName = provider.Name;
+    }
+
+    internal static void RegisterExternalResourceFileTypeResources(this MocaleBuilder builder, IExternalConfiguration externalConfiguration)
+    {
+        switch (externalConfiguration.ResourceType)
+        {
+            case LocaleResourceType.Json:
+            {
+                builder.AppBuilder.Services.AddSingleton<IExternalFileNameHelper, ExternalJsonFileNameHelper>();
+                builder.AppBuilder.Services.AddSingleton<ILocalizationParser, JsonLocalizationParser>();
+                break;
+            }
+
+            case LocaleResourceType.Resx:
+            {
+                builder.AppBuilder.Services.AddSingleton<IExternalFileNameHelper, ExternalResxFileNameHelper>();
+                builder.AppBuilder.Services.AddSingleton<ILocalizationParser, ResxLocalizationParser>();
+                break;
+            }
+
+            default:
+            {
+                throw new NotSupportedException($"Invalid value for {nameof(LocaleResourceType)}");
+            }
+        }
     }
 }

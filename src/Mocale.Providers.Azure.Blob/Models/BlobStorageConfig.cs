@@ -17,5 +17,5 @@ public class BlobStorageConfig : IBlobStorageConfig
     public string? VersionPrefix { get; set; }
 
     /// <inheritdoc/>
-    public LocaleResourceType FileType { get; set; } = LocaleResourceType.Json;
+    public LocaleResourceType ResourceType { get; set; } = LocaleResourceType.Json;
 }

@@ -1,7 +1,6 @@
-using Mocale.Enums;
 namespace Mocale.Providers.Azure.Blob.Abstractions;
 
-public interface IBlobStorageConfig
+public interface IBlobStorageConfig : IExternalConfiguration
 {
     /// <summary>
     /// Uri for the blob container
@@ -21,14 +20,4 @@ public interface IBlobStorageConfig
     /// will require an extra api call but reduce exception noise.
     /// </summary>
     bool CheckForFile { get; }
-
-    /// <summary>
-    /// Folder prefix for the bloc container, this will be added to the blob
-    /// </summary>
-    string? VersionPrefix { get; }
-
-    /// <summary>
-    /// The type of file stored externally
-    /// </summary>
-    LocaleResourceType FileType { get; }
 }

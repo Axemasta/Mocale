@@ -11,9 +11,11 @@ public static class MocaleBuilderExtension
         var config = new GithubRawConfig();
         configureGithub(config);
 
-        var configurationManager = new ConfigurationManager<IGithubRawConfig>(config);
+        builder.RegisterExternalResourceFileTypeResources(config);
 
-        builder.AppBuilder.Services.AddSingleton<IConfigurationManager<IGithubRawConfig>>(configurationManager);
+        // TODO: Is there a way I can avoid having 2 of the same config managers?
+        builder.AppBuilder.Services.AddSingleton<IConfigurationManager<IGithubRawConfig>>(new ConfigurationManager<IGithubRawConfig>(config));
+        builder.AppBuilder.Services.AddSingleton<IConfigurationManager<IExternalConfiguration>>(new ConfigurationManager<IExternalConfiguration>(config));
         builder.AppBuilder.Services.AddSingleton<IExternalLocalizationProvider, GitHubRawProvider>();
 
         if (configureHttpClient is not null)

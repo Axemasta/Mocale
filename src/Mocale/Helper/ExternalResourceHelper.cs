@@ -15,15 +15,15 @@ internal static class ExternalResourceHelper
         return string.Join("/", versionPrefix, fileName);
     }
 
-    //public static string GetExpectedResxFileName(CultureInfo cultureInfo, string resourceFileName, string? versionPrefix)
-    //{
-    //    var fileName = $"{resourceFileName}.{cultureInfo.Name}.resx";
+    public static string GetExpectedResxFileName(CultureInfo cultureInfo, string? versionPrefix)
+    {
+        var fileName = $"{cultureInfo.Name}.resx";
 
-    //    if (versionPrefix is null || string.IsNullOrEmpty(versionPrefix))
-    //    {
-    //        return fileName;
-    //    }
+        if (versionPrefix is null || string.IsNullOrEmpty(versionPrefix))
+        {
+            return fileName;
+        }
 
-    //    return string.Join("/", versionPrefix, fileName);
-    //}
+        return string.Join("/", versionPrefix, fileName);
+    }
 }

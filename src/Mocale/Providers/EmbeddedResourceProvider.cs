@@ -1,7 +1,6 @@
 using System.Globalization;
 using System.Reflection;
 using System.Text.Json;
-using Microsoft.Extensions.Logging;
 namespace Mocale.Providers;
 
 internal class EmbeddedResourceProvider : IInternalLocalizationProvider

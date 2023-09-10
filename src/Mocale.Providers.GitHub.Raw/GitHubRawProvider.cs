@@ -1,9 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Net.Http;
 using System.Text.Json;
-using System.Threading.Tasks;
 using Ardalis.GuardClauses;
 using Mocale.Helper;
 using Mocale.Providers.GitHub.Raw.Helpers;
@@ -14,6 +10,8 @@ internal class GitHubRawProvider : IExternalLocalizationProvider
     #region Fields
 
     private readonly IGithubRawConfig githubConfig;
+    private readonly IExternalFileNameHelper externalFileNameHelper;
+    private readonly ILocalizationParser localizationParser;
     private readonly ILogger logger;
 
     private readonly HttpClient httpClient;
@@ -24,13 +22,17 @@ internal class GitHubRawProvider : IExternalLocalizationProvider
 
     public GitHubRawProvider(
         IConfigurationManager<IGithubRawConfig> githubConfigurationManager,
+        IExternalFileNameHelper externalFileNameHelper,
         HttpClient httpClient,
+        ILocalizationParser localizationParser,
         ILogger<GitHubRawProvider> logger)
     {
         githubConfigurationManager = Guard.Against.Null(githubConfigurationManager, nameof(githubConfigurationManager));
 
         this.githubConfig = githubConfigurationManager.Configuration;
+        this.externalFileNameHelper = Guard.Against.Null(externalFileNameHelper, nameof(externalFileNameHelper));
         this.httpClient = Guard.Against.Null(httpClient, nameof(httpClient));
+        this.localizationParser = Guard.Against.Null(localizationParser, nameof(localizationParser));
         this.logger = Guard.Against.Null(logger, nameof(logger));
     }
 
@@ -38,7 +40,7 @@ internal class GitHubRawProvider : IExternalLocalizationProvider
 
     private Uri GetResourceUrl(CultureInfo cultureInfo)
     {
-        var fileName = ExternalResourceHelper.GetExpectedJsonFileName(cultureInfo, null);
+        var fileName = externalFileNameHelper.GetExpectedFileName(cultureInfo);
 
         return RawUrlBuilder.BuildResourceUrl(githubConfig.Username, githubConfig.Repository, githubConfig.Branch, githubConfig.LocaleDirectory, fileName);
     }

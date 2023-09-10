@@ -1,3 +1,4 @@
+using Mocale.Enums;
 using Mocale.Providers.GitHub.Raw.Abstractions;
 namespace Mocale.Providers.GitHub.Raw.Models;
 
@@ -10,4 +11,8 @@ public class GithubRawConfig : IGithubRawConfig
     public string Branch { get; set; } = "main";
 
     public string LocaleDirectory { get; set; } = string.Empty;
+
+    public LocaleResourceType ResourceType { get; set; } = LocaleResourceType.Json;
+
+    public string? VersionPrefix { get; set; }
 }

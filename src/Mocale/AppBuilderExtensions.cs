@@ -1,4 +1,5 @@
 using Mocale.Exceptions;
+using Mocale.Helper;
 using Mocale.Managers;
 using Mocale.Wrappers;
 namespace Mocale;
@@ -33,6 +34,7 @@ public static class AppBuilderExtensions
         mauiAppBuilder.Services.AddSingleton<IMauiInitializeService, MocaleInitializeService>();
         mauiAppBuilder.Services.AddSingleton<ITranslationResolver, TranslationResolver>();
         mauiAppBuilder.Services.AddSingleton<ICurrentCultureManager, CurrentCultureManager>();
+        mauiAppBuilder.Services.AddSingleton<IVersionPrefixHelper, VersionPrefixHelper>();
 
         // https://andrewlock.net/how-to-register-a-service-with-multiple-interfaces-for-in-asp-net-core-di/
         mauiAppBuilder.Services.AddSingleton<TranslatorManager>();

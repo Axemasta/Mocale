@@ -1,4 +1,3 @@
-using Mocale.Abstractions;
 using Mocale.Exceptions;
 using Mocale.Managers;
 using Mocale.Providers.Azure.Blob.Managers;
@@ -18,9 +17,11 @@ public static class MocaleBuilderExtension
             throw new InitializationException("You must set a blob container uri to use this provider");
         }
 
-        var configurationManager = new ConfigurationManager<IBlobStorageConfig>(config);
+        builder.RegisterExternalResourceFileTypeResources(config);
 
-        builder.AppBuilder.Services.AddSingleton<IConfigurationManager<IBlobStorageConfig>>(configurationManager);
+        // TODO: Is there a way I can avoid having 2 of the same config managers?
+        builder.AppBuilder.Services.AddSingleton<IConfigurationManager<IBlobStorageConfig>>(new ConfigurationManager<IBlobStorageConfig>(config));
+        builder.AppBuilder.Services.AddSingleton<IConfigurationManager<IExternalConfiguration>>(new ConfigurationManager<IExternalConfiguration>(config));
         builder.AppBuilder.Services.AddSingleton<IExternalLocalizationProvider, BlobLocalizationProvider>();
         builder.AppBuilder.Services.AddSingleton<IBlobResourceLocator, BlobResourceLocator>();
 
