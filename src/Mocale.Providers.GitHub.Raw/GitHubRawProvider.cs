@@ -1,7 +1,6 @@
 using System.Globalization;
 using System.Text.Json;
 using Ardalis.GuardClauses;
-using Mocale.Helper;
 using Mocale.Providers.GitHub.Raw.Helpers;
 namespace Mocale.Providers.GitHub.Raw;
 
@@ -95,7 +94,7 @@ internal class GitHubRawProvider : IExternalLocalizationProvider
 
     public async Task<IExternalLocalizationResult> GetValuesForCultureAsync(CultureInfo cultureInfo)
     {
-        var fileName = ExternalResourceHelper.GetExpectedJsonFileName(cultureInfo, null);
+        var fileName = externalFileNameHelper.GetExpectedFileName(cultureInfo);
 
         var resourceUrl = RawUrlBuilder.BuildResourceUrl(githubConfig.Username, githubConfig.Repository, githubConfig.Branch, githubConfig.LocaleDirectory, fileName);
 

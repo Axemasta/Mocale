@@ -5,7 +5,6 @@ using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Microsoft.Extensions.Logging;
 using Mocale.Extensions;
-using Mocale.Helper;
 namespace Mocale.Providers.Azure.Blob;
 
 internal sealed class BlobLocalizationProvider : IExternalLocalizationProvider
@@ -14,6 +13,7 @@ internal sealed class BlobLocalizationProvider : IExternalLocalizationProvider
 
     private readonly IBlobStorageConfig blobStorageConfig;
     private readonly IBlobResourceLocator blobResourceLocator;
+    private readonly IExternalFileNameHelper externalFileNameHelper;
     private readonly ILogger logger;
 
     private static readonly BlobOpenReadOptions BlobOptions = new BlobOpenReadOptions(false);
@@ -25,10 +25,12 @@ internal sealed class BlobLocalizationProvider : IExternalLocalizationProvider
     public BlobLocalizationProvider(
         IBlobResourceLocator blobResourceLocator,
         IConfigurationManager<IBlobStorageConfig> blobConfigurationManager,
+        IExternalFileNameHelper externalFileNameHelper,
         ILogger<BlobLocalizationProvider> logger)
     {
         this.blobResourceLocator = Guard.Against.Null(blobResourceLocator, nameof(blobResourceLocator));
         this.logger = Guard.Against.Null(logger, nameof(logger));
+        this.externalFileNameHelper = Guard.Against.Null(externalFileNameHelper, nameof(externalFileNameHelper));
 
         blobConfigurationManager = Guard.Against.Null(blobConfigurationManager, nameof(blobConfigurationManager));
         blobStorageConfig = blobConfigurationManager.Configuration;
@@ -44,8 +46,7 @@ internal sealed class BlobLocalizationProvider : IExternalLocalizationProvider
 
         if (!blobStorageConfig.CheckForFile)
         {
-            // TODO: Support resx
-            fileName = ExternalResourceHelper.GetExpectedJsonFileName(cultureInfo, blobStorageConfig.VersionPrefix);
+            fileName = externalFileNameHelper.GetExpectedFileName(cultureInfo);
         }
         else
         {

@@ -3,15 +3,15 @@ using Ardalis.GuardClauses;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Microsoft.Extensions.Logging;
-using Mocale.Helper;
 using Page = Azure.Page<Azure.Storage.Blobs.Models.BlobItem>;
 namespace Mocale.Providers.Azure.Blob.Managers;
 
-public class BlobResourceLocator : IBlobResourceLocator
+internal class BlobResourceLocator : IBlobResourceLocator
 {
     #region Fields
 
     private readonly IBlobStorageConfig blobStorageConfig;
+    private readonly IExternalFileNameHelper externalFileNameHelper;
     private readonly ILogger logger;
 
     #endregion Fields
@@ -20,9 +20,11 @@ public class BlobResourceLocator : IBlobResourceLocator
 
     public BlobResourceLocator(
         IConfigurationManager<IBlobStorageConfig> blobConfigurationManager,
+        IExternalFileNameHelper externalFileNameHelper,
         ILogger<BlobResourceLocator> logger)
     {
         this.logger = Guard.Against.Null(logger, nameof(logger));
+        this.externalFileNameHelper = Guard.Against.Null(externalFileNameHelper, nameof(externalFileNameHelper));
 
         blobConfigurationManager = Guard.Against.Null(blobConfigurationManager, nameof(blobConfigurationManager));
         blobStorageConfig = blobConfigurationManager.Configuration;
@@ -64,7 +66,7 @@ public class BlobResourceLocator : IBlobResourceLocator
     {
         try
         {
-            var expectedFileSlug = ExternalResourceHelper.GetExpectedJsonFileName(cultureInfo, blobStorageConfig.VersionPrefix);
+            var expectedFileSlug = externalFileNameHelper.GetExpectedFileName(cultureInfo);
 
             var client = new BlobContainerClient(blobStorageConfig.BlobContainerUri);
 
