@@ -14,6 +14,7 @@ internal sealed class BlobLocalizationProvider : IExternalLocalizationProvider
     private readonly IBlobStorageConfig blobStorageConfig;
     private readonly IBlobResourceLocator blobResourceLocator;
     private readonly IExternalFileNameHelper externalFileNameHelper;
+    private readonly ILocalizationParser localizationParser;
     private readonly ILogger logger;
 
     private static readonly BlobOpenReadOptions BlobOptions = new BlobOpenReadOptions(false);
@@ -26,11 +27,13 @@ internal sealed class BlobLocalizationProvider : IExternalLocalizationProvider
         IBlobResourceLocator blobResourceLocator,
         IConfigurationManager<IBlobStorageConfig> blobConfigurationManager,
         IExternalFileNameHelper externalFileNameHelper,
+        ILocalizationParser localizationParser,
         ILogger<BlobLocalizationProvider> logger)
     {
         this.blobResourceLocator = Guard.Against.Null(blobResourceLocator, nameof(blobResourceLocator));
-        this.logger = Guard.Against.Null(logger, nameof(logger));
         this.externalFileNameHelper = Guard.Against.Null(externalFileNameHelper, nameof(externalFileNameHelper));
+        this.localizationParser = Guard.Against.Null(localizationParser, nameof(localizationParser));
+        this.logger = Guard.Against.Null(logger, nameof(logger));
 
         blobConfigurationManager = Guard.Against.Null(blobConfigurationManager, nameof(blobConfigurationManager));
         blobStorageConfig = blobConfigurationManager.Configuration;
@@ -84,8 +87,7 @@ internal sealed class BlobLocalizationProvider : IExternalLocalizationProvider
                 return null;
             }
 
-            // TODO: Support resx
-            return await JsonSerializer.DeserializeAsync<Dictionary<string, string>>(blobStream);
+            return localizationParser.ParseLocalizationStream(blobStream);
         }
         catch (Exception ex)
         {

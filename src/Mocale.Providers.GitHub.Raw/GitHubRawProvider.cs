@@ -63,7 +63,7 @@ internal class GitHubRawProvider : IExternalLocalizationProvider
 
             await using var resourceStream = await response.Content.ReadAsStreamAsync();
 
-            var localizations = await JsonSerializer.DeserializeAsync<Dictionary<string, string>>(resourceStream);
+            var localizations = localizationParser.ParseLocalizationStream(resourceStream);
 
             if (localizations is null)
             {
