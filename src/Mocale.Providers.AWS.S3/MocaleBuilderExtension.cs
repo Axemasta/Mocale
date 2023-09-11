@@ -6,10 +6,10 @@ public static class MocaleBuilderExtension
 {
     public static MocaleBuilder UseS3Bucket(this MocaleBuilder builder, Action<BucketConfig> configureBucket)
     {
-        builder.RegisterExternalProvider(typeof(S3BucketProvider));
-
         var config = new BucketConfig();
         configureBucket(config);
+
+        builder.RegisterExternalProvider<IBucketConfig>(typeof(S3BucketProvider), config);
 
         var configurationManager = new ConfigurationManager<IBucketConfig>(config);
 

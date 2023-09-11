@@ -57,7 +57,8 @@ public static class MocaleBuilderExtensions
         builder.LocalProviderName = provider.Name;
     }
 
-    internal static void RegisterExternalProvider(this MocaleBuilder builder, Type provider)
+    internal static void RegisterExternalProvider<TConfig>(this MocaleBuilder builder, Type provider, TConfig config)
+        where TConfig : IExternalProviderConfiguration
     {
         if (!provider.IsAssignableTo(typeof(IExternalLocalizationProvider)))
         {
@@ -69,11 +70,16 @@ public static class MocaleBuilderExtensions
             throw new InitializationException($"The following local provider was already registered: {builder.ExternalProviderName}");
         }
 
+        builder.AppBuilder.Services.AddSingleton<IConfigurationManager<TConfig>>(new ConfigurationManager<TConfig>(config));
+        builder.AppBuilder.Services.AddSingleton<IConfigurationManager<IExternalProviderConfiguration>>(new ConfigurationManager<IExternalProviderConfiguration>(config));
+
         builder.ExternalProviderRegistered = true;
         builder.ExternalProviderName = provider.Name;
+
+        builder.RegisterExternalResourceFileTypeResources(config);
     }
 
-    internal static void RegisterExternalResourceFileTypeResources(this MocaleBuilder builder, IExternalConfiguration externalConfiguration)
+    internal static void RegisterExternalResourceFileTypeResources(this MocaleBuilder builder, IExternalProviderConfiguration externalConfiguration)
     {
         switch (externalConfiguration.ResourceType)
         {

@@ -3,9 +3,9 @@ using Ardalis.GuardClauses;
 namespace Mocale.Helper;
 internal class VersionPrefixHelper : IVersionPrefixHelper
 {
-    private readonly IExternalConfiguration externalConfiguration;
+    private readonly IExternalProviderConfiguration externalConfiguration;
 
-    public VersionPrefixHelper(IConfigurationManager<IExternalConfiguration> externalConfigurationManager)
+    public VersionPrefixHelper(IConfigurationManager<IExternalProviderConfiguration> externalConfigurationManager)
     {
         externalConfigurationManager = Guard.Against.Null(externalConfigurationManager, nameof(externalConfigurationManager));
 

@@ -1,5 +1,4 @@
 using Mocale.Enums;
-using Mocale.Providers.GitHub.Raw.Abstractions;
 namespace Mocale.Providers.GitHub.Raw.Models;
 
 public class GithubRawConfig : IGithubRawConfig
