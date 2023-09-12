@@ -22,7 +22,7 @@ public static class MauiProgram
                     })
                     .UseSqliteCache(config =>
                     {
-                        config.UpdateInterval = TimeSpan.FromDays(7);
+                        config.UpdateInterval = TimeSpan.FromDays(1);
                     })
                     .UseEmbeddedResources(config =>
                     {

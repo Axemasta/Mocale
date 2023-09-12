@@ -2,6 +2,7 @@ using System.Globalization;
 using Ardalis.GuardClauses;
 
 namespace Mocale.Helper;
+
 internal class ExternalResxFileNameHelper : IExternalFileNameHelper
 {
     private readonly IVersionPrefixHelper versionPrefixHelper;

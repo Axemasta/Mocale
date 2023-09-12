@@ -12,7 +12,9 @@ public class GitHubRawProviderTests : FixtureBase<IExternalLocalizationProvider>
     #region Setup
 
     private readonly Mock<IConfigurationManager<IGithubRawConfig>> configurationManager;
+    private readonly Mock<IExternalFileNameHelper> externalFileNameHelper;
     private readonly Mock<HttpMessageHandler> httpMessageHandler;
+    private readonly Mock<ILocalizationParser> localizationParser;
     private readonly Mock<ILogger<GitHubRawProvider>> logger;
 
     #region Constructors
@@ -20,7 +22,9 @@ public class GitHubRawProviderTests : FixtureBase<IExternalLocalizationProvider>
     public GitHubRawProviderTests()
     {
         configurationManager = new Mock<IConfigurationManager<IGithubRawConfig>>();
+        externalFileNameHelper = new Mock<IExternalFileNameHelper>();
         httpMessageHandler = new Mock<HttpMessageHandler>(MockBehavior.Strict);
+        localizationParser = new Mock<ILocalizationParser>();
         logger = new Mock<ILogger<GitHubRawProvider>>();
     }
 
@@ -30,7 +34,9 @@ public class GitHubRawProviderTests : FixtureBase<IExternalLocalizationProvider>
     {
         return new GitHubRawProvider(
             configurationManager.Object,
+            externalFileNameHelper.Object,
             new HttpClient(httpMessageHandler.Object),
+            localizationParser.Object,
             logger.Object);
     }
 

@@ -36,13 +36,6 @@ internal class GitHubRawProvider : IExternalLocalizationProvider
 
     #endregion Constructors
 
-    private Uri GetResourceUrl(CultureInfo cultureInfo)
-    {
-        var fileName = externalFileNameHelper.GetExpectedFileName(cultureInfo);
-
-        return RawUrlBuilder.BuildResourceUrl(githubConfig.Username, githubConfig.Repository, githubConfig.Branch, githubConfig.LocaleDirectory, fileName);
-    }
-
     private async Task<IExternalLocalizationResult> QueryResourceUrlForLocalizations(Uri resourceUri)
     {
         try

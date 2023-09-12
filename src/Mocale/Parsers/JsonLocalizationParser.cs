@@ -8,10 +8,5 @@ internal class JsonLocalizationParser : ILocalizationParser
     {
         return JsonSerializer.Deserialize<Dictionary<string, string>>(resourceStream);
     }
-
-    public Dictionary<string, string>? ParseLocalizationString(string resourceString)
-    {
-        return JsonSerializer.Deserialize<Dictionary<string, string>>(resourceString);
-    }
 }
 

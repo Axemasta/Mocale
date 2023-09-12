@@ -12,10 +12,5 @@ internal class ResxLocalizationParser : ILocalizationParser
 
         throw new NotImplementedException();
     }
-
-    public Dictionary<string, string>? ParseLocalizationString(string resourceString)
-    {
-        throw new NotImplementedException();
-    }
 }
 

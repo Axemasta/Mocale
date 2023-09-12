@@ -13,3 +13,17 @@ public abstract class FixtureBase<TSut>
 
     public abstract TSut CreateSystemUnderTest();
 }
+
+public abstract class FixtureBase
+{
+    private Lazy<object> SutLazy { get; init; }
+
+    protected TSut GetSut<TSut>() => (TSut)SutLazy.Value;
+
+    public FixtureBase()
+    {
+        SutLazy = new Lazy<object>(CreateSystemUnderTest, LazyThreadSafetyMode.ExecutionAndPublication);
+    }
+
+    public abstract object CreateSystemUnderTest();
+}
