@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Text;
 using Microsoft.Extensions.Logging;
 using Mocale.Abstractions;
 using Mocale.Providers.GitHub.Raw;
@@ -59,7 +60,10 @@ public class GitHubRawProviderTests : FixtureBase<IExternalLocalizationProvider>
                 LocaleDirectory = "samples/Locales",
             });
 
-        var rawJson = """
+        externalFileNameHelper.Setup(m => m.GetExpectedFileName(newCulture))
+            .Returns("en-GB.json");
+
+        var rawJson = /*lang=json,strict*/ """
             {
               "CurrentLocaleName": "English",
               "LocalizationCurrentProviderIs": "GR_The current localization provider is:",
@@ -69,8 +73,20 @@ public class GitHubRawProviderTests : FixtureBase<IExternalLocalizationProvider>
             }
             """;
 
+        var expectedStream = new MemoryStream(Encoding.UTF8.GetBytes(rawJson));
+
         httpMessageHandler.SetupRequest(HttpMethod.Get, "https://raw.githubusercontent.com/Axemasta/Mocale/main/samples/Locales/en-GB.json")
             .ReturnsResponse(rawJson);
+
+        localizationParser.Setup(m => m.ParseLocalizationStream(It.Is<Stream>(s => s.Length == expectedStream.Length)))
+            .Returns(new Dictionary<string, string>()
+            {
+                { "CurrentLocaleName", "English" },
+                { "LocalizationCurrentProviderIs", "GR_The current localization provider is:" },
+                { "LocalizationProviderName", "GR_Json" },
+                { "MocaleDescription", "GR_Localization framework for .NET Maui" },
+                { "MocaleTitle", "GR_Mocale" },
+            });
 
         // Act
         var result = await Sut.GetValuesForCultureAsync(newCulture);
