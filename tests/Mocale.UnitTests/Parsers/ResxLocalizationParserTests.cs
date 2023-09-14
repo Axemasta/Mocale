@@ -189,7 +189,7 @@ public class ResxLocalizationParserTests : FixtureBase
         {
             { "CurrentLocaleName", "English" },
             { "LocalizationCurrentProviderIs", "The current localization provider is:" },
-            { "LocalizationProviderName", "Json" },
+            { "LocalizationProviderName", "Resx" },
             { "MocaleDescription", "Localization framework for .NET Maui" },
             { "MocaleTitle", "Mocale" },
         };

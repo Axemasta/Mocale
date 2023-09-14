@@ -33,4 +33,8 @@
     <InternalsVisibleTo Include="$(AssemblyName).UnitTests" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="ResXResourceReader.NetStandard" Version="1.1.0" />
+  </ItemGroup>
+
 </Project>
