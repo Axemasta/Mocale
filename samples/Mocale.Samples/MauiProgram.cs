@@ -23,24 +23,32 @@ public static class MauiProgram
                     })
                     .UseSqliteCache(config =>
                     {
-                        config.UpdateInterval = TimeSpan.FromSeconds(1);
+                        config.UpdateInterval = TimeSpan.FromDays(1);
                     })
                     .UseEmbeddedResources(config =>
                     {
                         config.ResourcesPath = "Locales";
                         config.ResourcesAssembly = typeof(App).Assembly;
                     })
+                    //.UseGitHubRaw(config =>
+                    //{
+                    //    config.Username = "Axemasta";
+                    //    config.Repository = "Mocale";
+                    //    config.Branch = "main";
+                    //    config.LocaleDirectory = "samples/Locales/";
+                    //    config.ResourceFileDetails = new ResxResourceFileDetails()
+                    //    {
+                    //        ResourcePrefix = "AppResources",
+                    //    };
+                    //});
                     .UseGitHubRaw(config =>
-                    {
-                        config.Username = "Axemasta";
-                        config.Repository = "Mocale";
-                        config.Branch = "mutliple-providers";
-                        config.LocaleDirectory = "samples/Locales/";
-                        config.ResourceFileDetails = new ResxResourceFileDetails()
-                        {
-                            ResourcePrefix = "AppResources",
-                        };
-                    });
+                     {
+                         config.Username = "Axemasta";
+                         config.Repository = "Mocale";
+                         config.Branch = "main";
+                         config.LocaleDirectory = "samples/Locales/";
+                         config.ResourceFileDetails = new JsonResourceFileDetails();
+                     });
             })
             .ConfigureFonts(fonts =>
             {
