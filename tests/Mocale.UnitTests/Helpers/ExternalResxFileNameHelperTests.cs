@@ -48,13 +48,19 @@ public class ExternalResxFileNameHelperTests : FixtureBase
     }
 
     [Theory]
-    [InlineData("en-GB", null, "AppResources.en-GB.resx")]
-    [InlineData("fr-FR", null, "AppResources.fr-FR.resx")]
-    [InlineData("en-GB", "", "AppResources.en-GB.resx")]
-    [InlineData("fr-FR", "", "AppResources.fr-FR.resx")]
-    [InlineData("en-GB", "v1", "v1/AppResources.en-GB.resx")]
-    [InlineData("fr-FR", "v1", "v1/AppResources.fr-FR.resx")]
-    public void GetExpectedFileName_WhenCalled_ShouldCreateCorrectName(string cultureString, string? versionPrefix, string expectedFileName)
+    [InlineData("en-GB", null, false, "AppResources.en-GB.resx")]
+    [InlineData("fr-FR", null, false, "AppResources.fr-FR.resx")]
+    [InlineData("en-GB", "", false, "AppResources.en-GB.resx")]
+    [InlineData("fr-FR", "", false, "AppResources.fr-FR.resx")]
+    [InlineData("en-GB", "v1", false, "v1/AppResources.en-GB.resx")]
+    [InlineData("fr-FR", "v1", false, "v1/AppResources.fr-FR.resx")]
+    [InlineData("en-GB", null, true, "AppResources.resx")]
+    [InlineData("fr-FR", null, true, "AppResources.resx")]
+    [InlineData("en-GB", "", true, "AppResources.resx")]
+    [InlineData("fr-FR", "", true, "AppResources.resx")]
+    [InlineData("en-GB", "v1", true, "v1/AppResources.resx")]
+    [InlineData("fr-FR", "v1", true, "v1/AppResources.resx")]
+    public void GetExpectedFileName_WhenCalled_ShouldCreateCorrectName(string cultureString, string? versionPrefix, bool primaryCulture, string expectedFileName)
     {
         // Arrange
         var resxFileConfig = new ResxResourceFileDetails()
@@ -62,6 +68,11 @@ public class ExternalResxFileNameHelperTests : FixtureBase
             ResourcePrefix = "AppResources",
             VersionPrefix = versionPrefix,
         };
+
+        if (primaryCulture)
+        {
+            resxFileConfig.PrimaryCulture = new CultureInfo(cultureString);
+        }
 
         var config = new Mock<IExternalProviderConfiguration>();
 

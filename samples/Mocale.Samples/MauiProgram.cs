@@ -34,12 +34,11 @@ public static class MauiProgram
                     {
                         config.Username = "Axemasta";
                         config.Repository = "Mocale";
-                        config.Branch = "main";
-                        config.LocaleDirectory = "samples/Mocale.Samples/Resources/resx/";
+                        config.Branch = "mutliple-providers";
+                        config.LocaleDirectory = "samples/Locales/";
                         config.ResourceFileDetails = new ResxResourceFileDetails()
                         {
                             ResourcePrefix = "AppResources",
-                            PrimaryCulture = new CultureInfo("en-GB"),
                         };
                     });
             })

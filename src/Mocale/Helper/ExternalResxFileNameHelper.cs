@@ -21,12 +21,16 @@ internal class ExternalResxFileNameHelper : IExternalFileNameHelper
 
     public string GetExpectedFileName(CultureInfo culture)
     {
-        if (resourceFileDetails.PrimaryCulture == culture)
-        {
-            return $"{resourceFileDetails.ResourcePrefix}.resx";
-        }
+        string fileName;
 
-        var fileName = $"{resourceFileDetails.ResourcePrefix}.{culture.Name}.resx";
+        if (resourceFileDetails.PrimaryCulture != null && resourceFileDetails.PrimaryCulture.Equals(culture))
+        {
+            fileName = $"{resourceFileDetails.ResourcePrefix}.resx";
+        }
+        else
+        {
+            fileName = $"{resourceFileDetails.ResourcePrefix}.{culture.Name}.resx";
+        }
 
         if (!string.IsNullOrEmpty(resourceFileDetails.VersionPrefix))
         {
