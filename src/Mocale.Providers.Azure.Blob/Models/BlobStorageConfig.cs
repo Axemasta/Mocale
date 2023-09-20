@@ -1,4 +1,3 @@
-using Mocale.Enums;
 namespace Mocale.Providers.Azure.Blob.Models;
 
 /// <inheritdoc/>
@@ -14,8 +13,5 @@ public class BlobStorageConfig : IBlobStorageConfig
     public bool CheckForFile { get; set; } = true;
 
     /// <inheritdoc/>
-    public string? VersionPrefix { get; set; }
-
-    /// <inheritdoc/>
-    public LocaleResourceType ResourceType { get; set; } = LocaleResourceType.Json;
+    public IResourceFileDetails ResourceFileDetails { get; set; } = new JsonResourceFileDetails();
 }

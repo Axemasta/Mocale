@@ -1,4 +1,3 @@
-using Mocale.Enums;
 namespace Mocale.Providers.GitHub.Raw.Models;
 
 public class GithubRawConfig : IGithubRawConfig
@@ -11,7 +10,5 @@ public class GithubRawConfig : IGithubRawConfig
 
     public string LocaleDirectory { get; set; } = string.Empty;
 
-    public LocaleResourceType ResourceType { get; set; } = LocaleResourceType.Json;
-
-    public string? VersionPrefix { get; set; }
+    public IResourceFileDetails ResourceFileDetails { get; set; } = new JsonResourceFileDetails();
 }

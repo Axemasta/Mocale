@@ -81,7 +81,7 @@ public static class MocaleBuilderExtensions
 
     internal static void RegisterExternalResourceFileTypeResources(this MocaleBuilder builder, IExternalProviderConfiguration externalConfiguration)
     {
-        switch (externalConfiguration.ResourceType)
+        switch (externalConfiguration.ResourceFileDetails.ResourceType)
         {
             case LocaleResourceType.Json:
             {

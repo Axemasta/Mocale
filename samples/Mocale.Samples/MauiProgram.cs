@@ -1,6 +1,7 @@
 using System.Globalization;
 using Microsoft.Extensions.Logging;
 using Mocale.Cache.SQLite;
+using Mocale.Models;
 using Mocale.Providers.GitHub.Raw;
 using Mocale.Samples.ViewModels;
 using Mocale.Samples.Views;
@@ -22,7 +23,7 @@ public static class MauiProgram
                     })
                     .UseSqliteCache(config =>
                     {
-                        config.UpdateInterval = TimeSpan.FromDays(1);
+                        config.UpdateInterval = TimeSpan.FromSeconds(1);
                     })
                     .UseEmbeddedResources(config =>
                     {
@@ -34,7 +35,12 @@ public static class MauiProgram
                         config.Username = "Axemasta";
                         config.Repository = "Mocale";
                         config.Branch = "main";
-                        config.LocaleDirectory = "samples/Locales/";
+                        config.LocaleDirectory = "samples/Mocale.Samples/Resources/resx/";
+                        config.ResourceFileDetails = new ResxResourceFileDetails()
+                        {
+                            ResourcePrefix = "AppResources",
+                            PrimaryCulture = new CultureInfo("en-GB"),
+                        };
                     });
             })
             .ConfigureFonts(fonts =>
