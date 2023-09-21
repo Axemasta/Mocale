@@ -5,17 +5,29 @@ namespace Mocale.Helper;
 
 internal class ExternalJsonFileNameHelper : IExternalFileNameHelper
 {
-    private readonly IVersionPrefixHelper versionPrefixHelper;
+    private readonly JsonResourceFileDetails resourceFileDetails;
 
-    public ExternalJsonFileNameHelper(IVersionPrefixHelper versionPrefixHelper)
+    public ExternalJsonFileNameHelper(IConfigurationManager<IExternalProviderConfiguration> configurationManager)
     {
-        this.versionPrefixHelper = Guard.Against.Null(versionPrefixHelper, nameof(versionPrefixHelper));
+        configurationManager = Guard.Against.Null(configurationManager, nameof(configurationManager));
+
+        if (configurationManager.Configuration.ResourceFileDetails is not JsonResourceFileDetails fileDetails)
+        {
+            throw new NotSupportedException("Resource file details were not for json files");
+        }
+
+        this.resourceFileDetails = fileDetails;
     }
 
     public string GetExpectedFileName(CultureInfo culture)
     {
         var fileName = $"{culture.Name}.json";
 
-        return versionPrefixHelper.ApplyVersionPrefix(fileName);
+        if (!string.IsNullOrEmpty(resourceFileDetails.VersionPrefix))
+        {
+            fileName = string.Join("/", resourceFileDetails.VersionPrefix, fileName);
+        }
+
+        return fileName;
     }
 }

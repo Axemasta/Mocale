@@ -1,6 +1,7 @@
 using System.Globalization;
 using Microsoft.Extensions.Logging;
 using Mocale.Cache.SQLite;
+using Mocale.Models;
 using Mocale.Providers.GitHub.Raw;
 using Mocale.Samples.ViewModels;
 using Mocale.Samples.Views;
@@ -22,20 +23,32 @@ public static class MauiProgram
                     })
                     .UseSqliteCache(config =>
                     {
-                        config.UpdateInterval = TimeSpan.FromDays(7);
+                        config.UpdateInterval = TimeSpan.FromDays(1);
                     })
                     .UseEmbeddedResources(config =>
                     {
                         config.ResourcesPath = "Locales";
                         config.ResourcesAssembly = typeof(App).Assembly;
                     })
+                    //.UseGitHubRaw(config =>
+                    //{
+                    //    config.Username = "Axemasta";
+                    //    config.Repository = "Mocale";
+                    //    config.Branch = "main";
+                    //    config.LocaleDirectory = "samples/Locales/";
+                    //    config.ResourceFileDetails = new ResxResourceFileDetails()
+                    //    {
+                    //        ResourcePrefix = "AppResources",
+                    //    };
+                    //});
                     .UseGitHubRaw(config =>
-                    {
-                        config.Username = "Axemasta";
-                        config.Repository = "Mocale";
-                        config.Branch = "main";
-                        config.LocaleDirectory = "samples/Locales/";
-                    });
+                     {
+                         config.Username = "Axemasta";
+                         config.Repository = "Mocale";
+                         config.Branch = "main";
+                         config.LocaleDirectory = "samples/Locales/";
+                         config.ResourceFileDetails = new JsonResourceFileDetails();
+                     });
             })
             .ConfigureFonts(fonts =>
             {

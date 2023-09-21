@@ -1,15 +1,28 @@
+using System.Text.Json;
+using Ardalis.GuardClauses;
+
 namespace Mocale.Parsers;
 
 internal class JsonLocalizationParser : ILocalizationParser
 {
-    public Dictionary<string, string>? ParseLocalizationStream(Stream resourceStream)
+    private readonly ILogger logger;
+
+    public JsonLocalizationParser(ILogger<JsonLocalizationParser> logger)
     {
-        throw new NotImplementedException();
+        this.logger = Guard.Against.Null(logger, nameof(logger));
     }
 
-    public Dictionary<string, string>? ParseLocalizationString(string resourceString)
+    public Dictionary<string, string>? ParseLocalizationStream(Stream resourceStream)
     {
-        throw new NotImplementedException();
+        try
+        {
+            return JsonSerializer.Deserialize<Dictionary<string, string>>(resourceStream);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "An exception occurred parsing localization stream");
+            return null;
+        }
     }
 }
 

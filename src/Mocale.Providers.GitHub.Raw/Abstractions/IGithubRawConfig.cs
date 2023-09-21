@@ -1,6 +1,6 @@
 namespace Mocale.Providers.GitHub.Raw.Abstractions;
 
-public interface IGithubRawConfig : IExternalConfiguration
+public interface IGithubRawConfig : IExternalProviderConfiguration
 {
     string Username { get; }
 

@@ -1,6 +1,6 @@
 namespace Mocale.Providers.Azure.Blob.Abstractions;
 
-public interface IBlobStorageConfig : IExternalConfiguration
+public interface IBlobStorageConfig : IExternalProviderConfiguration
 {
     /// <summary>
     /// Uri for the blob container

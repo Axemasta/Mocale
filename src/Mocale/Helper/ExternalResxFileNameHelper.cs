@@ -2,19 +2,41 @@ using System.Globalization;
 using Ardalis.GuardClauses;
 
 namespace Mocale.Helper;
+
 internal class ExternalResxFileNameHelper : IExternalFileNameHelper
 {
-    private readonly IVersionPrefixHelper versionPrefixHelper;
+    private readonly ResxResourceFileDetails resourceFileDetails;
 
-    public ExternalResxFileNameHelper(IVersionPrefixHelper versionPrefixHelper)
+    public ExternalResxFileNameHelper(IConfigurationManager<IExternalProviderConfiguration> configurationManager)
     {
-        this.versionPrefixHelper = Guard.Against.Null(versionPrefixHelper, nameof(versionPrefixHelper));
+        configurationManager = Guard.Against.Null(configurationManager, nameof(configurationManager));
+
+        if (configurationManager.Configuration.ResourceFileDetails is not ResxResourceFileDetails fileDetails)
+        {
+            throw new NotSupportedException("Resource file details were not for resx files");
+        }
+
+        this.resourceFileDetails = fileDetails;
     }
 
     public string GetExpectedFileName(CultureInfo culture)
     {
-        var fileName = $"{culture.Name}.resx";
+        string fileName;
 
-        return versionPrefixHelper.ApplyVersionPrefix(fileName);
+        if (resourceFileDetails.PrimaryCulture != null && resourceFileDetails.PrimaryCulture.Equals(culture))
+        {
+            fileName = $"{resourceFileDetails.ResourcePrefix}.resx";
+        }
+        else
+        {
+            fileName = $"{resourceFileDetails.ResourcePrefix}.{culture.Name}.resx";
+        }
+
+        if (!string.IsNullOrEmpty(resourceFileDetails.VersionPrefix))
+        {
+            fileName = string.Join("/", resourceFileDetails.VersionPrefix, fileName);
+        }
+
+        return fileName;
     }
 }

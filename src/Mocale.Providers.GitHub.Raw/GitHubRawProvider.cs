@@ -1,7 +1,5 @@
 using System.Globalization;
-using System.Text.Json;
 using Ardalis.GuardClauses;
-using Mocale.Helper;
 using Mocale.Providers.GitHub.Raw.Helpers;
 namespace Mocale.Providers.GitHub.Raw;
 
@@ -38,13 +36,6 @@ internal class GitHubRawProvider : IExternalLocalizationProvider
 
     #endregion Constructors
 
-    private Uri GetResourceUrl(CultureInfo cultureInfo)
-    {
-        var fileName = externalFileNameHelper.GetExpectedFileName(cultureInfo);
-
-        return RawUrlBuilder.BuildResourceUrl(githubConfig.Username, githubConfig.Repository, githubConfig.Branch, githubConfig.LocaleDirectory, fileName);
-    }
-
     private async Task<IExternalLocalizationResult> QueryResourceUrlForLocalizations(Uri resourceUri)
     {
         try
@@ -64,7 +55,7 @@ internal class GitHubRawProvider : IExternalLocalizationProvider
 
             await using var resourceStream = await response.Content.ReadAsStreamAsync();
 
-            var localizations = await JsonSerializer.DeserializeAsync<Dictionary<string, string>>(resourceStream);
+            var localizations = localizationParser.ParseLocalizationStream(resourceStream);
 
             if (localizations is null)
             {
@@ -95,7 +86,7 @@ internal class GitHubRawProvider : IExternalLocalizationProvider
 
     public async Task<IExternalLocalizationResult> GetValuesForCultureAsync(CultureInfo cultureInfo)
     {
-        var fileName = ExternalResourceHelper.GetExpectedJsonFileName(cultureInfo, null);
+        var fileName = externalFileNameHelper.GetExpectedFileName(cultureInfo);
 
         var resourceUrl = RawUrlBuilder.BuildResourceUrl(githubConfig.Username, githubConfig.Repository, githubConfig.Branch, githubConfig.LocaleDirectory, fileName);
 

@@ -7,6 +7,13 @@ namespace Mocale;
 
 public static class MocaleBuilderExtensions
 {
+    /// <summary>
+    /// [Local Provider]
+    /// Use App Resources from a .resx file, these files will be available on the device at all times
+    /// </summary>
+    /// <param name="builder">Mocale Builder</param>
+    /// <param name="configureResources">Configuration Action</param>
+    /// <returns>Mocale Builder</returns>
     public static MocaleBuilder UseAppResources(this MocaleBuilder builder, Action<AppResourcesConfig> configureResources)
     {
         builder.RegisterLocalProvider(typeof(AppResourceProvider));
@@ -24,14 +31,21 @@ public static class MocaleBuilderExtensions
         return builder;
     }
 
-    public static MocaleBuilder UseEmbeddedResources(this MocaleBuilder builder, Action<EmbeddedResourcesConfig> configureJson)
+    /// <summary>
+    /// [Local Provider]
+    /// Use Embedded Resources, these files will be bundled in your assembly as an EmbeddedResource
+    /// </summary>
+    /// <param name="builder">Mocale Builder</param>
+    /// <param name="configureEmbedded">Configuration Action</param>
+    /// <returns>Mocale Builder</returns>
+    public static MocaleBuilder UseEmbeddedResources(this MocaleBuilder builder, Action<EmbeddedResourcesConfig> configureEmbedded)
     {
         builder.RegisterLocalProvider(typeof(EmbeddedResourceProvider));
 
         builder.ConfigurationManager.UpdateConfiguration(config => ((MocaleConfiguration)config).ResourceType = LocaleResourceType.Json);
 
         var config = new EmbeddedResourcesConfig();
-        configureJson.Invoke(config);
+        configureEmbedded.Invoke(config);
 
         var embeddedResourcesConfigManager = new ConfigurationManager<IEmbeddedResourcesConfig>(config);
 
@@ -57,7 +71,8 @@ public static class MocaleBuilderExtensions
         builder.LocalProviderName = provider.Name;
     }
 
-    internal static void RegisterExternalProvider(this MocaleBuilder builder, Type provider)
+    internal static void RegisterExternalProvider<TConfig>(this MocaleBuilder builder, Type provider, TConfig config)
+        where TConfig : IExternalProviderConfiguration
     {
         if (!provider.IsAssignableTo(typeof(IExternalLocalizationProvider)))
         {
@@ -69,13 +84,18 @@ public static class MocaleBuilderExtensions
             throw new InitializationException($"The following local provider was already registered: {builder.ExternalProviderName}");
         }
 
+        builder.AppBuilder.Services.AddSingleton<IConfigurationManager<TConfig>>(new ConfigurationManager<TConfig>(config));
+        builder.AppBuilder.Services.AddSingleton<IConfigurationManager<IExternalProviderConfiguration>>(new ConfigurationManager<IExternalProviderConfiguration>(config));
+
         builder.ExternalProviderRegistered = true;
         builder.ExternalProviderName = provider.Name;
+
+        builder.RegisterExternalResourceFileTypeResources(config);
     }
 
-    internal static void RegisterExternalResourceFileTypeResources(this MocaleBuilder builder, IExternalConfiguration externalConfiguration)
+    internal static void RegisterExternalResourceFileTypeResources(this MocaleBuilder builder, IExternalProviderConfiguration externalConfiguration)
     {
-        switch (externalConfiguration.ResourceType)
+        switch (externalConfiguration.ResourceFileDetails.ResourceType)
         {
             case LocaleResourceType.Json:
             {
