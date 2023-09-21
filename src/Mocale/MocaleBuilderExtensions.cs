@@ -7,6 +7,13 @@ namespace Mocale;
 
 public static class MocaleBuilderExtensions
 {
+    /// <summary>
+    /// [Local Provider]
+    /// Use App Resources from a .resx file, these files will be available on the device at all times
+    /// </summary>
+    /// <param name="builder">Mocale Builder</param>
+    /// <param name="configureResources">Configuration Action</param>
+    /// <returns>Mocale Builder</returns>
     public static MocaleBuilder UseAppResources(this MocaleBuilder builder, Action<AppResourcesConfig> configureResources)
     {
         builder.RegisterLocalProvider(typeof(AppResourceProvider));
@@ -24,14 +31,21 @@ public static class MocaleBuilderExtensions
         return builder;
     }
 
-    public static MocaleBuilder UseEmbeddedResources(this MocaleBuilder builder, Action<EmbeddedResourcesConfig> configureJson)
+    /// <summary>
+    /// [Local Provider]
+    /// Use Embedded Resources, these files will be bundled in your assembly as an EmbeddedResource
+    /// </summary>
+    /// <param name="builder">Mocale Builder</param>
+    /// <param name="configureEmbedded">Configuration Action</param>
+    /// <returns>Mocale Builder</returns>
+    public static MocaleBuilder UseEmbeddedResources(this MocaleBuilder builder, Action<EmbeddedResourcesConfig> configureEmbedded)
     {
         builder.RegisterLocalProvider(typeof(EmbeddedResourceProvider));
 
         builder.ConfigurationManager.UpdateConfiguration(config => ((MocaleConfiguration)config).ResourceType = LocaleResourceType.Json);
 
         var config = new EmbeddedResourcesConfig();
-        configureJson.Invoke(config);
+        configureEmbedded.Invoke(config);
 
         var embeddedResourcesConfigManager = new ConfigurationManager<IEmbeddedResourcesConfig>(config);
 

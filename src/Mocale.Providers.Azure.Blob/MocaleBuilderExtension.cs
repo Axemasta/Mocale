@@ -4,6 +4,14 @@ namespace Mocale.Providers.Azure.Blob;
 
 public static class MocaleBuilderExtension
 {
+    /// <summary>
+    /// [External Provider]
+    /// Use Azure Blob Storage to retrieve localizations
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <param name="configureBlobStorage"></param>
+    /// <returns></returns>
+    /// <exception cref="InitializationException"></exception>
     public static MocaleBuilder UseBlobStorage(this MocaleBuilder builder, Action<BlobStorageConfig> configureBlobStorage)
     {
         var config = new BlobStorageConfig();
