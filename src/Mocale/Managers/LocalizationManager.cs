@@ -56,6 +56,11 @@ public class LocalizationManager : ILocalizationManager
             else
             {
                 logger.LogInformation("No internal translations found for culture: {CultureName}, consider adding them as a backup", culture.Name);
+
+                if (!mocaleConfiguration.UseExternalProvider)
+                {
+                    return false;
+                }
             }
 
             CurrentCulture = culture;
