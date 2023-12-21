@@ -16,22 +16,16 @@ internal class EmbeddedResourceProvider : IInternalLocalizationProvider
         this.logger = logger;
     }
 
-    public Dictionary<string, string> GetValuesForCulture(CultureInfo cultureInfo)
+    public Dictionary<string, string>? GetValuesForCulture(CultureInfo cultureInfo)
     {
         // read assembly
         if (localConfig.ResourcesAssembly is null)
         {
             logger.LogWarning("Configured resource assembly was null");
-            return new Dictionary<string, string>();
+            return null;
         }
 
         var resources = localConfig.ResourcesAssembly.GetManifestResourceNames();
-
-        if (resources is null)
-        {
-            logger.LogWarning("No embedded resources found in assembly {ResourceAssembly}", localConfig.ResourcesAssembly);
-            return new Dictionary<string, string>();
-        }
 
         // look for the right folder
         var relativeFolder = localConfig.UseResourceFolder
@@ -40,12 +34,13 @@ internal class EmbeddedResourceProvider : IInternalLocalizationProvider
 
         var folderPrefix = localConfig.ResourcesAssembly.GetName().Name + "." + relativeFolder;
 
-        var localesFolderResources = resources.Where(r => r.StartsWith(folderPrefix, StringComparison.InvariantCultureIgnoreCase));
+        var localesFolderResources = resources.Where(r => r.StartsWith(folderPrefix, StringComparison.InvariantCultureIgnoreCase))
+            .ToList();
 
         if (!localesFolderResources.Any())
         {
             logger.LogWarning("No assembly resources found with prefix: {FolderPrefix}", folderPrefix);
-            return new Dictionary<string, string>();
+            return null;
         }
 
         // check if filenames match
@@ -59,7 +54,7 @@ internal class EmbeddedResourceProvider : IInternalLocalizationProvider
 
         logger.LogWarning("Unable to find resource for selected culture: {CultureName}", cultureInfo.Name);
 
-        return new Dictionary<string, string>();
+        return null;
     }
 
     private static bool FileMatchesCulture(string resourceName, CultureInfo culture)
@@ -73,14 +68,14 @@ internal class EmbeddedResourceProvider : IInternalLocalizationProvider
         return fileName.Equals(culture.Name, StringComparison.OrdinalIgnoreCase);
     }
 
-    private Dictionary<string, string> ParseFile(string filePath, Assembly assembly)
+    private Dictionary<string, string>? ParseFile(string filePath, Assembly assembly)
     {
         using var fileStream = assembly.GetManifestResourceStream(filePath);
 
         if (fileStream is null)
         {
             logger.LogWarning("File stream was null for assembly resource: {FilePath}", filePath);
-            return new Dictionary<string, string>();
+            return null;
         }
 
         try
@@ -92,7 +87,7 @@ internal class EmbeddedResourceProvider : IInternalLocalizationProvider
         {
             logger.LogError(ex, "An exception occurred loading & parsing assembly resource {FilePath}", filePath);
 
-            return new Dictionary<string, string>();
+            return null;
         }
     }
 }
