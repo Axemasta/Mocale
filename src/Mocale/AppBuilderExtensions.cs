@@ -1,6 +1,8 @@
+using System.Globalization;
 using Mocale.Exceptions;
 using Mocale.Helper;
 using Mocale.Managers;
+using Mocale.Providers;
 using Mocale.Wrappers;
 namespace Mocale;
 
@@ -50,6 +52,11 @@ public static class AppBuilderExtensions
         if (config.UseExternalProvider && !mocaleBuilder.ExternalProviderRegistered)
         {
             throw new InitializationException($"No external provider was registered when mocale was configured to use one. Please register an external provider or set {nameof(IMocaleConfiguration.UseExternalProvider)} to false.");
+        }
+
+        if (!config.UseExternalProvider)
+        {
+            mauiAppBuilder.Services.AddTransient<IExternalLocalizationProvider, InactiveExternalLocalizationProvider>();
         }
 
         if (!mocaleBuilder.CacheProviderRegistered)
