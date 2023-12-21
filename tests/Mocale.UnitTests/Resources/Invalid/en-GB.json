@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Localizations>
+  <CurrentLocaleName>English</CurrentLocaleName>
+  <LocalizationCurrentProviderIs>The current localization provider is:</LocalizationCurrentProviderIs>
+  <LocalizationProviderName>Json</LocalizationProviderName>
+  <MocaleDescription>Localization framework for .NET Maui</MocaleDescription>
+  <MocaleTitle>Mocale</MocaleTitle>
+  <ExternalPrefixExplanation>Strings prefixed with GR_ indicate they have been pulled from the external provider (GitHub.Raw), when the local cache expires if these values change, so will the text displayed!</ExternalPrefixExplanation>
+</Localizations>

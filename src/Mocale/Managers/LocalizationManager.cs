@@ -6,6 +6,7 @@ public class LocalizationManager : ILocalizationManager
 {
     private readonly ICurrentCultureManager currentCultureManager;
     private readonly ILogger logger;
+    private readonly IMocaleConfiguration mocaleConfiguration;
     private readonly ITranslationResolver translationResolver;
     private readonly ITranslationUpdater translationUpdater;
 
@@ -13,6 +14,7 @@ public class LocalizationManager : ILocalizationManager
 
     public LocalizationManager(
         ICurrentCultureManager currentCultureManager,
+        IConfigurationManager<IMocaleConfiguration> configurationManager,
         ILogger<LocalizationManager> logger,
         ITranslationResolver translationResolver,
         ITranslationUpdater translationUpdater)
@@ -22,6 +24,9 @@ public class LocalizationManager : ILocalizationManager
         this.translationResolver = Guard.Against.Null(translationResolver, nameof(translationResolver));
         this.translationUpdater = Guard.Against.Null(translationUpdater, nameof(this.translationUpdater));
 
+        configurationManager = Guard.Against.Null(configurationManager, nameof(configurationManager));
+        this.mocaleConfiguration = configurationManager.Configuration;
+
         CurrentCulture = currentCultureManager.GetActiveCulture();
     }
 
@@ -29,12 +34,17 @@ public class LocalizationManager : ILocalizationManager
     {
         try
         {
-            var result = await translationResolver.LoadTranslations(culture);
-
-            if (!result.Loaded)
+            if (mocaleConfiguration.UseExternalProvider)
             {
-                logger.LogWarning("Unable to load culture {CultureName}, no localizations found", culture.Name);
-                return false;
+                var result = await translationResolver.LoadTranslations(culture);
+
+                if (!result.Loaded)
+                {
+                    logger.LogWarning("Unable to load culture {CultureName}, no localizations found", culture.Name);
+                    return false;
+                }
+
+                translationUpdater.UpdateTranslations(result.Localization, result.Source);
             }
 
             var localTranslations = translationResolver.LoadLocalTranslations(culture);
@@ -46,9 +56,12 @@ public class LocalizationManager : ILocalizationManager
             else
             {
                 logger.LogInformation("No internal translations found for culture: {CultureName}, consider adding them as a backup", culture.Name);
-            }
 
-            translationUpdater.UpdateTranslations(result.Localization, result.Source);
+                if (!mocaleConfiguration.UseExternalProvider)
+                {
+                    return false;
+                }
+            }
 
             CurrentCulture = culture;
 
@@ -93,7 +106,7 @@ public class LocalizationManager : ILocalizationManager
 
         logger.LogTrace("Loaded local translations from source: {TranslationSource}", localTranslations.Source);
 
-        if (localTranslations.Source is TranslationSource.Internal or TranslationSource.ColdCache)
+        if ((localTranslations.Source is TranslationSource.Internal or TranslationSource.ColdCache) && mocaleConfiguration.UseExternalProvider)
         {
             logger.LogInformation("External translations can be updated, checking for newer copy...");
 

@@ -13,22 +13,35 @@ public class LocalizationManagerTests : FixtureBase<ILocalizationManager>
     #region Setup
 
     private readonly Mock<ICurrentCultureManager> currentCultureManager;
+    private readonly Mock<IConfigurationManager<IMocaleConfiguration>> configurationManager;
     private readonly Mock<ILogger<LocalizationManager>> logger;
+    private readonly Mock<IMocaleConfiguration> mocaleConfiguration;
     private readonly Mock<ITranslationResolver> translationResolver;
     private readonly Mock<ITranslationUpdater> translationUpdater;
 
     public LocalizationManagerTests()
     {
         currentCultureManager = new Mock<ICurrentCultureManager>();
+        configurationManager = new Mock<IConfigurationManager<IMocaleConfiguration>>();
         logger = new Mock<ILogger<LocalizationManager>>();
+        mocaleConfiguration = new Mock<IMocaleConfiguration>();
         translationResolver = new Mock<ITranslationResolver>();
         translationUpdater = new Mock<ITranslationUpdater>();
+
+        mocaleConfiguration = new Mock<IMocaleConfiguration>();
+
+        mocaleConfiguration.SetupGet(m => m.UseExternalProvider)
+            .Returns(true);
+
+        configurationManager.SetupGet(m => m.Configuration)
+            .Returns(mocaleConfiguration.Object);
     }
 
     public override ILocalizationManager CreateSystemUnderTest()
     {
         return new LocalizationManager(
             currentCultureManager.Object,
+            configurationManager.Object,
             logger.Object,
             translationResolver.Object,
             translationUpdater.Object
@@ -383,6 +396,180 @@ public class LocalizationManagerTests : FixtureBase<ILocalizationManager>
     }
 
     [Fact]
+    public async Task Initialize_WhenExternalProviderNotEnabledAndLocalProviderFailsToLoad_ShouldLogAndReturnFalse()
+    {
+        // Arrange
+        mocaleConfiguration.SetupGet(m => m.UseExternalProvider)
+            .Returns(false);
+
+        var activeCulture = new CultureInfo("fr-FR");
+
+        currentCultureManager.Setup(m => m.GetActiveCulture())
+            .Returns(activeCulture);
+
+        translationResolver.Setup(m => m.LoadLocalTranslations(activeCulture))
+            .Returns(new TranslationLoadResult()
+            {
+                Loaded = false,
+                Localization = Localization.Invariant,
+            });
+
+        // Act
+        var initialized = await Sut.Initialize();
+
+        // Assert
+        Assert.False(initialized);
+
+        logger.VerifyLog(
+            log => log.LogWarning("Unable to load translations for culture: {CultureName}", activeCulture.Name),
+            Times.Once());
+    }
+
+    [Fact]
+    public async Task Initialize_WhenExternalProviderNotEnabledAndLocalProviderLoadsFromInternal_ShouldUpdateAndReturnTrueWithoutUpdatingExternal()
+    {
+        // Arrange
+        mocaleConfiguration.SetupGet(m => m.UseExternalProvider)
+            .Returns(false);
+
+        var activeCulture = new CultureInfo("it-IT");
+
+        currentCultureManager.Setup(m => m.GetActiveCulture())
+            .Returns(activeCulture);
+
+        var loadResult = new TranslationLoadResult()
+        {
+            Loaded = true,
+            Localization = new Localization()
+            {
+                CultureInfo = activeCulture,
+                Translations = new Dictionary<string, string>()
+                {
+                    { "KeyOne", "Ciao mondo!" },
+                }
+            },
+            Source = TranslationSource.Internal,
+        };
+
+        translationResolver.Setup(m => m.LoadLocalTranslations(activeCulture))
+            .Returns(loadResult);
+
+        // Act
+        var initialized = await Sut.Initialize();
+
+        // Assert
+        Assert.True(initialized);
+
+        translationUpdater.Verify(
+            m => m.UpdateTranslations(loadResult.Localization, TranslationSource.Internal),
+            Times.Once());
+
+        logger.VerifyLog(
+            log => log.LogTrace("Loaded local translations from source: {TranslationSource}", TranslationSource.Internal),
+            Times.Once());
+
+        logger.VerifyLog(
+            log => log.LogInformation("External translations can be updated, checking for newer copy..."),
+            Times.Never());
+    }
+
+    [Fact]
+    public async Task Initialize_WhenExternalProviderNotEnabledAndLocalProviderLoadsFromColdCache_ShouldUpdateAndReturnTrueWithoutUpdatingExternal()
+    {
+        // Arrange
+        mocaleConfiguration.SetupGet(m => m.UseExternalProvider)
+            .Returns(false);
+
+        var activeCulture = new CultureInfo("it-IT");
+
+        currentCultureManager.Setup(m => m.GetActiveCulture())
+            .Returns(activeCulture);
+
+        var loadResult = new TranslationLoadResult()
+        {
+            Loaded = true,
+            Localization = new Localization()
+            {
+                CultureInfo = activeCulture,
+                Translations = new Dictionary<string, string>()
+                {
+                    { "KeyOne", "Ciao mondo!" },
+                }
+            },
+            Source = TranslationSource.ColdCache,
+        };
+
+        translationResolver.Setup(m => m.LoadLocalTranslations(activeCulture))
+            .Returns(loadResult);
+
+        // Act
+        var initialized = await Sut.Initialize();
+
+        // Assert
+        Assert.True(initialized);
+
+        translationUpdater.Verify(
+            m => m.UpdateTranslations(loadResult.Localization, TranslationSource.ColdCache),
+            Times.Once());
+
+        logger.VerifyLog(
+            log => log.LogTrace("Loaded local translations from source: {TranslationSource}", TranslationSource.ColdCache),
+            Times.Once());
+
+        logger.VerifyLog(
+            log => log.LogInformation("External translations can be updated, checking for newer copy..."),
+            Times.Never());
+    }
+
+    [Fact]
+    public async Task Initialize_WhenExternalProviderNotEnabledAndLocalProviderLoadsFromHotCache_ShouldUpdateAndReturnTrueWithoutUpdatingExternal()
+    {
+        // Arrange
+        mocaleConfiguration.SetupGet(m => m.UseExternalProvider)
+            .Returns(false);
+
+        var activeCulture = new CultureInfo("it-IT");
+
+        currentCultureManager.Setup(m => m.GetActiveCulture())
+            .Returns(activeCulture);
+
+        var loadResult = new TranslationLoadResult()
+        {
+            Loaded = true,
+            Localization = new Localization()
+            {
+                CultureInfo = activeCulture,
+                Translations = new Dictionary<string, string>()
+                {
+                    { "KeyOne", "Ciao mondo!" },
+                }
+            },
+            Source = TranslationSource.WarmCache,
+        };
+
+        translationResolver.Setup(m => m.LoadLocalTranslations(activeCulture))
+            .Returns(loadResult);
+
+        // Act
+        var initialized = await Sut.Initialize();
+
+        // Assert
+        Assert.True(initialized);
+
+        translationUpdater.Verify(
+            m => m.UpdateTranslations(loadResult.Localization, TranslationSource.WarmCache),
+            Times.Once());
+
+        logger.VerifyLog(
+            log => log.LogTrace("Loaded local translations from source: {TranslationSource}", TranslationSource.WarmCache),
+            Times.Once());
+
+        logger.VerifyLog(
+            log => log.LogInformation("External translations can be updated, checking for newer copy..."),
+            Times.Never());
+    }
+
+    [Fact]
     public async Task SetCultureAsync_WhenSomethingThrows_ShouldLogAndReturnFalse()
     {
         // Arrange
@@ -572,6 +759,104 @@ public class LocalizationManagerTests : FixtureBase<ILocalizationManager>
         translationUpdater.Verify(
             m => m.UpdateTranslations(localLoadResult.Localization, TranslationSource.Internal),
             Times.Never());
+    }
+
+    [Fact]
+    public async Task SetCultureAsync_WhenExternalProviderNotEnabledAndLocalTranslationsNotLoaded_ShouldReturnFalseAndNotSetCulture()
+    {
+        mocaleConfiguration.SetupGet(m => m.UseExternalProvider)
+            .Returns(false);
+
+        var activeCulture = new CultureInfo("it-IT");
+
+        currentCultureManager.Setup(m => m.GetActiveCulture())
+            .Returns(activeCulture);
+
+        var newCulture = new CultureInfo("fr-FR");
+
+        var localLoadResult = new TranslationLoadResult()
+        {
+            Loaded = false,
+            Localization = Localization.Invariant,
+            Source = TranslationSource.Internal,
+        };
+
+        translationResolver.Setup(m => m.LoadLocalTranslations(newCulture))
+            .Returns(localLoadResult);
+
+        // Act
+        var loaded = await Sut.SetCultureAsync(newCulture);
+
+        // Assert
+        Assert.False(loaded);
+        Assert.Equal(activeCulture, Sut.CurrentCulture);
+        Assert.NotEqual(newCulture, Sut.CurrentCulture);
+
+        currentCultureManager.Verify(
+            m => m.SetActiveCulture(It.IsAny<CultureInfo>()),
+            Times.Never);
+
+        logger.VerifyLog(
+            log => log.LogDebug("Updated localization culture to {CultureName}", newCulture.Name),
+            Times.Never());
+    }
+
+    [Fact]
+    public async Task SetCultureAsync_WhenExternalProviderNotEnabledAndLocalTranslationsLoaded_ShouldReturnTrue()
+    {
+        mocaleConfiguration.SetupGet(m => m.UseExternalProvider)
+            .Returns(false);
+
+        var activeCulture = new CultureInfo("it-IT");
+
+        currentCultureManager.Setup(m => m.GetActiveCulture())
+            .Returns(activeCulture);
+
+        var newCulture = new CultureInfo("fr-FR");
+
+        var localLoadResult = new TranslationLoadResult()
+        {
+            Loaded = true,
+            Localization = new Localization()
+            {
+                CultureInfo = newCulture,
+                Translations = new Dictionary<string, string>()
+                {
+                    { "KeyOne", "Bonjour le monde" },
+                },
+            },
+            Source = TranslationSource.Internal,
+        };
+
+        translationResolver.Setup(m => m.LoadLocalTranslations(newCulture))
+            .Returns(localLoadResult);
+
+        // Act
+        var loaded = await Sut.SetCultureAsync(newCulture);
+
+        // Assert
+        Assert.True(loaded);
+        Assert.Equal(newCulture, Sut.CurrentCulture);
+
+        currentCultureManager.Verify(
+            m => m.SetActiveCulture(newCulture),
+            Times.Once());
+
+        logger.VerifyLog(
+            log => log.LogDebug("Updated localization culture to {CultureName}", newCulture.Name),
+            Times.Once());
+
+        logger.VerifyLog(
+            log => log.LogInformation("No internal translations found for culture: {CultureName}, consider adding them as a backup", newCulture.Name),
+            Times.Never);
+
+        translationUpdater.Verify(
+            m => m.UpdateTranslations(It.IsAny<Localization>(), TranslationSource.External),
+            Times.Never());
+
+        translationUpdater.Verify(
+            m => m.UpdateTranslations(localLoadResult.Localization, TranslationSource.Internal),
+            Times.Once());
     }
 
     #endregion Tests

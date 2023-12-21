@@ -33,5 +33,10 @@
     <ProjectReference Include="..\..\src\Mocale.Providers.Github.Raw\Mocale.Providers.Github.Raw.csproj" />
     <ProjectReference Include="..\..\src\Mocale\Mocale.csproj" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <!-- Some fake files embedded to allow testing embedded resource loading -->
+    <EmbeddedResource Include="Resources/**/*"/>
+  </ItemGroup>
 
 </Project>

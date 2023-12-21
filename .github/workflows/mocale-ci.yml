@@ -25,6 +25,14 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 7.0.x
+    - name: Setup Java JDK
+      uses: actions/setup-java@v4.0.0
+      with:
+        distribution: 'microsoft'
+        java-version: '11'
+        architecture: 'x64'
+    - name: Install Maui Workloads
+      run: dotnet workload install maui --source https://api.nuget.org/v3/index.json
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
