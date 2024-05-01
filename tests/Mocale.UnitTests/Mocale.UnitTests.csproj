@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>$(StandardTargetFramework)</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
@@ -36,7 +36,7 @@
   
   <ItemGroup>
     <!-- Some fake files embedded to allow testing embedded resource loading -->
-    <EmbeddedResource Include="Resources/**/*"/>
+    <EmbeddedResource Include="Resources/**/*" />
   </ItemGroup>
 
 </Project>

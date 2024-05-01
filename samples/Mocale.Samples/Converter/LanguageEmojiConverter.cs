@@ -1,5 +1,5 @@
 using System.Globalization;
-using Mocale.Abstractions;
+
 namespace Mocale.Samples.Converter;
 
 internal sealed class LanguageEmojiConverter : IValueConverter

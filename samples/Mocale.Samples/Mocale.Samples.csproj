@@ -1,22 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net7.0-android;net7.0-ios;net7.0-maccatalyst</TargetFrameworks>
-    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net7.0-windows10.0.19041.0</TargetFrameworks>
-    <!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
-    <!-- <TargetFrameworks>$(TargetFrameworks);net7.0-tizen</TargetFrameworks> -->
-    <OutputType>Exe</OutputType>
-    <RootNamespace>Mocale.Samples</RootNamespace>
+    <TargetFrameworks>$(MauiPlatformTargetFrameworks);</TargetFrameworks>
     <UseMaui>true</UseMaui>
+    <OutputType Condition="'$(TargetFramework)' != '$(StandardTargetFramework)'">Exe</OutputType>
+    <RootNamespace>Mocale.Samples</RootNamespace>
     <SingleProject>true</SingleProject>
-    <ImplicitUsings>enable</ImplicitUsings>
+    <ImplicitUsings>true</ImplicitUsings>
+    
     <GenerateSatelliteAssembliesForCore>true</GenerateSatelliteAssembliesForCore>
 
     <!-- Display name -->
     <ApplicationTitle>Mocale.Samples</ApplicationTitle>
 
     <!-- App Identifier -->
-    <ApplicationId>com.companyname.mocale.samples</ApplicationId>
+    <ApplicationId>com.axemasta.mocale.samples</ApplicationId>
     <ApplicationIdGuid>432e5f26-7a6a-4945-a189-7d5f776ba14b</ApplicationIdGuid>
 
     <!-- Versions -->
@@ -64,7 +62,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
     <PackageReference Include="Refractored.MvvmHelpers" Version="1.6.2" />
   </ItemGroup>
 
