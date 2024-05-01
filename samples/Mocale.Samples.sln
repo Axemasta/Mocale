@@ -17,6 +17,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DD07193B-0A76-436A-80B6-B6915F00C20A}"
 	ProjectSection(SolutionItems) = preProject
 		..\.editorconfig = ..\.editorconfig
+		..\directory.build.props = ..\directory.build.props
 		..\global.json = ..\global.json
 	EndProjectSection
 EndProject
@@ -38,9 +39,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mocale.GeneratorSample", "M
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{23D0CB27-546A-43F3-B467-04D2A4672D81}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mocale.UnitTests", "..\tests\Mocale.UnitTests\Mocale.UnitTests.csproj", "{04F9CE7A-4E0E-4DDD-9730-1BC6348559EF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mocale.UnitTests", "..\tests\Mocale.UnitTests\Mocale.UnitTests.csproj", "{04F9CE7A-4E0E-4DDD-9730-1BC6348559EF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mocale.Providers.GitHub.Raw", "..\src\Mocale.Providers.GitHub.Raw\Mocale.Providers.GitHub.Raw.csproj", "{DE6A22FD-CAAA-4FD0-896D-066ABC5AFBAB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mocale.Providers.GitHub.Raw", "..\src\Mocale.Providers.GitHub.Raw\Mocale.Providers.GitHub.Raw.csproj", "{DE6A22FD-CAAA-4FD0-896D-066ABC5AFBAB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
