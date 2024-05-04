@@ -4,5 +4,17 @@
   "LocalizationProviderName": "Json",
   "MocaleDescription": "Localization framework for .NET Maui",
   "MocaleTitle": "Mocale",
-  "ExternalPrefixExplanation": "Strings prefixed with GR_ indicate they have been pulled from the external provider (GitHub.Raw), when the local cache expires if these values change, so will the text displayed!"
+  "ExternalPrefixExplanation": "Strings prefixed with GR_ indicate they have been pulled from the external provider (GitHub.Raw), when the local cache expires if these values change, so will the text displayed!",
+  "CityDescription_London": "London, the capital of England and the United Kingdom, is a 21st-century city with history stretching back to Roman times. At its centre stand the imposing Houses of Parliament, the iconic ‘Big Ben’ clock tower and Westminster Abbey, site of British monarch coronations. Across the Thames River, the London Eye observation wheel provides panoramic views of the South Bank cultural complex, and the entire city.",
+  "CityDescription_Nottingham": "Nottingham is a city in central England’s Midlands region. It’s known for its role in the Robin Hood legend and for the hilltop Nottingham Castle Museum and Art Gallery, rebuilt many times since the medieval era. In the Lace Market area, once the centre of the world’s lace industry, the Galleries of Justice Museum has crime-related exhibits. Wollaton Hall is an ornate Elizabethan mansion with gardens and a deer park.",
+  "CityDescription_Newcastle": "Newcastle upon Tyne, or simply Newcastle, is a city and metropolitan borough in Tyne and Wear, England. It is England's northernmost metropolitan borough, located on the River Tyne's northern bank opposite Gateshead to the south. It is the most populous settlement in the Tyneside conurbation and North East England.",
+  "CityDescription_Manchester": "Manchester is a major city in the northwest of England with a rich industrial heritage. The Castlefield conservation area’s 18th-century canal system recalls the city’s days as a textile powerhouse, and visitors can trace this history at the interactive Museum of Science & Industry. The revitalised Salford Quays dockyards now house the Daniel Libeskind-designed Imperial War Museum North and the Lowry cultural centre.",
+  "BindingPage_Title": "Binding",
+  "BindingPage_Heading": "This page shows how to use Mocale to correctly respond to value changes and bindings.",
+  "BindingPage_CityDemo_Title": "City converter",
+  "BindingPage_CityDemo_Heading": "In this demo we have a Picker with some values, when the value changes we want to change the text being displayed. This is using a converter behind the scenes to change the localisation based on the selected city.",
+  "BindingPage_CityDemo_PickerPlaceholder": "Select a city...",
+  "BindingPage_CodeBehind_Title": "Code Behind Translation",
+  "BindingPage_CodeBehind_Heading": "In this example we have a label whos translation will be set via code behind using the SetTranslation method.",
+  "BindingPage_CodeBehind_LabelKey": "This translation was set in c# code, not xaml!"
 }

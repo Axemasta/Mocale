@@ -91,13 +91,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <MauiXaml Update="Views\IntroductionPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </MauiXaml>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Resources\Locales\" />
     <EmbeddedResource Include="Resources\Locales\*.json" />
     <AdditionalFiles Include="Resources\Locales\*.json" />
   </ItemGroup>

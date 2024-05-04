@@ -1,12 +1,11 @@
-using Mocale.Samples.Views;
 namespace Mocale.Samples;
 
 public partial class App : Application
 {
-    public App(IntroductionPage introductionPage)
+    public App()
     {
         InitializeComponent();
 
-        MainPage = new NavigationPage(introductionPage);
+        MainPage = new AppShell();
     }
 }

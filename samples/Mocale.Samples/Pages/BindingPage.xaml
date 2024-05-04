@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="Mocale.Samples.Pages.BindingPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:converters="clr-namespace:Mocale.Samples.Converters"
+    xmlns:keys="clr-namespace:Mocale.Translations"
+    xmlns:mocale="http://axemasta.com/schemas/2022/mocale"
+    Title="{mocale:Localize Key={x:Static keys:TranslationKeys.BindingPageTitle}}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:CityDescriptionConverter x:Key="CityDescriptionConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout
+            HorizontalOptions="Fill"
+            Spacing="20"
+            VerticalOptions="Start">
+            <Label Text="{mocale:Localize Key={x:Static keys:TranslationKeys.BindingPageHeading}}" />
+
+
+            <VerticalStackLayout>
+
+                <Label Text="{mocale:Localize Key={x:Static keys:TranslationKeys.BindingPageCityDemoTitle}}" />
+                <Label Text="{mocale:Localize Key={x:Static keys:TranslationKeys.BindingPageCityDemoHeading}}" />
+
+                <Picker x:Name="CityPicker" Title="{mocale:Localize Key={x:Static keys:TranslationKeys.BindingPageCityDemoPickerPlaceholder}}">
+                    <Picker.ItemsSource>
+                        <x:Array Type="{x:Type x:String}">
+                            <x:String>London</x:String>
+                            <x:String>Manchester</x:String>
+                            <x:String>Nottingham</x:String>
+                            <x:String>Newcastle</x:String>
+                        </x:Array>
+                    </Picker.ItemsSource>
+                </Picker>
+
+                <Label Text="{Binding Source={x:Reference CityPicker}, Path=SelectedItem, Converter={StaticResource CityDescriptionConverter}}" />
+
+            </VerticalStackLayout>
+
+            <VerticalStackLayout>
+
+                <Label Text="{mocale:Localize Key={x:Static keys:TranslationKeys.BindingPageCodeBehindTitle}}" />
+                <Label Text="{mocale:Localize Key={x:Static keys:TranslationKeys.BindingPageCodeBehindHeading}}" />
+
+                <Label x:Name="Label" />
+
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+
+
+
+    </ScrollView>
+</ContentPage>
