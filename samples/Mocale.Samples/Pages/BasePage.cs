@@ -1,6 +1,8 @@
+using CommunityToolkit.Mvvm.ComponentModel;
+
 namespace Mocale.Samples.Pages;
 
-public abstract class BasePage<TViewModel> : ContentPage where TViewModel : BaseViewModel
+public abstract class BasePage<TViewModel> : ContentPage where TViewModel : ObservableObject
 {
     protected BasePage(TViewModel viewModel)
     {

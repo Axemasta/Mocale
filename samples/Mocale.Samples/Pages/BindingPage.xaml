@@ -11,6 +11,13 @@
     <ContentPage.Resources>
         <ResourceDictionary>
             <converters:CityDescriptionConverter x:Key="CityDescriptionConverter" />
+
+            <Style TargetType="Border">
+                <Setter Property="StrokeShape" Value="RoundRectangle, 20" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray900}}" />
+                <Setter Property="Padding" Value="10" />
+            </Style>
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -22,34 +29,38 @@
             <Label Text="{mocale:Localize Key={x:Static keys:TranslationKeys.BindingPageHeading}}" />
 
 
-            <VerticalStackLayout>
+            <Border>
+                <VerticalStackLayout Spacing="10">
 
-                <Label Text="{mocale:Localize Key={x:Static keys:TranslationKeys.BindingPageCityDemoTitle}}" />
-                <Label Text="{mocale:Localize Key={x:Static keys:TranslationKeys.BindingPageCityDemoHeading}}" />
+                    <Label Text="{mocale:Localize Key={x:Static keys:TranslationKeys.BindingPageCityDemoTitle}}" />
+                    <Label Text="{mocale:Localize Key={x:Static keys:TranslationKeys.BindingPageCityDemoHeading}}" />
 
-                <Picker x:Name="CityPicker" Title="{mocale:Localize Key={x:Static keys:TranslationKeys.BindingPageCityDemoPickerPlaceholder}}">
-                    <Picker.ItemsSource>
-                        <x:Array Type="{x:Type x:String}">
-                            <x:String>London</x:String>
-                            <x:String>Manchester</x:String>
-                            <x:String>Nottingham</x:String>
-                            <x:String>Newcastle</x:String>
-                        </x:Array>
-                    </Picker.ItemsSource>
-                </Picker>
+                    <Picker x:Name="CityPicker" Title="{mocale:Localize Key={x:Static keys:TranslationKeys.BindingPageCityDemoPickerPlaceholder}}">
+                        <Picker.ItemsSource>
+                            <x:Array Type="{x:Type x:String}">
+                                <x:String>London</x:String>
+                                <x:String>Manchester</x:String>
+                                <x:String>Nottingham</x:String>
+                                <x:String>Newcastle</x:String>
+                            </x:Array>
+                        </Picker.ItemsSource>
+                    </Picker>
 
-                <Label Text="{Binding Source={x:Reference CityPicker}, Path=SelectedItem, Converter={StaticResource CityDescriptionConverter}}" />
+                    <Label Text="{Binding Source={x:Reference CityPicker}, Path=SelectedItem, Converter={StaticResource CityDescriptionConverter}}" />
 
-            </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
 
-            <VerticalStackLayout>
+            <Border>
+                <VerticalStackLayout Spacing="10">
 
-                <Label Text="{mocale:Localize Key={x:Static keys:TranslationKeys.BindingPageCodeBehindTitle}}" />
-                <Label Text="{mocale:Localize Key={x:Static keys:TranslationKeys.BindingPageCodeBehindHeading}}" />
+                    <Label Text="{mocale:Localize Key={x:Static keys:TranslationKeys.BindingPageCodeBehindTitle}}" />
+                    <Label Text="{mocale:Localize Key={x:Static keys:TranslationKeys.BindingPageCodeBehindHeading}}" />
 
-                <Label x:Name="Label" />
+                    <Label x:Name="Label" />
 
-            </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
         </VerticalStackLayout>
 
 

@@ -1,42 +1,35 @@
 using System.Globalization;
+
 namespace Mocale.Samples.ViewModels;
 
-public class IntroductionPageViewModel : BaseViewModel
+public partial class IntroductionPageViewModel : BaseViewModel
 {
     private readonly ILocalizationManager localizationManager;
 
     public ObservableRangeCollection<string> Locales { get; }
 
+    [ObservableProperty]
     private string selectedLocale;
-
-    public string SelectedLocale
-    {
-        get => selectedLocale;
-        set
-        {
-            var oldValue = selectedLocale;
-
-            if (SetProperty(ref selectedLocale, value))
-            {
-                RaiseLocaleSelected(oldValue, value);
-            }
-        }
-    }
 
     public IntroductionPageViewModel(ILocalizationManager localizationManager)
     {
         this.localizationManager = localizationManager;
 
-        Locales = new ObservableRangeCollection<string>(new[]
-        {
+        Locales = new ObservableRangeCollection<string>(
+        [
             "en-GB",
             "fr-FR",
             "it-IT",
-        });
+        ]);
 
         var selectedLocale = Locales.FirstOrDefault(localizationManager.CurrentCulture.Name.Equals);
 
         SelectedLocale = selectedLocale ?? Locales[0];
+    }
+
+    partial void OnSelectedLocaleChanged(string oldValue, string newValue)
+    {
+        RaiseLocaleSelected(oldValue, newValue);
     }
 
     private async void RaiseLocaleSelected(string oldValue, string newValue)
