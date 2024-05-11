@@ -11,13 +11,6 @@
     <ContentPage.Resources>
         <ResourceDictionary>
             <converters:CityDescriptionConverter x:Key="CityDescriptionConverter" />
-
-            <Style TargetType="Border">
-                <Setter Property="StrokeShape" Value="RoundRectangle, 20" />
-                <Setter Property="StrokeThickness" Value="0" />
-                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray900}}" />
-                <Setter Property="Padding" Value="10" />
-            </Style>
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -27,7 +20,6 @@
             Spacing="20"
             VerticalOptions="Start">
             <Label Text="{mocale:Localize Key={x:Static keys:TranslationKeys.BindingPageHeading}}" />
-
 
             <Border>
                 <VerticalStackLayout Spacing="10">
@@ -62,8 +54,6 @@
                 </VerticalStackLayout>
             </Border>
         </VerticalStackLayout>
-
-
 
     </ScrollView>
 </ContentPage>

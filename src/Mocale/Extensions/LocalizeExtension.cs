@@ -2,9 +2,9 @@ using Ardalis.GuardClauses;
 namespace Mocale.Extensions;
 
 [ContentProperty(nameof(Key))]
-public class LocalizeExtension : IMarkupExtension<BindingBase>
+public class LocalizeExtension(ITranslatorManager translatorManager) : IMarkupExtension<BindingBase>
 {
-    private readonly ITranslatorManager translatorManager;
+    private readonly ITranslatorManager translatorManager = Guard.Against.Null(translatorManager, nameof(translatorManager));
 
     public string? Key { get; set; }
 
@@ -13,11 +13,6 @@ public class LocalizeExtension : IMarkupExtension<BindingBase>
     public LocalizeExtension()
         : this(MocaleLocator.TranslatorManager)
     {
-    }
-
-    public LocalizeExtension(ITranslatorManager translatorManager)
-    {
-        this.translatorManager = Guard.Against.Null(translatorManager, nameof(translatorManager));
     }
 
     public BindingBase ProvideValue(IServiceProvider serviceProvider)

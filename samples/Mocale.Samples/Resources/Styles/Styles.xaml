@@ -11,10 +11,17 @@
         <Setter Property="SelectedIndicatorColor" Value="{AppThemeBinding Light={StaticResource Gray950}, Dark={StaticResource Gray100}}" />
     </Style>
 
-    <Style TargetType="Border">
+    <!--<Style TargetType="Border">
         <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray500}}" />
         <Setter Property="StrokeShape" Value="Rectangle" />
         <Setter Property="StrokeThickness" Value="1" />
+    </Style>-->
+
+    <Style TargetType="Border">
+        <Setter Property="StrokeShape" Value="RoundRectangle, 20" />
+        <Setter Property="StrokeThickness" Value="0" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray900}}" />
+        <Setter Property="Padding" Value="10" />
     </Style>
 
     <Style TargetType="BoxView">
