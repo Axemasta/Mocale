@@ -1,25 +1,19 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Shell
+    TabBarIsVisible="False"
     x:Class="Mocale.Samples.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:keys="clr-namespace:Mocale.Translations"
     xmlns:mocale="http://axemasta.com/schemas/2022/mocale"
-    xmlns:pages="clr-namespace:Mocale.Samples.Pages">
+    xmlns:pages="clr-namespace:Mocale.Samples.Pages"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
 
     <FlyoutItem FlyoutDisplayOptions="AsMultipleItems">
-        <Tab Title="{mocale:Localize Key={x:Static keys:TranslationKeys.IntroductionPageTitle}}">
-            <ShellContent Title="{mocale:Localize Key={x:Static keys:TranslationKeys.IntroductionPageTitle}}" ContentTemplate="{DataTemplate pages:IntroductionPage}" />
-        </Tab>
+        <ShellContent ContentTemplate="{DataTemplate pages:IntroductionPage}" Title="{mocale:Localize Key={x:Static keys:TranslationKeys.IntroductionPageTitle}}" />
 
-        <Tab Title="{mocale:Localize Key={x:Static keys:TranslationKeys.BindingPageTitle}}">
-            <ShellContent Title="{mocale:Localize Key={x:Static keys:TranslationKeys.BindingPageTitle}}" ContentTemplate="{DataTemplate pages:BindingPage}" />
-        </Tab>
+        <ShellContent ContentTemplate="{DataTemplate pages:BindingPage}" Title="{mocale:Localize Key={x:Static keys:TranslationKeys.BindingPageTitle}}" />
 
-        <Tab Title="{mocale:Localize Key={x:Static keys:TranslationKeys.ParameterPageTitle}}">
-            <ShellContent Title="{mocale:Localize Key={x:Static keys:TranslationKeys.ParameterPageTitle}}" ContentTemplate="{DataTemplate pages:ParameterPage}" />
-        </Tab>
-
+        <ShellContent ContentTemplate="{DataTemplate pages:ParameterPage}" Title="{mocale:Localize Key={x:Static keys:TranslationKeys.ParameterPageTitle}}" />
     </FlyoutItem>
 </Shell>

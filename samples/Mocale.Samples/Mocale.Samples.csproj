@@ -7,7 +7,7 @@
     <RootNamespace>Mocale.Samples</RootNamespace>
     <SingleProject>true</SingleProject>
     <ImplicitUsings>true</ImplicitUsings>
-    
+
     <GenerateSatelliteAssembliesForCore>true</GenerateSatelliteAssembliesForCore>
 
     <!-- Display name -->
@@ -29,15 +29,15 @@
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-ios|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)'=='Debug|$(IosTargetFramework)'">
     <CreatePackage>false</CreatePackage>
     <CodesignProvision>Automatic</CodesignProvision>
     <CodesignKey>iPhone Developer</CodesignKey>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-ios|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)'=='Release|$(MacTargetFramework)'">
     <CreatePackage>false</CreatePackage>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-maccatalyst|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)'=='Debug|$(MacTargetFramework)'">
     <CreatePackage>false</CreatePackage>
     <CodesignKey>Mac Developer</CodesignKey>
     <PackageSigningKey>3rd Party Mac Developer Installer</PackageSigningKey>

@@ -4,12 +4,7 @@ namespace Mocale.Samples.Converters;
 
 internal sealed class CityDescriptionConverter : IValueConverter
 {
-    private readonly ITranslatorManager translatorManager;
-
-    public CityDescriptionConverter()
-    {
-        translatorManager = MocaleLocator.TranslatorManager;
-    }
+    private readonly ITranslatorManager translatorManager = MocaleLocator.TranslatorManager;
 
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
