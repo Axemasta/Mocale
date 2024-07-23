@@ -16,9 +16,9 @@ public class TranslatorManager : ITranslatorManager, ITranslationUpdater, INotif
 
     public CultureInfo? CurrentCulture { get; private set; }
 
-    private Dictionary<string, string> PreferredLocalizations { get; set; } = new Dictionary<string, string>();
+    private Dictionary<string, string> PreferredLocalizations { get; set; } = [];
 
-    private Dictionary<string, string> BackupLocalizations { get; set; } = new Dictionary<string, string>();
+    private Dictionary<string, string> BackupLocalizations { get; set; } = [];
 
     #endregion Properties
 
