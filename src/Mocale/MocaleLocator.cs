@@ -30,7 +30,6 @@ public static class MocaleLocator
     /// </summary>
     public static ITranslatorManager TranslatorManager { get; internal set; }
 
-
     /// <summary>
     /// Set custom instance of <see cref="ITranslatorManager" /> for test scenarios
     /// </summary>

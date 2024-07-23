@@ -69,6 +69,21 @@ public class TranslatorManager : ITranslatorManager, ITranslationUpdater, INotif
         return mocaleConfiguration.NotFoundSymbol + key + StringExtension.Reverse(mocaleConfiguration.NotFoundSymbol);
     }
 
+    public string? Translate(string key, object[] parameters)
+    {
+        var translation = Translate(key);
+
+        try
+        {
+            return string.Format(translation, parameters);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "An exception occurred formating translation for key {Key}: '{Translation}' with parameters: {Parameters}", key, translation, parameters);
+            return translation;
+        }
+    }
+
     #endregion - ITranslatorManager
 
     #region - ITranslationUpdater
