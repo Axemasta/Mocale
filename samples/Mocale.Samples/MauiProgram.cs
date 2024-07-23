@@ -4,7 +4,7 @@ using Mocale.Cache.SQLite;
 using Mocale.Models;
 using Mocale.Providers.GitHub.Raw;
 using Mocale.Samples.ViewModels;
-using Mocale.Samples.Views;
+using Mocale.Samples.Pages;
 namespace Mocale.Samples;
 
 public static class MauiProgram
@@ -64,8 +64,13 @@ public static class MauiProgram
 #endif
         });
 
+        builder.Services.AddTransient<BindingPage>();
         builder.Services.AddTransient<IntroductionPage>();
+        builder.Services.AddTransient<ParameterPage>();
+
         builder.Services.AddTransient<IntroductionPageViewModel>();
+        builder.Services.AddTransient<BindingViewModel>();
+        builder.Services.AddTransient<ParameterViewModel>();
 
         return builder.Build();
     }

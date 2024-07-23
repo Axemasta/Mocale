@@ -1,15 +1,17 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 
-<ContentPage
-    Title="{mocale:Localize Key={x:Static keys:TranslationKeys.MocaleTitle}}"
-    x:Class="Mocale.Samples.Views.IntroductionPage"
-    x:DataType="vm:IntroductionPageViewModel"
+<pages:BasePage
+    x:Class="Mocale.Samples.Pages.IntroductionPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:converters="clr-namespace:Mocale.Samples.Converter"
-    xmlns:mocale="http://axemasta.com/schemas/2022/mocale"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:converters="clr-namespace:Mocale.Samples.Converters"
     xmlns:keys="clr-namespace:Mocale.Translations"
+    xmlns:mocale="http://axemasta.com/schemas/2022/mocale"
+    xmlns:pages="clr-namespace:Mocale.Samples.Pages"
     xmlns:vm="clr-namespace:Mocale.Samples.ViewModels"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    Title="{mocale:Localize Key={x:Static keys:TranslationKeys.MocaleTitle}}"
+    x:DataType="vm:IntroductionPageViewModel"
+    x:TypeArguments="vm:IntroductionPageViewModel">
 
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -19,20 +21,21 @@
 
     <ScrollView>
         <VerticalStackLayout
+            Padding="20,20,20,0"
             HorizontalOptions="Center"
             Spacing="10"
-            Padding="20, 20, 20, 0"
             VerticalOptions="StartAndExpand">
-            <Image Source="mocale_logo_color.png" HorizontalOptions="Center" HeightRequest="200" />
+            <Image
+                HeightRequest="200"
+                HorizontalOptions="Center"
+                Source="mocale_logo_color.png" />
 
-            <Label
-                Text="{mocale:Localize Key={x:Static keys:TranslationKeys.CurrentLocaleName}, Converter={StaticResource LanguageEmojiConverter}}" />
+            <Label Text="{mocale:Localize Key={x:Static keys:TranslationKeys.CurrentLocaleName}, Converter={StaticResource LanguageEmojiConverter}}" />
 
             <Label>
                 <Label.FormattedText>
                     <FormattedString>
-                        <Span
-                            Text="{mocale:Localize Key={x:Static keys:TranslationKeys.LocalizationCurrentProviderIs}}" />
+                        <Span Text="{mocale:Localize Key={x:Static keys:TranslationKeys.LocalizationCurrentProviderIs}}" />
                         <Span Text=" " />
                         <Span Text="{mocale:Localize Key={x:Static keys:TranslationKeys.LocalizationProviderName}}" />
                     </FormattedString>
@@ -54,4 +57,4 @@
         </VerticalStackLayout>
 
     </ScrollView>
-</ContentPage>
+</pages:BasePage>
