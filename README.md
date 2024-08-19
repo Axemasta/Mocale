@@ -1,6 +1,7 @@
 # Mocale
 
 ![Mocale Logo](assets/Mocale_Inverted_Color_Crop.png)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FAxemasta%2FMocale.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FAxemasta%2FMocale?ref=badge_shield)
 
 ![Build status](https://img.shields.io/github/actions/workflow/status/axemasta/mocale/mocale-ci.yml)
 
@@ -407,3 +408,7 @@ needing them. Feel free to raise a PR if I haven't got around to implementing th
 - Add a more MVVM friendly mechanism to resolve translations (such as a `ITranslationProvider` where you request a
   number of keys & get localizations back)
 - Resolve translation keys within the mocale `XmlnsDefinition`, I did try this but couldn't get it working.
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FAxemasta%2FMocale.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FAxemasta%2FMocale?ref=badge_large)
