@@ -12,6 +12,7 @@
     <Title>Mocale.Providers.Azure.Blob</Title>
     <Description>AWS S3 object storage external provider for Mocale. This packages provides the ability to query S3 object storage for localization files to be used in your maui application.</Description>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

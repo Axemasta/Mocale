@@ -1,6 +1,3 @@
-using System.Globalization;
-using Mocale.Abstractions;
-using Mocale.Models;
 namespace Mocale.Providers.AWS.S3;
 
 internal sealed class S3BucketProvider : IExternalLocalizationProvider
@@ -44,7 +41,7 @@ internal sealed class S3BucketProvider : IExternalLocalizationProvider
         return new ExternalLocalizationResult()
         {
             Success = false,
-            Localizations = new Dictionary<string, string>(),
+            Localizations = [],
         };
     }
 }
