@@ -1,5 +1,8 @@
 namespace Mocale.Providers.Azure.Blob.Abstractions;
 
+/// <summary>
+/// Configuration for aure blob storage external provider
+/// </summary>
 public interface IBlobStorageConfig : IExternalProviderConfiguration
 {
     /// <summary>

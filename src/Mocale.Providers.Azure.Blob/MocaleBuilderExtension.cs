@@ -2,6 +2,9 @@ using Mocale.Exceptions;
 using Mocale.Providers.Azure.Blob.Managers;
 namespace Mocale.Providers.Azure.Blob;
 
+/// <summary>
+/// Mocale Builder Extension
+/// </summary>
 public static class MocaleBuilderExtension
 {
     /// <summary>

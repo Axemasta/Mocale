@@ -1,4 +1,3 @@
-using System.Globalization;
 namespace Mocale.Providers.Azure.Blob.Abstractions;
 
 /// <summary>
