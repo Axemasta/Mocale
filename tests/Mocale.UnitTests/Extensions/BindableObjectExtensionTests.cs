@@ -76,7 +76,7 @@ public class BindableObjectExtensionTests
             }
         };
 
-        translatorManager.UpdateTranslations(localization, TranslationSource.Internal);;
+        translatorManager.UpdateTranslations(localization, TranslationSource.Internal);
 
         var label = new Label();
 

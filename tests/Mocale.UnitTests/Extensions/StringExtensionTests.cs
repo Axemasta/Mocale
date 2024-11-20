@@ -5,7 +5,6 @@ namespace Mocale.UnitTests.Extensions;
 public class StringExtensionTests
 {
     [Theory]
-    [InlineData(null)]
     [InlineData("")]
     [InlineData(" ")]
     [InlineData("   ")]

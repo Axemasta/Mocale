@@ -1,0 +1,12 @@
+###############################
+# Core EditorConfig Options   #
+###############################
+
+# Csharp files
+[*.{cs,vb}]
+dotnet_diagnostic.CA1309.severity = none
+dotnet_diagnostic.CA1861.severity = none
+
+# Resharper
+[resharper_]
+resharper_structured_message_template_problem_highlighting = none
