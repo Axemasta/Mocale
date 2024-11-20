@@ -3,7 +3,7 @@ namespace Mocale.Cache.SQLite.Entities;
 #nullable disable
 
 [Table("UpdateHistory")]
-public class UpdateHistoryItem
+internal class UpdateHistoryItem
 {
     [PrimaryKey]
     [AutoIncrement]

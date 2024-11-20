@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Logging;
 namespace Mocale.Cache.SQLite.Providers;
 
-public class DatabaseConnectionProvider : IDatabaseConnectionProvider
+internal class DatabaseConnectionProvider : IDatabaseConnectionProvider
 {
     #region Fields
 

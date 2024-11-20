@@ -3,7 +3,7 @@ namespace Mocale.Cache.SQLite.Entities;
 #nullable disable
 
 [Table("Translations")]
-public class TranslationItem
+internal class TranslationItem
 {
     [PrimaryKey]
     [AutoIncrement]

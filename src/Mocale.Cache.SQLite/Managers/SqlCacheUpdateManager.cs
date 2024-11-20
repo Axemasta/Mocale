@@ -4,7 +4,7 @@ using Mocale.Abstractions;
 
 namespace Mocale.Cache.SQLite.Managers;
 
-public class SqlCacheUpdateManager : ICacheUpdateManager
+internal class SqlCacheUpdateManager : ICacheUpdateManager
 {
     private readonly ICacheRepository cacheRepository;
     private readonly IDateTime dateTime;
