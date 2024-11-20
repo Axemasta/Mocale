@@ -4,9 +4,9 @@ namespace Mocale.Samples.Pages;
 
 public partial class ParameterPage : BasePage<ParameterViewModel>
 {
-	public ParameterPage(ParameterViewModel viewModel)
+    public ParameterPage(ParameterViewModel viewModel)
         : base(viewModel)
-	{
-		InitializeComponent();
-	}
+    {
+        InitializeComponent();
+    }
 }

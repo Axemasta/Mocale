@@ -1,10 +1,11 @@
 namespace Mocale.Samples.ViewModels;
+
 public sealed partial class ParameterViewModel : BaseViewModel
 {
     [ObservableProperty]
     private string name;
 
-    private static readonly Random random = new();
+    private static readonly Random Random = new();
 
     private readonly string[] names =
         [
@@ -29,7 +30,7 @@ public sealed partial class ParameterViewModel : BaseViewModel
 
     private string ChooseRandomName()
     {
-        var index = random.Next(0, names.Length);
+        var index = Random.Next(0, names.Length);
 
         var name = names[index];
 
