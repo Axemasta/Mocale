@@ -1,4 +1,8 @@
 namespace Mocale.Abstractions;
+
+/// <summary>
+/// Resource File Details
+/// </summary>
 public interface IResourceFileDetails
 {
     /// <summary>
@@ -7,7 +11,7 @@ public interface IResourceFileDetails
     LocaleResourceType ResourceType { get; }
 
     /// <summary>
-    /// The version prefix of the files, this will be prepanded after the url &amp; before the file name
+    /// The version prefix of the files, this will be prepended after the url &amp; before the file name
     /// </summary>
     string? VersionPrefix { get; }
 }

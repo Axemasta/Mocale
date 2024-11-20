@@ -1,6 +1,7 @@
 using System.Globalization;
 namespace Mocale.Models;
 
+/// <inheritdoc/>
 public class MocaleConfiguration : IMocaleConfiguration
 {
     /// <inheritdoc/>

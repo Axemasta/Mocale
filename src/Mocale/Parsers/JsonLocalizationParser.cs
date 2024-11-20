@@ -3,14 +3,9 @@ using Ardalis.GuardClauses;
 
 namespace Mocale.Parsers;
 
-internal class JsonLocalizationParser : ILocalizationParser
+internal class JsonLocalizationParser(ILogger<JsonLocalizationParser> logger) : ILocalizationParser
 {
-    private readonly ILogger logger;
-
-    public JsonLocalizationParser(ILogger<JsonLocalizationParser> logger)
-    {
-        this.logger = Guard.Against.Null(logger, nameof(logger));
-    }
+    private readonly ILogger logger = Guard.Against.Null(logger, nameof(logger));
 
     public Dictionary<string, string>? ParseLocalizationStream(Stream resourceStream)
     {

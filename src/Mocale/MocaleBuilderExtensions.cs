@@ -5,6 +5,9 @@ using Mocale.Parsers;
 using Mocale.Providers;
 namespace Mocale;
 
+/// <summary>
+/// Mocale Builder Extensions
+/// </summary>
 public static class MocaleBuilderExtensions
 {
     /// <summary>

@@ -6,15 +6,13 @@ namespace Mocale.Managers;
 /// Simple Singleton Style Class For Storing Configuration Objects
 /// </summary>
 /// <typeparam name="TConfig"></typeparam>
-public class ConfigurationManager<TConfig> : IConfigurationManager<TConfig>, IConfigurationUpdateManager<TConfig>
+public class ConfigurationManager<TConfig>(TConfig config)
+    : IConfigurationManager<TConfig>, IConfigurationUpdateManager<TConfig>
 {
-    public TConfig Configuration { get; set; }
+    /// <inheritdoc/>
+    public TConfig Configuration { get; set; } = Guard.Against.Null(config, nameof(config));
 
-    public ConfigurationManager(TConfig config)
-    {
-        Configuration = Guard.Against.Null(config, nameof(config));
-    }
-
+    /// <inheritdoc/>
     public void UpdateConfiguration(Action<TConfig> configuration)
     {
         configuration(Configuration);

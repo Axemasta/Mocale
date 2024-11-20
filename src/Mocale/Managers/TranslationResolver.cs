@@ -2,35 +2,23 @@ using System.Globalization;
 using Ardalis.GuardClauses;
 namespace Mocale.Managers;
 
-public class TranslationResolver : ITranslationResolver
+internal class TranslationResolver(
+    ICacheUpdateManager cacheUpdateManager,
+    IExternalLocalizationProvider externalLocalizationProvider,
+    IInternalLocalizationProvider internalLocalizationProvider,
+    ILocalisationCacheManager localisationCacheManager,
+    ILogger<TranslationResolver> logger)
+    : ITranslationResolver
 {
     #region Fields
 
-    private readonly ICacheUpdateManager cacheUpdateManager;
-    private readonly IExternalLocalizationProvider externalLocalizationProvider;
-    private readonly IInternalLocalizationProvider internalLocalizationProvider;
-    private readonly ILocalisationCacheManager localisationCacheManager;
-    private readonly ILogger logger;
+    private readonly ICacheUpdateManager cacheUpdateManager = Guard.Against.Null(cacheUpdateManager, nameof(cacheUpdateManager));
+    private readonly IExternalLocalizationProvider externalLocalizationProvider = Guard.Against.Null(externalLocalizationProvider, nameof(externalLocalizationProvider));
+    private readonly IInternalLocalizationProvider internalLocalizationProvider = Guard.Against.Null(internalLocalizationProvider, nameof(internalLocalizationProvider));
+    private readonly ILocalisationCacheManager localisationCacheManager = Guard.Against.Null(localisationCacheManager, nameof(localisationCacheManager));
+    private readonly ILogger logger = Guard.Against.Null(logger, nameof(logger));
 
     #endregion Fields
-
-    #region Constructors
-
-    public TranslationResolver(
-        ICacheUpdateManager cacheUpdateManager,
-        IExternalLocalizationProvider externalLocalizationProvider,
-        IInternalLocalizationProvider internalLocalizationProvider,
-        ILocalisationCacheManager localisationCacheManager,
-        ILogger<TranslationResolver> logger)
-    {
-        this.cacheUpdateManager = Guard.Against.Null(cacheUpdateManager, nameof(cacheUpdateManager));
-        this.externalLocalizationProvider = Guard.Against.Null(externalLocalizationProvider, nameof(externalLocalizationProvider));
-        this.internalLocalizationProvider = Guard.Against.Null(internalLocalizationProvider, nameof(internalLocalizationProvider));
-        this.localisationCacheManager = Guard.Against.Null(localisationCacheManager, nameof(localisationCacheManager));
-        this.logger = Guard.Against.Null(logger, nameof(logger));
-    }
-
-    #endregion Constructors
 
     #region Methods
 
@@ -158,7 +146,7 @@ public class TranslationResolver : ITranslationResolver
             }
         }
 
-        if (addedKeys.Any())
+        if (addedKeys.Count > 0)
         {
             logger.LogInformation("The following keys were present in the local translations but not in the cache: {AddedKeys}", addedKeys);
         }

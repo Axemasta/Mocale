@@ -3,28 +3,53 @@ using Ardalis.GuardClauses;
 using Mocale.Managers;
 namespace Mocale.Extensions;
 
+/// <summary>
+/// Localize Extension
+/// </summary>
+/// <param name="translatorManager">Translator Manager</param>
+[AcceptEmptyServiceProvider]
 [ContentProperty(nameof(Key))]
 public class LocalizeExtension(ITranslatorManager translatorManager) : IMarkupExtension<BindingBase>
 {
     private readonly ITranslatorManager translatorManager = Guard.Against.Null(translatorManager, nameof(translatorManager));
 
+    /// <summary>
+    /// The translation key
+    /// </summary>
     public string? Key { get; set; }
 
+    /// <summary>
+    /// Translation parameters
+    /// </summary>
     public string? Parameters { get; set; }
 
+    /// <summary>
+    /// Binding
+    /// </summary>
     public BindingBase? Binding { get; set; }
 
+    /// <summary>
+    /// Parameter delimiter (for string)
+    /// </summary>
     public char SplitDelimiter { get; set; } = '|';
 
+    /// <summary>
+    /// Converter
+    /// </summary>
     public IValueConverter? Converter { get; set; }
 
+    /// <summary>
+    /// Localize Extension
+    /// </summary>
     public LocalizeExtension()
         : this(MocaleLocator.TranslatorManager)
     {
     }
 
+    /// <inheritdoc/>
     public BindingBase ProvideValue(IServiceProvider serviceProvider)
     {
+        //TODO: Pass in itranslator
         if (!string.IsNullOrEmpty(Parameters))
         {
             var parameters = Parameters.Contains(SplitDelimiter)
@@ -44,7 +69,7 @@ public class LocalizeExtension(ITranslatorManager translatorManager) : IMarkupEx
         }
         else if (Binding is Binding originalBinding)
         {
-            var parameter = translatorManager.Translate(Key);
+            var parameter = translatorManager.Translate(Key ?? string.Empty);
 
             var converter = new LocalizeBindingConverter();
 
@@ -77,7 +102,7 @@ public class LocalizeExtension(ITranslatorManager translatorManager) : IMarkupEx
         return ProvideValue(serviceProvider);
     }
 
-    public class LocalizeBindingConverter : IValueConverter
+    private class LocalizeBindingConverter : IValueConverter
     {
         public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {

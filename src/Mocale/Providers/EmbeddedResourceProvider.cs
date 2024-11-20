@@ -3,18 +3,13 @@ using System.Reflection;
 using System.Text.Json;
 namespace Mocale.Providers;
 
-internal class EmbeddedResourceProvider : IInternalLocalizationProvider
+internal class EmbeddedResourceProvider(
+    IConfigurationManager<IEmbeddedResourcesConfig> jsonConfigurationManager,
+    ILogger<EmbeddedResourceProvider> logger)
+    : IInternalLocalizationProvider
 {
-    private readonly IEmbeddedResourcesConfig localConfig;
-    private readonly ILogger logger;
-
-    public EmbeddedResourceProvider(
-        IConfigurationManager<IEmbeddedResourcesConfig> jsonConfigurationManager,
-        ILogger<EmbeddedResourceProvider> logger)
-    {
-        localConfig = jsonConfigurationManager.Configuration;
-        this.logger = logger;
-    }
+    private readonly IEmbeddedResourcesConfig localConfig = jsonConfigurationManager.Configuration;
+    private readonly ILogger logger = logger;
 
     public Dictionary<string, string>? GetValuesForCulture(CultureInfo cultureInfo)
     {
@@ -37,7 +32,7 @@ internal class EmbeddedResourceProvider : IInternalLocalizationProvider
         var localesFolderResources = resources.Where(r => r.StartsWith(folderPrefix, StringComparison.InvariantCultureIgnoreCase))
             .ToList();
 
-        if (!localesFolderResources.Any())
+        if (localesFolderResources.Count < 1)
         {
             logger.LogWarning("No assembly resources found with prefix: {FolderPrefix}", folderPrefix);
             return null;
@@ -80,8 +75,7 @@ internal class EmbeddedResourceProvider : IInternalLocalizationProvider
 
         try
         {
-            return JsonSerializer.Deserialize<Dictionary<string, string>>(fileStream)
-                ?? new Dictionary<string, string>();
+            return JsonSerializer.Deserialize<Dictionary<string, string>>(fileStream) ?? [];
         }
         catch (Exception ex)
         {

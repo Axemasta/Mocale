@@ -2,7 +2,7 @@ using System.Globalization;
 using Ardalis.GuardClauses;
 namespace Mocale.Managers;
 
-public class LocalizationManager : ILocalizationManager
+internal class LocalizationManager : ILocalizationManager
 {
     private readonly ICurrentCultureManager currentCultureManager;
     private readonly ILogger logger;

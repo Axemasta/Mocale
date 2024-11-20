@@ -1,5 +1,6 @@
 namespace Mocale.Models;
 
+/// <inheritdoc/>
 public class JsonResourceFileDetails : IResourceFileDetails
 {
     /// <inheritdoc/>

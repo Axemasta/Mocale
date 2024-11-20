@@ -3,14 +3,9 @@ using Ardalis.GuardClauses;
 
 namespace Mocale.Parsers;
 
-internal class ResxLocalizationParser : ILocalizationParser
+internal class ResxLocalizationParser(ILogger<ResxLocalizationParser> logger) : ILocalizationParser
 {
-    private readonly ILogger<ResxLocalizationParser> logger;
-
-    public ResxLocalizationParser(ILogger<ResxLocalizationParser> logger)
-    {
-        this.logger = Guard.Against.Null(logger, nameof(logger));
-    }
+    private readonly ILogger<ResxLocalizationParser> logger = Guard.Against.Null(logger, nameof(logger));
 
     public Dictionary<string, string>? ParseLocalizationStream(Stream resourceStream)
     {

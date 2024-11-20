@@ -7,20 +7,14 @@ using Mocale.Models;
 
 namespace Mocale.UnitTests.Managers;
 
-public class TranslatorManagerTests : FixtureBase<TranslatorManager>
+public class TranslatorManagerTests : FixtureBase
 {
     #region Setup
 
-    private readonly Mock<ILogger<TranslatorManager>> logger;
-    private readonly Mock<IConfigurationManager<IMocaleConfiguration>> configManager;
+    private readonly Mock<ILogger<TranslatorManager>> logger = new();
+    private readonly Mock<IConfigurationManager<IMocaleConfiguration>> configManager = new();
 
-    public TranslatorManagerTests()
-    {
-        logger = new Mock<ILogger<TranslatorManager>>();
-        configManager = new Mock<IConfigurationManager<IMocaleConfiguration>>();
-    }
-
-    public override TranslatorManager CreateSystemUnderTest()
+    public override object CreateSystemUnderTest()
     {
         return new TranslatorManager(logger.Object, configManager.Object);
     }
@@ -39,10 +33,12 @@ public class TranslatorManagerTests : FixtureBase<TranslatorManager>
             Translations = new Dictionary<string, string> { { "KeyOne", "I am the first key" } }
         };
 
-        Sut.UpdateTranslations(localization, TranslationSource.External);
+        var sut = GetSut<TranslatorManager>();
+
+        sut.UpdateTranslations(localization, TranslationSource.External);
 
         // Act
-        var translation = Sut.Translate("KeyOne");
+        var translation = sut.Translate("KeyOne");
 
         // Assert
         Assert.Equal("I am the first key", translation);
@@ -60,10 +56,12 @@ public class TranslatorManagerTests : FixtureBase<TranslatorManager>
             Translations = new Dictionary<string, string> { { "KeyOne", "I am the first key" } }
         };
 
-        Sut.UpdateTranslations(localization, TranslationSource.Internal);
+        var sut = GetSut<TranslatorManager>();
+
+        sut.UpdateTranslations(localization, TranslationSource.Internal);
 
         // Act
-        var translation = Sut.Translate("KeyOne");
+        var translation = sut.Translate("KeyOne");
 
         // Assert
         Assert.Equal("I am the first key", translation);
@@ -78,8 +76,10 @@ public class TranslatorManagerTests : FixtureBase<TranslatorManager>
         configManager.SetupGet(m => m.Configuration)
             .Returns(new MocaleConfiguration { ShowMissingKeys = false });
 
+        var sut = GetSut<TranslatorManager>();
+
         // Act
-        var translation = Sut.Translate("KeyOne");
+        var translation = sut.Translate("KeyOne");
 
         // Assert
         Assert.Equal(string.Empty, translation);
@@ -100,8 +100,10 @@ public class TranslatorManagerTests : FixtureBase<TranslatorManager>
         configManager.SetupGet(m => m.Configuration)
             .Returns(new MocaleConfiguration { ShowMissingKeys = true, NotFoundSymbol = missingSymbol });
 
+        var sut = GetSut<TranslatorManager>();
+
         // Act
-        var translation = Sut.Translate("KeyOne");
+        var translation = sut.Translate("KeyOne");
 
         // Assert
         Assert.Equal(expectedTranslation, translation);
@@ -125,12 +127,14 @@ public class TranslatorManagerTests : FixtureBase<TranslatorManager>
             Translations = new Dictionary<string, string> { { "KeyOne", "je suis la première clé" } }
         };
 
-        Sut.UpdateTranslations(englishLocalization, TranslationSource.External);
+        var sut = GetSut<TranslatorManager>();
+
+        sut.UpdateTranslations(englishLocalization, TranslationSource.External);
 
         // Act
-        Sut.UpdateTranslations(frenchLocalization, TranslationSource.External);
+        sut.UpdateTranslations(frenchLocalization, TranslationSource.External);
 
-        var translation = Sut.Translate("KeyOne");
+        var translation = sut.Translate("KeyOne");
 
         // Assert
         Assert.Equal("je suis la première clé", translation);
@@ -155,12 +159,14 @@ public class TranslatorManagerTests : FixtureBase<TranslatorManager>
         configManager.SetupGet(m => m.Configuration)
             .Returns(new MocaleConfiguration { ShowMissingKeys = true, NotFoundSymbol = "_" });
 
-        Sut.UpdateTranslations(englishLocalization, TranslationSource.External);
+        var sut = GetSut<TranslatorManager>();
+
+        sut.UpdateTranslations(englishLocalization, TranslationSource.External);
 
         // Act
-        Sut.UpdateTranslations(frenchLocalization, TranslationSource.External);
+        sut.UpdateTranslations(frenchLocalization, TranslationSource.External);
 
-        var translation = Sut.Translate("KeyOne");
+        var translation = sut.Translate("KeyOne");
 
         // Assert
         Assert.Equal("_KeyOne_", translation);
