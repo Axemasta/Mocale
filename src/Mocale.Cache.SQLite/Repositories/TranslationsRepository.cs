@@ -2,7 +2,7 @@ using System.Globalization;
 using Microsoft.Extensions.Logging;
 namespace Mocale.Cache.SQLite.Repositories;
 
-public class TranslationsRepository : RepositoryBase, ITranslationsRepository
+internal class TranslationsRepository : RepositoryBase, ITranslationsRepository
 {
     #region Constructors
 
@@ -50,7 +50,7 @@ public class TranslationsRepository : RepositoryBase, ITranslationsRepository
                 .Where(t => t.CultureName == cultureInfo.Name)
                 .ToList();
 
-            if (entities is null || !entities.Any())
+            if (entities is null || entities.Count < 1)
             {
                 logger.LogTrace("No cached translations found for culture: {CultureName}", cultureInfo.Name);
                 return null;
@@ -80,7 +80,7 @@ public class TranslationsRepository : RepositoryBase, ITranslationsRepository
             var newValues = translations.Where(t => currentEntities.All(c => c.Key != t.Key))
                 .ToList();
 
-            if (newValues.Any())
+            if (newValues.Count > 0)
             {
                 var newTranslations = translations.Where(t => currentEntities.All(c => c.Key != t.Key))
                     .ToDictionary(d => d.Key, d => d.Value);
@@ -95,7 +95,7 @@ public class TranslationsRepository : RepositoryBase, ITranslationsRepository
             var deletedValues = currentEntities.Where(t => translations.All(c => c.Key != t.Key))
                 .ToList();
 
-            if (deletedValues.Any())
+            if (deletedValues.Count > 0)
             {
                 var rows = 0;
 
@@ -110,7 +110,7 @@ public class TranslationsRepository : RepositoryBase, ITranslationsRepository
             var updatedValues = currentEntities.Where(t => translations.Any(c => c.Key == t.Key && c.Value != t.Value))
                 .ToList();
 
-            if (updatedValues.Any())
+            if (updatedValues.Count > 0)
             {
                 foreach (var translation in updatedValues)
                 {
@@ -143,7 +143,7 @@ public class TranslationsRepository : RepositoryBase, ITranslationsRepository
                 .Where(t => t.CultureName == cultureInfo.Name)
                 .ToList();
 
-            if (entities is null || !entities.Any())
+            if (entities is null || entities.Count < 1)
             {
                 logger.LogWarning("No translations to delete for culture: {CultureName}", cultureInfo.Name);
                 return false;

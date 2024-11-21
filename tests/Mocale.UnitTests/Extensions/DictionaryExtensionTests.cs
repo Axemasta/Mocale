@@ -18,7 +18,7 @@ public class DictionaryExtensionTests
         current.AddOrUpdateValues(updated);
 
         // Assert
-        Assert.True(current.Count == 2);
+        Assert.Equal(2, current.Count);
         current.Should().BeEquivalentTo(new Dictionary<string, string>()
         {
             { "Key One", "Value One" },
@@ -46,7 +46,7 @@ public class DictionaryExtensionTests
         current.AddOrUpdateValues(updated);
 
         // Assert
-        Assert.True(current.Count == 4);
+        Assert.Equal(4, current.Count);
         current.Should().BeEquivalentTo(new Dictionary<string, string>()
         {
             { "Key One", "Value One" },
@@ -76,7 +76,7 @@ public class DictionaryExtensionTests
         current.AddOrUpdateValues(updated);
 
         // Assert
-        Assert.True(current.Count == 2);
+        Assert.Equal(2, current.Count);
         current.Should().BeEquivalentTo(new Dictionary<string, string>()
         {
             { "Key One", "Value One" },
@@ -103,7 +103,7 @@ public class DictionaryExtensionTests
         current.AddOrUpdateValues(updated);
 
         // Assert
-        Assert.True(current.Count == 2);
+        Assert.Equal(2, current.Count);
         current.Should().BeEquivalentTo(new Dictionary<string, string>()
         {
             { "Key One", "Value One" },
@@ -131,7 +131,7 @@ public class DictionaryExtensionTests
         current.AddOrUpdateValues(updated);
 
         // Assert
-        Assert.True(current.Count == 3);
+        Assert.Equal(3, current.Count);
         current.Should().BeEquivalentTo(new Dictionary<string, string>()
         {
             { "Key One", "Value One" },

@@ -3,7 +3,7 @@ using System.Globalization;
 using Ardalis.GuardClauses;
 namespace Mocale.Managers;
 
-public class TranslatorManager : ITranslatorManager, ITranslationUpdater, INotifyPropertyChanged
+internal class TranslatorManager : ITranslatorManager, ITranslationUpdater, INotifyPropertyChanged
 {
     #region Fields
 
@@ -73,9 +73,14 @@ public class TranslatorManager : ITranslatorManager, ITranslationUpdater, INotif
     {
         var translation = Translate(key);
 
+        if (string.IsNullOrEmpty(translation))
+        {
+            return translation;
+        }
+
         try
         {
-            return string.Format(translation, parameters);
+            return string.Format(CurrentCulture, translation, parameters);
         }
         catch (Exception ex)
         {

@@ -1,6 +1,4 @@
-using System.Globalization;
 using Mocale.Exceptions;
-using Mocale.Helper;
 using Mocale.Managers;
 using Mocale.Providers;
 using Mocale.Wrappers;
@@ -11,6 +9,13 @@ namespace Mocale;
 /// </summary>
 public static class AppBuilderExtensions
 {
+    /// <summary>
+    /// Use mocale in your app to provide translations.
+    /// </summary>
+    /// <param name="mauiAppBuilder">Maui app builder</param>
+    /// <param name="builder">Mocale builder</param>
+    /// <returns>Maui app builder</returns>
+    /// <exception cref="InitializationException">If configuration is invalid, see details for troubleshooting</exception>
     public static MauiAppBuilder UseMocale(
         this MauiAppBuilder mauiAppBuilder,
         Action<MocaleBuilder>? builder = default)

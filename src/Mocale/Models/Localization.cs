@@ -1,13 +1,24 @@
 using System.Globalization;
 namespace Mocale.Models;
 
+/// <summary>
+/// Localization
+/// </summary>
 public class Localization
 {
+    /// <summary>
+    /// Corresponding culture
+    /// </summary>
     public required CultureInfo CultureInfo { get; set; }
 
-    public Dictionary<string, string> Translations { get; set; } = new Dictionary<string, string>();
+    /// <summary>
+    /// Translations
+    /// </summary>
+    public Dictionary<string, string> Translations { get; set; } = [];
 
-    // This is to get around nullable
+    /// <summary>
+    /// Blank localization
+    /// </summary>
     public static Localization Invariant => new()
     {
         CultureInfo = new CultureInfo(""),

@@ -1,9 +1,12 @@
 using Microsoft.Extensions.Logging;
 namespace Mocale.Cache.SQLite.Repositories;
 
-public abstract class RepositoryBase
+internal abstract class RepositoryBase
 {
+#pragma warning disable IDE1006
+    // ReSharper disable once InconsistentNaming
     protected ILogger logger { get; }
+#pragma warning restore IDE1006
 
     protected SQLiteConnection Connection { get; }
 

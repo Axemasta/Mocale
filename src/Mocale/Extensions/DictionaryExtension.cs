@@ -7,7 +7,7 @@ internal static class DictionaryExtension
         var newValues = updatedValues.Where(uv => !currentValues.ContainsKey(uv.Key))
             .ToList();
 
-        if (newValues.Any())
+        if (newValues.Count > 0)
         {
             foreach (var newValue in newValues)
             {
@@ -20,7 +20,7 @@ internal static class DictionaryExtension
                   !currentValues[uv.Key].Equals(uv.Value, StringComparison.Ordinal))
             .ToList();
 
-        if (modifiedValues.Any())
+        if (modifiedValues.Count > 0)
         {
             foreach (var modifiedValue in modifiedValues)
             {

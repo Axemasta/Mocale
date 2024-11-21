@@ -1,5 +1,8 @@
 namespace Mocale.Providers.GitHub.Raw;
 
+/// <summary>
+/// Mocale Builder Extension
+/// </summary>
 public static class MocaleBuilderExtension
 {
     /// <summary>

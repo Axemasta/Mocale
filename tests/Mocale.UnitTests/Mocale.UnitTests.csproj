@@ -7,23 +7,24 @@
     <IsPackable>false</IsPackable>
     <UseMaui>true</UseMaui>
     <IsTestProject>true</IsTestProject>
+    <NoWarn>$(NoWarn);CA2254;IDE0005</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentAssertions" Version="6.11.0" />
+    <PackageReference Include="FluentAssertions" Version="6.12.2" />
     <PackageReference Include="ILogger.Moq" Version="1.1.10" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
     <PackageReference Include="Moq.Contrib.HttpClient" Version="1.4.0" />
-    <PackageReference Include="xunit" Version="2.5.0" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.0">
+    <PackageReference Include="xunit" Version="2.9.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="coverlet.collector" Version="6.0.0">
+    <PackageReference Include="coverlet.collector" Version="6.0.2">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Moq" Version="4.18.4" />
+    <PackageReference Include="Moq" Version="4.20.72" />
   </ItemGroup>
 
   <ItemGroup>
@@ -33,7 +34,7 @@
     <ProjectReference Include="..\..\src\Mocale.Providers.Github.Raw\Mocale.Providers.Github.Raw.csproj" />
     <ProjectReference Include="..\..\src\Mocale\Mocale.csproj" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <!-- Some fake files embedded to allow testing embedded resource loading -->
     <EmbeddedResource Include="Resources/**/*" />

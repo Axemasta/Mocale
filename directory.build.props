@@ -5,13 +5,13 @@
 	</PropertyGroup>
 
   <PropertyGroup>
-    <MauiVersion>8.0.70</MauiVersion>
+    <MauiVersion>9.0.10</MauiVersion>
 
-    <StandardTargetFramework>net8.0</StandardTargetFramework>
-    <IosTargetFramework>net8.0-ios</IosTargetFramework>
-    <AndroidTargetFramework>net8.0-android</AndroidTargetFramework>
-    <MacTargetFramework>net8.0-maccatalyst</MacTargetFramework>
-    <WindowsTargetFramework>net8.0-windows10.0.19041.0</WindowsTargetFramework>
+    <StandardTargetFramework>net9.0</StandardTargetFramework>
+    <IosTargetFramework>net9.0-ios</IosTargetFramework>
+    <AndroidTargetFramework>net9.0-android</AndroidTargetFramework>
+    <MacTargetFramework>net9.0-maccatalyst</MacTargetFramework>
+    <WindowsTargetFramework>net9.0-windows10.0.19041.0</WindowsTargetFramework>
 
     <MauiPlatformTargetFrameworks>$(StandardTargetFramework);$(AndroidTargetFramework);$(IosTargetFramework);$(MacTargetFramework);</MauiPlatformTargetFrameworks>
     <MauiPlatformTargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(StandardTargetFramework);$(AndroidTargetFramework);$(IosTargetFramework);$(MacTargetFramework);$(WindowsTargetFramework);</MauiPlatformTargetFrameworks>

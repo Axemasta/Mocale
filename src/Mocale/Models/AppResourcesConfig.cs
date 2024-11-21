@@ -1,9 +1,8 @@
 namespace Mocale.Models;
 
-/// <summary>
-/// Configuration for App Resources localizations
-/// </summary>
+/// <inheritdoc/>
 public class AppResourcesConfig : IAppResourcesConfig
 {
+    /// <inheritdoc/>
     public Type? AppResourcesType { get; set; }
 }

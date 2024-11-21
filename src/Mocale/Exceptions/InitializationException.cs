@@ -1,9 +1,3 @@
 namespace Mocale.Exceptions;
 
-internal class InitializationException : MocaleException
-{
-    public InitializationException(string message)
-        : base(message)
-    {
-    }
-}
+internal class InitializationException(string message) : MocaleException(message);

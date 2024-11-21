@@ -1,10 +1,5 @@
-using System.Globalization;
-using System.Text.Json;
-using Ardalis.GuardClauses;
-using Azure.Storage.Blobs;
-using Azure.Storage.Blobs.Models;
-using Microsoft.Extensions.Logging;
 using Mocale.Extensions;
+
 namespace Mocale.Providers.Azure.Blob;
 
 internal sealed class BlobLocalizationProvider : IExternalLocalizationProvider
@@ -17,7 +12,7 @@ internal sealed class BlobLocalizationProvider : IExternalLocalizationProvider
     private readonly ILocalizationParser localizationParser;
     private readonly ILogger logger;
 
-    private static readonly BlobOpenReadOptions BlobOptions = new BlobOpenReadOptions(false);
+    private static readonly BlobOpenReadOptions BlobOptions = new(false);
 
     #endregion Fields
 

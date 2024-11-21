@@ -3,29 +3,19 @@ using Microsoft.Extensions.Logging;
 using Mocale.Abstractions;
 namespace Mocale.Cache.SQLite.Managers;
 
-public class LocalisationCacheManager : ILocalisationCacheManager
+internal class LocalisationCacheManager(
+    ICacheUpdateManager cacheUpdateManager,
+    ILogger<LocalisationCacheManager> logger,
+    ITranslationsRepository translationsRepository)
+    : ILocalisationCacheManager
 {
     #region Fields
 
-    private readonly ICacheUpdateManager cacheUpdateManager;
-    private readonly ILogger logger;
-    private readonly ITranslationsRepository translationsRepository;
+    private readonly ICacheUpdateManager cacheUpdateManager = Guard.Against.Null(cacheUpdateManager, nameof(cacheUpdateManager));
+    private readonly ILogger logger = Guard.Against.Null(logger, nameof(logger));
+    private readonly ITranslationsRepository translationsRepository = Guard.Against.Null(translationsRepository, nameof(translationsRepository));
 
     #endregion Fields
-
-    #region Constructors
-
-    public LocalisationCacheManager(
-        ICacheUpdateManager cacheUpdateManager,
-        ILogger<LocalisationCacheManager> logger,
-        ITranslationsRepository translationsRepository)
-    {
-        this.cacheUpdateManager = Guard.Against.Null(cacheUpdateManager, nameof(cacheUpdateManager));
-        this.logger = Guard.Against.Null(logger, nameof(logger));
-        this.translationsRepository = Guard.Against.Null(translationsRepository, nameof(translationsRepository));
-    }
-
-    #endregion Constructors
 
     #region Interface Implementations
 

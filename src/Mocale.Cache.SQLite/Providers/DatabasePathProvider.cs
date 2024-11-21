@@ -1,14 +1,10 @@
 using Mocale.Abstractions;
 namespace Mocale.Cache.SQLite.Providers;
 
-public class DatabasePathProvider : IDatabasePathProvider
+internal class DatabasePathProvider(IConfigurationManager<ISqliteConfig> configurationManager)
+    : IDatabasePathProvider
 {
-    private readonly IConfigurationManager<ISqliteConfig> configurationManager;
-
-    public DatabasePathProvider(IConfigurationManager<ISqliteConfig> configurationManager)
-    {
-        this.configurationManager = Guard.Against.Null(configurationManager, nameof(configurationManager));
-    }
+    private readonly IConfigurationManager<ISqliteConfig> configurationManager = Guard.Against.Null(configurationManager, nameof(configurationManager));
 
     public string GetDatabasePath()
     {

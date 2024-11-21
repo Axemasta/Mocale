@@ -3,7 +3,7 @@ using Ardalis.GuardClauses;
 
 namespace Mocale.Managers;
 
-public class CurrentCultureManager : ICurrentCultureManager
+internal class CurrentCultureManager : ICurrentCultureManager
 {
     #region Fields
 

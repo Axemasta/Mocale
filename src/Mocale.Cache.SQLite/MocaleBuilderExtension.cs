@@ -5,8 +5,17 @@ using Mocale.Cache.SQLite.Repositories;
 using Mocale.Managers;
 namespace Mocale.Cache.SQLite;
 
+/// <summary>
+/// Mocale Builder Extension
+/// </summary>
 public static class MocaleBuilderExtension
 {
+    /// <summary>
+    /// Use SQLite to cache localizations acquired by external providers
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <param name="configureSql"></param>
+    /// <returns></returns>
     public static MocaleBuilder UseSqliteCache(this MocaleBuilder builder, Action<SqliteConfig> configureSql)
     {
         var config = new SqliteConfig

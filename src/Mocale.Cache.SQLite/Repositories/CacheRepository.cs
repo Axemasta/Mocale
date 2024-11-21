@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Mocale.Cache.SQLite.Repositories;
 
-public class CacheRepository : RepositoryBase, ICacheRepository
+internal class CacheRepository : RepositoryBase, ICacheRepository
 {
     #region Constructors
 

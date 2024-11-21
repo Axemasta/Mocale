@@ -1,9 +1,3 @@
-using System.Globalization;
-using Ardalis.GuardClauses;
-using Azure.Storage.Blobs;
-using Azure.Storage.Blobs.Models;
-using Microsoft.Extensions.Logging;
-using Page = Azure.Page<Azure.Storage.Blobs.Models.BlobItem>;
 namespace Mocale.Providers.Azure.Blob.Managers;
 
 internal class BlobResourceLocator : IBlobResourceLocator
@@ -72,7 +66,7 @@ internal class BlobResourceLocator : IBlobResourceLocator
 
             var pages = client.GetBlobsAsync().AsPages();
 
-            await foreach (Page page in pages)
+            await foreach (var page in pages)
             {
                 if (FindMatchingBlobResource(page.Values, expectedFileSlug, out var info) && info is not null)
                 {
