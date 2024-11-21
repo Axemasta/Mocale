@@ -19,6 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\.editorconfig = ..\.editorconfig
 		..\directory.build.props = ..\directory.build.props
 		..\global.json = ..\global.json
+		..\version.json = ..\version.json
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mocale.Providers.Azure.Blob", "..\src\Mocale.Providers.Azure.Blob\Mocale.Providers.Azure.Blob.csproj", "{1BF264ED-14A2-4847-9578-9312BF9ECFA9}"
