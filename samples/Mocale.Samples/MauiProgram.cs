@@ -5,6 +5,7 @@ using Mocale.Models;
 using Mocale.Providers.GitHub.Raw;
 using Mocale.Samples.ViewModels;
 using Mocale.Samples.Pages;
+using CommunityToolkit.Maui;
 namespace Mocale.Samples;
 
 public static class MauiProgram
@@ -14,6 +15,7 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
+            .UseMauiCommunityToolkit()
             .UseMocale(mocale =>
             {
                 mocale.WithConfiguration(config =>
