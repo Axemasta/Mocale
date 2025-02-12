@@ -3,7 +3,8 @@ using System.Globalization;
 using Ardalis.GuardClauses;
 namespace Mocale.Managers;
 
-internal class TranslatorManager : ITranslatorManager, ITranslationUpdater, INotifyPropertyChanged
+/// <inheritdoc />
+internal partial class TranslatorManager : ITranslatorManager, ITranslationUpdater, INotifyPropertyChanged
 {
     #region Fields
 
@@ -93,6 +94,7 @@ internal class TranslatorManager : ITranslatorManager, ITranslationUpdater, INot
 
     #region - ITranslationUpdater
 
+    /// <inheritdoc />
     public void UpdateTranslations(Localization localization, TranslationSource source, bool notify = true)
     {
         if (!Equals(CurrentCulture, localization.CultureInfo))

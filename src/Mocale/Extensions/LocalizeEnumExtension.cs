@@ -1,17 +1,20 @@
 using System.Globalization;
 using Ardalis.GuardClauses;
-using EnumsNET;
+using Mocale.Helper;
 
 namespace Mocale.Extensions;
 
 /// <summary>
 /// Localize Enum Markup Extension
 /// </summary>
+/// <param name="mocaleConfiguration"></param>
 /// <param name="translatorManager"></param>
 [AcceptEmptyServiceProvider]
 [ContentProperty(nameof(Path))]
-public class LocalizeEnumExtension(ITranslatorManager translatorManager) : IMarkupExtension, IMultiValueConverter
+public class LocalizeEnumExtension(IMocaleConfiguration mocaleConfiguration, ITranslatorManager translatorManager) : IMarkupExtension, IMultiValueConverter
 {
+    private readonly EnumTranslationKeyHelper enumTranslationKeyHelper = new(mocaleConfiguration);
+    private readonly IMocaleConfiguration mocaleConfiguration = Guard.Against.Null(mocaleConfiguration, nameof(mocaleConfiguration));
     private readonly ITranslatorManager translatorManager = Guard.Against.Null(translatorManager, nameof(translatorManager));
 
     /// <summary>
@@ -37,13 +40,11 @@ public class LocalizeEnumExtension(ITranslatorManager translatorManager) : IMark
     /// <inheritdoc/>
     public object? Source { get; set; }
 
-    public bool UseAttribute { get; set; } = true;
-
     /// <summary>
     /// Localize Extension
     /// </summary>
     public LocalizeEnumExtension()
-        : this(MocaleLocator.TranslatorManager)
+        : this(MocaleLocator.MocaleConfiguration, MocaleLocator.TranslatorManager)
     {
     }
 
@@ -80,9 +81,7 @@ public class LocalizeEnumExtension(ITranslatorManager translatorManager) : IMark
             return string.Empty;
         }
 
-        var translationKey = UseAttribute
-            ? EnumsNET.Enums.AsString(enumValue.GetType(), enumValue, EnumFormat.Description) ?? enumValue.ToString()
-            : enumValue.ToString();
+        var translationKey = enumTranslationKeyHelper.GetTranslationKey(enumValue);
 
         return translatorManager.Translate(translationKey);
     }

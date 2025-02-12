@@ -6,6 +6,7 @@ using Mocale.Providers.GitHub.Raw;
 using Mocale.Samples.ViewModels;
 using Mocale.Samples.Pages;
 using CommunityToolkit.Maui;
+using Mocale.Samples.Enums;
 namespace Mocale.Samples;
 
 public static class MauiProgram
@@ -22,6 +23,12 @@ public static class MauiProgram
                     {
                         config.DefaultCulture = new CultureInfo("en-GB");
                         config.NotFoundSymbol = "?";
+                        config.EnumBehavior.OverrideRules.Add(typeof(Cities), new LocalizeEnumRule()
+                        {
+                            UseAttribute = true,
+                            LocalizeAttribute = typeof(MocaleTranslationKeyAttribute),
+                            AttributePropertyName = nameof(MocaleTranslationKeyAttribute.Key),
+                        });
                     })
                     .UseSqliteCache(config =>
                     {
