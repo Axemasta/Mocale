@@ -4,7 +4,7 @@ using Mocale.Managers;
 namespace Mocale.Extensions;
 
 /// <summary>
-/// Localize Extension
+/// Localize Markup Extension
 /// </summary>
 /// <param name="translatorManager">Translator Manager</param>
 [AcceptEmptyServiceProvider]

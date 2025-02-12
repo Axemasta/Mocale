@@ -10,5 +10,6 @@ public interface ITranslationUpdater
     /// </summary>
     /// <param name="localization"></param>
     /// <param name="source"></param>
-    void UpdateTranslations(Localization localization, TranslationSource source);
+    /// <param name="notify">Whether this should notify observers</param>
+    void UpdateTranslations(Localization localization, TranslationSource source, bool notify = true);
 }

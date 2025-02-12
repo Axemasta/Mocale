@@ -8,7 +8,7 @@ internal class LocalizationManager : ILocalizationManager
     private readonly ILogger logger;
     private readonly IMocaleConfiguration mocaleConfiguration;
     private readonly ITranslationResolver translationResolver;
-    private readonly ITranslationUpdater translationUpdater;
+    private readonly TranslatorManager translatorManager;
 
     public CultureInfo CurrentCulture { get; private set; }
 
@@ -17,12 +17,12 @@ internal class LocalizationManager : ILocalizationManager
         IConfigurationManager<IMocaleConfiguration> configurationManager,
         ILogger<LocalizationManager> logger,
         ITranslationResolver translationResolver,
-        ITranslationUpdater translationUpdater)
+        TranslatorManager translatorManager)
     {
         this.currentCultureManager = Guard.Against.Null(currentCultureManager, nameof(currentCultureManager));
         this.logger = Guard.Against.Null(logger, nameof(logger));
         this.translationResolver = Guard.Against.Null(translationResolver, nameof(translationResolver));
-        this.translationUpdater = Guard.Against.Null(translationUpdater, nameof(this.translationUpdater));
+        this.translatorManager = Guard.Against.Null(translatorManager, nameof(this.translatorManager));
 
         configurationManager = Guard.Against.Null(configurationManager, nameof(configurationManager));
         this.mocaleConfiguration = configurationManager.Configuration;
@@ -44,14 +44,14 @@ internal class LocalizationManager : ILocalizationManager
                     return false;
                 }
 
-                translationUpdater.UpdateTranslations(result.Localization, result.Source);
+                translatorManager.UpdateTranslations(result.Localization, result.Source, false);
             }
 
             var localTranslations = translationResolver.LoadLocalTranslations(culture);
 
             if (localTranslations.Loaded)
             {
-                translationUpdater.UpdateTranslations(localTranslations.Localization, localTranslations.Source);
+                translatorManager.UpdateTranslations(localTranslations.Localization, localTranslations.Source, false);
             }
             else
             {
@@ -62,6 +62,8 @@ internal class LocalizationManager : ILocalizationManager
                     return false;
                 }
             }
+
+            translatorManager.RaisePropertyChanged();
 
             CurrentCulture = culture;
 
@@ -102,7 +104,7 @@ internal class LocalizationManager : ILocalizationManager
             return Task.FromResult(false);
         }
 
-        translationUpdater.UpdateTranslations(localTranslations.Localization, localTranslations.Source);
+        translatorManager.UpdateTranslations(localTranslations.Localization, localTranslations.Source);
 
         logger.LogTrace("Loaded local translations from source: {TranslationSource}", localTranslations.Source);
 
@@ -128,6 +130,6 @@ internal class LocalizationManager : ILocalizationManager
             return;
         }
 
-        translationUpdater.UpdateTranslations(external.Localization, TranslationSource.External);
+        translatorManager.UpdateTranslations(external.Localization, TranslationSource.External);
     }
 }

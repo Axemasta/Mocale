@@ -93,7 +93,7 @@ internal class TranslatorManager : ITranslatorManager, ITranslationUpdater, INot
 
     #region - ITranslationUpdater
 
-    public void UpdateTranslations(Localization localization, TranslationSource source)
+    public void UpdateTranslations(Localization localization, TranslationSource source, bool notify = true)
     {
         if (!Equals(CurrentCulture, localization.CultureInfo))
         {
@@ -122,7 +122,10 @@ internal class TranslatorManager : ITranslatorManager, ITranslationUpdater, INot
                 break;
         }
 
-        RaisePropertyChanged();
+        if (notify)
+        {
+            RaisePropertyChanged();
+        }
     }
 
     #endregion - ITranslationUpdater
@@ -131,7 +134,7 @@ internal class TranslatorManager : ITranslatorManager, ITranslationUpdater, INot
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    private void RaisePropertyChanged(string? propertyName = null)
+    public void RaisePropertyChanged(string? propertyName = null)
     {
         if (PropertyChanged is null)
         {
