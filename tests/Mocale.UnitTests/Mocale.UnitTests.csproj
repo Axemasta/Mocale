@@ -32,6 +32,7 @@
     <ProjectReference Include="..\..\src\Mocale.Providers.Aws.S3\Mocale.Providers.AWS.S3.csproj" />
     <ProjectReference Include="..\..\src\Mocale.Providers.Azure.Blob\Mocale.Providers.Azure.Blob.csproj" />
     <ProjectReference Include="..\..\src\Mocale.Providers.Github.Raw\Mocale.Providers.Github.Raw.csproj" />
+    <ProjectReference Include="..\..\src\Mocale.Testing\Mocale.Testing.csproj" />
     <ProjectReference Include="..\..\src\Mocale\Mocale.csproj" />
   </ItemGroup>
 

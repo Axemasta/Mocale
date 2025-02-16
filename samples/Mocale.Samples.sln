@@ -44,6 +44,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mocale.UnitTests", "..\test
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mocale.Providers.GitHub.Raw", "..\src\Mocale.Providers.GitHub.Raw\Mocale.Providers.GitHub.Raw.csproj", "{DE6A22FD-CAAA-4FD0-896D-066ABC5AFBAB}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{5797B417-2496-4029-B05D-54C03CD0A6E0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mocale.Testing", "..\src\Mocale.Testing\Mocale.Testing.csproj", "{F513B3DB-963C-4504-B142-B8E05A8CE648}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -88,6 +92,10 @@ Global
 		{DE6A22FD-CAAA-4FD0-896D-066ABC5AFBAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE6A22FD-CAAA-4FD0-896D-066ABC5AFBAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DE6A22FD-CAAA-4FD0-896D-066ABC5AFBAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F513B3DB-963C-4504-B142-B8E05A8CE648}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F513B3DB-963C-4504-B142-B8E05A8CE648}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F513B3DB-963C-4504-B142-B8E05A8CE648}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F513B3DB-963C-4504-B142-B8E05A8CE648}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -105,6 +113,8 @@ Global
 		{8F1A039F-2FEA-4C3B-BD0C-598F93A2BE8B} = {30608F13-5526-4C56-AB32-8123BC2A8D9C}
 		{04F9CE7A-4E0E-4DDD-9730-1BC6348559EF} = {23D0CB27-546A-43F3-B467-04D2A4672D81}
 		{DE6A22FD-CAAA-4FD0-896D-066ABC5AFBAB} = {0B693BD4-B0C5-4448-9784-8839869C7371}
+		{5797B417-2496-4029-B05D-54C03CD0A6E0} = {AEF022DA-558F-432C-A6D3-1520EABBD3B3}
+		{F513B3DB-963C-4504-B142-B8E05A8CE648} = {5797B417-2496-4029-B05D-54C03CD0A6E0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {61F7FB11-1E47-470C-91E2-47F8143E1572}
