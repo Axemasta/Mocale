@@ -14,7 +14,6 @@ namespace Mocale.Extensions;
 public class LocalizeEnumExtension(IMocaleConfiguration mocaleConfiguration, ITranslatorManager translatorManager) : IMarkupExtension, IMultiValueConverter
 {
     private readonly EnumTranslationKeyHelper enumTranslationKeyHelper = new(mocaleConfiguration);
-    private readonly IMocaleConfiguration mocaleConfiguration = Guard.Against.Null(mocaleConfiguration, nameof(mocaleConfiguration));
     private readonly ITranslatorManager translatorManager = Guard.Against.Null(translatorManager, nameof(translatorManager));
 
     /// <summary>

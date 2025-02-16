@@ -7,6 +7,7 @@ using Mocale.Samples.ViewModels;
 using Mocale.Samples.Pages;
 using CommunityToolkit.Maui;
 using Mocale.Samples.Enums;
+using CommunityToolkit.Maui.Markup;
 namespace Mocale.Samples;
 
 public static class MauiProgram
@@ -17,6 +18,7 @@ public static class MauiProgram
         builder
             .UseMauiApp<App>()
             .UseMauiCommunityToolkit()
+            .UseMauiCommunityToolkitMarkup()
             .UseMocale(mocale =>
             {
                 mocale.WithConfiguration(config =>
