@@ -9,6 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		src\directory.build.props = src\directory.build.props
+		directory.packages.props = directory.packages.props
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Providers", "Providers", "{D3CFAD31-519D-41F6-80AA-38E209378B59}"
@@ -16,6 +17,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cache", "Cache", "{40F3C130-0713-4EE4-BA11-93AAD3EF6DFA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{2265BFF6-B4BE-401C-BBBD-8C3CBDE63645}"
+	ProjectSection(SolutionItems) = preProject
+		tests\directory.packages.props = tests\directory.packages.props
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mocale.UnitTests", "tests\Mocale.UnitTests\Mocale.UnitTests.csproj", "{F40DDD6B-5621-4E0E-A4EB-EB7D37C31A00}"
 EndProject
