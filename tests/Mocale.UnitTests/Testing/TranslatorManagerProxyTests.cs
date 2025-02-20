@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Globalization;
 using Mocale.Abstractions;
+using Mocale.Enums;
 using Mocale.Models;
 using Mocale.Testing;
 
@@ -37,7 +34,7 @@ public class TranslatorManagerProxyTests : FixtureBase<TranslatorManagerProxy>
         var translation1 = Sut.Translate("hello");
         Assert.Equal("$hello$", translation1);
 
-        var translation2 = Sut.Translate("hello {0}", [ "Gary"]);
+        var translation2 = Sut.Translate("hello {0}", ["Gary"]);
         Assert.Equal("$hello Gary$", translation2);
     }
 
@@ -56,44 +53,32 @@ public class TranslatorManagerProxyTests : FixtureBase<TranslatorManagerProxy>
         };
 
         // Act
-        Sut.UpdateTranslations(new Localization()
-        {
-            CultureInfo = new System.Globalization.CultureInfo("en-GB"),
-            Translations = new Dictionary<string, string>()
+        Sut.UpdateTranslations(
+            new Localization
             {
-                { "KeyOne", "Hello" },
-                { "KeyTwo", "World" },
-            },
-        }, Enums.TranslationSource.External, true);
+                CultureInfo = new CultureInfo("en-GB"),
+                Translations = new Dictionary<string, string> { { "KeyOne", "Hello" }, { "KeyTwo", "World" } }
+            }, TranslationSource.External);
 
-        Sut.UpdateTranslations(new Localization()
-        {
-            CultureInfo = new System.Globalization.CultureInfo("en-GB"),
-            Translations = new Dictionary<string, string>()
+        Sut.UpdateTranslations(
+            new Localization
             {
-                { "KeyOne", "Hello" },
-                { "KeyTwo", "World" },
-            },
-        }, Enums.TranslationSource.WarmCache, true);
+                CultureInfo = new CultureInfo("en-GB"),
+                Translations = new Dictionary<string, string> { { "KeyOne", "Hello" }, { "KeyTwo", "World" } }
+            }, TranslationSource.WarmCache);
 
-        Sut.UpdateTranslations(new Localization()
-        {
-            CultureInfo = new System.Globalization.CultureInfo("en-GB"),
-            Translations = new Dictionary<string, string>()
+        Sut.UpdateTranslations(
+            new Localization
             {
-                { "KeyOne", "Hello" },
-                { "KeyTwo", "World" },
-            },
-        }, Enums.TranslationSource.ColdCache, true);
+                CultureInfo = new CultureInfo("en-GB"),
+                Translations = new Dictionary<string, string> { { "KeyOne", "Hello" }, { "KeyTwo", "World" } }
+            }, TranslationSource.ColdCache);
 
         // Assert
         Assert.Equal(2, Sut.PreferredLocalizations.Count);
 
-        Assert.Equivalent(new Dictionary<string, string>()
-            {
-                { "KeyOne", "Hello" },
-                { "KeyTwo", "World" },
-            }, Sut.PreferredLocalizations);
+        Assert.Equivalent(new Dictionary<string, string> { { "KeyOne", "Hello" }, { "KeyTwo", "World" } },
+            Sut.PreferredLocalizations);
 
         Assert.Empty(Sut.BackupLocalizations);
         Assert.Equal(3, notifyInvocations);
@@ -114,24 +99,18 @@ public class TranslatorManagerProxyTests : FixtureBase<TranslatorManagerProxy>
         };
 
         // Act
-        Sut.UpdateTranslations(new Localization()
-        {
-            CultureInfo = new System.Globalization.CultureInfo("en-GB"),
-            Translations = new Dictionary<string, string>()
+        Sut.UpdateTranslations(
+            new Localization
             {
-                { "KeyOne", "Hello" },
-                { "KeyTwo", "World" },
-            },
-        }, Enums.TranslationSource.Internal, true);
+                CultureInfo = new CultureInfo("en-GB"),
+                Translations = new Dictionary<string, string> { { "KeyOne", "Hello" }, { "KeyTwo", "World" } }
+            }, TranslationSource.Internal);
 
         // Assert
         Assert.Equal(2, Sut.BackupLocalizations.Count);
 
-        Assert.Equivalent(new Dictionary<string, string>()
-            {
-                { "KeyOne", "Hello" },
-                { "KeyTwo", "World" },
-            }, Sut.BackupLocalizations);
+        Assert.Equivalent(new Dictionary<string, string> { { "KeyOne", "Hello" }, { "KeyTwo", "World" } },
+            Sut.BackupLocalizations);
 
         Assert.Empty(Sut.PreferredLocalizations);
 
@@ -153,44 +132,32 @@ public class TranslatorManagerProxyTests : FixtureBase<TranslatorManagerProxy>
         };
 
         // Act
-        Sut.UpdateTranslations(new Localization()
-        {
-            CultureInfo = new System.Globalization.CultureInfo("en-GB"),
-            Translations = new Dictionary<string, string>()
+        Sut.UpdateTranslations(
+            new Localization
             {
-                { "KeyOne", "Hello" },
-                { "KeyTwo", "World" },
-            },
-        }, Enums.TranslationSource.External, false);
+                CultureInfo = new CultureInfo("en-GB"),
+                Translations = new Dictionary<string, string> { { "KeyOne", "Hello" }, { "KeyTwo", "World" } }
+            }, TranslationSource.External, false);
 
-        Sut.UpdateTranslations(new Localization()
-        {
-            CultureInfo = new System.Globalization.CultureInfo("en-GB"),
-            Translations = new Dictionary<string, string>()
+        Sut.UpdateTranslations(
+            new Localization
             {
-                { "KeyOne", "Hello" },
-                { "KeyTwo", "World" },
-            },
-        }, Enums.TranslationSource.WarmCache, false);
+                CultureInfo = new CultureInfo("en-GB"),
+                Translations = new Dictionary<string, string> { { "KeyOne", "Hello" }, { "KeyTwo", "World" } }
+            }, TranslationSource.WarmCache, false);
 
-        Sut.UpdateTranslations(new Localization()
-        {
-            CultureInfo = new System.Globalization.CultureInfo("en-GB"),
-            Translations = new Dictionary<string, string>()
+        Sut.UpdateTranslations(
+            new Localization
             {
-                { "KeyOne", "Hello" },
-                { "KeyTwo", "World" },
-            },
-        }, Enums.TranslationSource.ColdCache, false);
+                CultureInfo = new CultureInfo("en-GB"),
+                Translations = new Dictionary<string, string> { { "KeyOne", "Hello" }, { "KeyTwo", "World" } }
+            }, TranslationSource.ColdCache, false);
 
         // Assert
         Assert.Equal(2, Sut.PreferredLocalizations.Count);
 
-        Assert.Equivalent(new Dictionary<string, string>()
-            {
-                { "KeyOne", "Hello" },
-                { "KeyTwo", "World" },
-            }, Sut.PreferredLocalizations);
+        Assert.Equivalent(new Dictionary<string, string> { { "KeyOne", "Hello" }, { "KeyTwo", "World" } },
+            Sut.PreferredLocalizations);
 
         Assert.Empty(Sut.BackupLocalizations);
         Assert.Equal(0, notifyInvocations);
@@ -211,24 +178,18 @@ public class TranslatorManagerProxyTests : FixtureBase<TranslatorManagerProxy>
         };
 
         // Act
-        Sut.UpdateTranslations(new Localization()
-        {
-            CultureInfo = new System.Globalization.CultureInfo("en-GB"),
-            Translations = new Dictionary<string, string>()
+        Sut.UpdateTranslations(
+            new Localization
             {
-                { "KeyOne", "Hello" },
-                { "KeyTwo", "World" },
-            },
-        }, Enums.TranslationSource.Internal, false);
+                CultureInfo = new CultureInfo("en-GB"),
+                Translations = new Dictionary<string, string> { { "KeyOne", "Hello" }, { "KeyTwo", "World" } }
+            }, TranslationSource.Internal, false);
 
         // Assert
         Assert.Equal(2, Sut.BackupLocalizations.Count);
 
-        Assert.Equivalent(new Dictionary<string, string>()
-            {
-                { "KeyOne", "Hello" },
-                { "KeyTwo", "World" },
-            }, Sut.BackupLocalizations);
+        Assert.Equivalent(new Dictionary<string, string> { { "KeyOne", "Hello" }, { "KeyTwo", "World" } },
+            Sut.BackupLocalizations);
 
         Assert.Empty(Sut.PreferredLocalizations);
 

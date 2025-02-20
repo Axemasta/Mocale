@@ -7,20 +7,14 @@
     <Nullable>enable</Nullable>
     <UseMaui>true</UseMaui>
     <NoWarn>$(NoWarn);IDE0005</NoWarn>
+    <MocaleResourcePath>Locales\*.json</MocaleResourcePath>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="Locales\en-GB.json" />
-    <None Remove="Locales\fr-FR.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <AdditionalFiles Include="Locales\en-GB.json" />
-    <AdditionalFiles Include="Locales\fr-FR.json" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Mocale.SourceGenerators\Mocale.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
+  
+  <Import Project="..\..\src\Mocale.SourceGenerators\build\Package.props" />
+  <Import Project="..\..\src\Mocale.SourceGenerators\build\Package.targets" />
 
 </Project>

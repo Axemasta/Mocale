@@ -78,12 +78,9 @@ and can be load immediately
 
 #### Embedded Resource Provider
 
-This will use Json to load localizations that have been registered as an `EmbeddedResource`:
-
+This will use Json to load localizations that have been registered as an `EmbeddedResource`. These files are governed by the `MocaleResource` property which is set to `Resources/Locales` by default. To override this directory then set `MocaleResource`:
 ```xml
-<ItemGroup>
-  <EmbeddedResource Include="Resources\Locales\*.json" />
-</ItemGroup>
+<MocaleResourcePath>MyCustomPath\Locales\*.json</MocaleResourcePath>
 ```
 
 ```
@@ -340,12 +337,10 @@ issue until runtime, now if you have a reference through code, removing it will 
 
 To get this source generator to work:
 
-- Reference all your Locale Json files as `C# Analyzer Additional Files`:
-  ```xml
-  <ItemGroup>
-    <AdditionalFiles Include="Resources\Locales\*.json" />
-  </ItemGroup>
-  ```
+- Place your json files in the locales folder, by default this is `Resources/Locales`, if you want to use another directory then override `<MocaleResourcePath>` in your csproj:
+```xml
+<MocaleResource Include="MyCustomPath\Locales\*.json" />
+```
 
 - Build solution (to run the generator)
 

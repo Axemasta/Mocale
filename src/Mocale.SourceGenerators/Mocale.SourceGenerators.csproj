@@ -8,6 +8,9 @@
     <Nullable>enable</Nullable>
     <IsRoslynComponent>true</IsRoslynComponent>
     <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+    <IsPackable>true</IsPackable>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
 
     <AssemblyName>Mocale.SourceGenerators</AssemblyName>
     <RootNamespace>Mocale.SourceGenerators</RootNamespace>
@@ -48,4 +51,5 @@
       <TargetPathWithTargetPlatformMoniker Include="$(PkgNewtonsoft_Json)\lib\netstandard2.0\Newtonsoft.Json.dll" IncludeRuntimeDependency="false"/>
     </ItemGroup>
   </Target>
+
 </Project>

@@ -16,10 +16,16 @@ public class TranslatorManagerProxy : ITranslatorManager, ITranslationUpdater, I
 
     internal Dictionary<string, string> BackupLocalizations { get; set; } = [];
 
+    /// <inheritdoc/>
     public CultureInfo? CurrentCulture { get; private set; }
 
+    /// <summary>
+    /// Used internally to provide translations
+    /// </summary>
+    /// <param name="resourceKey"></param>
     public object? this[string resourceKey] => Translate(resourceKey);
 
+    /// <inheritdoc/>
     public string? Translate(string key)
     {
         if (PreferredLocalizations.TryGetValue(key, out var externalTranslation))
@@ -35,6 +41,7 @@ public class TranslatorManagerProxy : ITranslatorManager, ITranslationUpdater, I
         return "$" + key + "$";
     }
 
+    /// <inheritdoc/>
     public string? Translate(string key, object[] parameters)
     {
         var translation = Translate(key);
@@ -54,6 +61,7 @@ public class TranslatorManagerProxy : ITranslatorManager, ITranslationUpdater, I
         }
     }
 
+    /// <inheritdoc/>
     public void UpdateTranslations(Localization localization, TranslationSource source, bool notify = true)
     {
         if (!Equals(CurrentCulture, localization.CultureInfo))
@@ -89,15 +97,11 @@ public class TranslatorManagerProxy : ITranslatorManager, ITranslationUpdater, I
         }
     }
 
+    /// <inheritdoc/>
     public event PropertyChangedEventHandler? PropertyChanged;
 
     private void RaisePropertyChanged(string? propertyName = null)
     {
-        if (PropertyChanged is null)
-        {
-            return;
-        }
-
-        PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }
