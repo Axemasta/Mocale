@@ -49,10 +49,21 @@
                     <Label Margin="0,0,0,10" Text="{mocale:LocalizeBinding Name, TranslationKey={x:Static keys:TranslationKeys.ParameterPageBasicStringFormat}}" />
 
                     <Label FontAttributes="Bold" Text="{mocale:Localize Key={x:Static keys:TranslationKeys.ParameterPageLargeStringFormatLabel}}" />
-                    <Label Margin="0,0,0,10" Text="{mocale:Localize Key={x:Static keys:TranslationKeys.ParameterPageLargeStringFormat}}" />
+                    <!--<Label Margin="0,0,0,10" Text="{mocale:Localize Key={x:Static keys:TranslationKeys.ParameterPageLargeStringFormat}}" />-->
+                    <Label Margin="0,0,0,10">
+                        <Label.Text>
+                            <mocale:LocalizeMultiBinding TranslationKey="{x:Static keys:TranslationKeys.ParameterPageLargeStringFormat}">
+                                <Binding Path="Name" />
+                                <Binding Path="Date" />
+                                <Binding Path="Number" />
+                            </mocale:LocalizeMultiBinding>
+                        </Label.Text>
+                    </Label>
 
                     <Label FontAttributes="Bold" Text="{mocale:Localize Key={x:Static keys:TranslationKeys.ParameterPageMultipleFormatsSameValueLabel}}" />
-                    <Label Text="{mocale:Localize Key={x:Static keys:TranslationKeys.ParameterPageMultipleFormatsSameValue}, Binding={Binding Name}}" />
+                    <Label Text="{mocale:LocalizeBinding Name, TranslationKey={x:Static keys:TranslationKeys.ParameterPageMultipleFormatsSameValue}}" />
+
+
 
                 </VerticalStackLayout>
             </Border>

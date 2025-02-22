@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <LangVersion>preview</LangVersion>
     <TargetFrameworks>$(MauiPlatformTargetFrameworks);</TargetFrameworks>
     <UseMaui>true</UseMaui>
     <OutputType Condition="'$(TargetFramework)' != '$(StandardTargetFramework)'">Exe</OutputType>
