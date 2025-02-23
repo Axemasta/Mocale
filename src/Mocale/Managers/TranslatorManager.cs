@@ -4,7 +4,7 @@ using Ardalis.GuardClauses;
 namespace Mocale.Managers;
 
 /// <inheritdoc />
-internal partial class TranslatorManager : ITranslatorManager, ITranslationUpdater, INotifyPropertyChanged
+internal partial class TranslatorManager : IInternalTranslatorManager
 {
     #region Fields
 

@@ -1,10 +1,11 @@
+using System.ComponentModel;
 using System.Globalization;
 namespace Mocale.Abstractions;
 
 /// <summary>
 /// Translator Manager
 /// </summary>
-public interface ITranslatorManager
+public interface ITranslatorManager : INotifyPropertyChanged
 {
     /// <summary>
     /// Current Culture

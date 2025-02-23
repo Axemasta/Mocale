@@ -3,7 +3,7 @@ namespace Mocale.Abstractions;
 /// <summary>
 /// Translation Updater
 /// </summary>
-public interface ITranslationUpdater
+internal interface ITranslationUpdater
 {
     /// <summary>
     /// Update Translations From Source

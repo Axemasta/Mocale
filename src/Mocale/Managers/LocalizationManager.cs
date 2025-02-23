@@ -8,7 +8,7 @@ internal class LocalizationManager : ILocalizationManager
     private readonly ILogger logger;
     private readonly IMocaleConfiguration mocaleConfiguration;
     private readonly ITranslationResolver translationResolver;
-    private readonly TranslatorManager translatorManager;
+    private readonly IInternalTranslatorManager translatorManager;
 
     public CultureInfo CurrentCulture { get; private set; }
 
@@ -17,7 +17,7 @@ internal class LocalizationManager : ILocalizationManager
         IConfigurationManager<IMocaleConfiguration> configurationManager,
         ILogger<LocalizationManager> logger,
         ITranslationResolver translationResolver,
-        TranslatorManager translatorManager)
+        IInternalTranslatorManager translatorManager)
     {
         this.currentCultureManager = Guard.Against.Null(currentCultureManager, nameof(currentCultureManager));
         this.logger = Guard.Against.Null(logger, nameof(logger));

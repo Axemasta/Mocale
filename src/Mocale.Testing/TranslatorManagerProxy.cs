@@ -10,7 +10,7 @@ namespace Mocale.Testing;
 /// <summary>
 /// Translator Manager Proxy class to enable unit testing of views that use Mocale translations.
 /// </summary>
-public class TranslatorManagerProxy : ITranslatorManager, ITranslationUpdater, INotifyPropertyChanged
+public class TranslatorManagerProxy : IInternalTranslatorManager, INotifyPropertyChanged
 {
     internal Dictionary<string, string> PreferredLocalizations { get; set; } = [];
 
@@ -100,7 +100,8 @@ public class TranslatorManagerProxy : ITranslatorManager, ITranslationUpdater, I
     /// <inheritdoc/>
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    private void RaisePropertyChanged(string? propertyName = null)
+    /// <inheritdoc/>
+    public void RaisePropertyChanged(string? propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }

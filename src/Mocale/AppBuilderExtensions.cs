@@ -41,11 +41,13 @@ public static class AppBuilderExtensions
         mauiAppBuilder.Services.AddSingleton<IMauiInitializeService, MocaleInitializeService>();
         mauiAppBuilder.Services.AddSingleton<ITranslationResolver, TranslationResolver>();
         mauiAppBuilder.Services.AddSingleton<ICurrentCultureManager, CurrentCultureManager>();
+        mauiAppBuilder.Services.AddSingleton<IInternalTranslatorManager, TranslatorManager>();
 
         // https://andrewlock.net/how-to-register-a-service-with-multiple-interfaces-for-in-asp-net-core-di/
         mauiAppBuilder.Services.AddSingleton<TranslatorManager>();
         mauiAppBuilder.Services.AddSingleton<ITranslatorManager>(x => x.GetRequiredService<TranslatorManager>());
         mauiAppBuilder.Services.AddSingleton<ITranslationUpdater>(x => x.GetRequiredService<TranslatorManager>());
+        mauiAppBuilder.Services.AddSingleton<IInternalTranslatorManager>(x => x.GetRequiredService<TranslatorManager>());
 
         if (!mocaleBuilder.LocalProviderRegistered)
         {
