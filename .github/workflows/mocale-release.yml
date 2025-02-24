@@ -31,6 +31,11 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        global-json-file: global.json
+
     - name: Download artifacts
       id: download-artifact
       uses: dawidd6/action-download-artifact@v6
@@ -54,7 +59,7 @@ jobs:
 
         if (!$Match.Success) {
             Write-Host "Unable to parse version number for artifact: $($ArtifactName)"
-            exit
+            exit 1
         }
 
         $ArtifactName = $Match.Value
@@ -98,4 +103,4 @@ jobs:
         body: ${{ inputs.release-notes }}
 
     - name: Publish NuGet
-      run: nuget push ${{ inputs.artifacts }} -Source 'https://api.nuget.org/v3/index.json' -ApiKey ${{ secrets.NUGET_API_KEY }} -SkipDuplicate
+      run: dotnet nuget push ${{ inputs.artifacts }} --source 'https://api.nuget.org/v3/index.json' --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
