@@ -4,20 +4,57 @@ on:
   pull_request:
     branches: [ "main" ]
     paths:
-      - 'tests/**'
-      - 'src/**'
+      - '**'
+      - '!README.md'
+      - '!assets/**'
+      - '!samples/**'
   push:
-    branches: [ "main" ]
+    branches: [ "main", "actions" ]
     paths:
-      - 'src/**'
-      - 'version.json'
-  workflow_dispatch:
+      - '**'
+      - '!README.md'
+      - '!assets/**'
+      - '!samples/**'
 
 jobs:
-  build:
-
+  test:
     runs-on: windows-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # https://github.com/dotnet/Nerdbank.GitVersioning/blob/main/doc/cloudbuild.md
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          global-json-file: global.json
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4.0.0
+        with:
+          distribution: 'microsoft'
+          java-version: '11'
+          architecture: 'x64'
+      - name: Install Maui Workloads
+        run: dotnet workload install maui --source https://api.nuget.org/v3/index.json
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore --configuration Release
+      - name: Test
+        run: dotnet test --no-build --verbosity normal --collect:"XPlat Code Coverage"
+        if: github.event_name == 'pull_request'
+      - name: Publish Code Coverage To PR
+        uses: 5monkeys/cobertura-action@v13
+        with:
+          path: tests/Mocale.UnitTests/TestResults/*/coverage.cobertura.xml
+          minimum_coverage: 5
+          show_line: true
+          show_branch: true
+          show_missing: true
 
+  build:
+    runs-on: windows-latest
+    if: github.event_name != 'pull_request'
     steps:
     - uses: actions/checkout@v3
       with:
@@ -38,21 +75,95 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore --configuration Release
-    - name: Test
-      run: dotnet test --no-build --verbosity normal --collect:"XPlat Code Coverage"
-      if: github.event_name == 'pull_request'
-    - name: Publish Code Coverage To PR
-      uses: 5monkeys/cobertura-action@v13
-      with:
-        path: tests/Mocale.UnitTests/TestResults/*/coverage.cobertura.xml
-        minimum_coverage: 5
-        show_line: true
-        show_branch: true
-        show_missing: true
-      if: github.event_name == 'pull_request'
     - name: Upload Artifacts
       uses: actions/upload-artifact@v4
       with:
         name: drop
         path: src/**/*.nupkg
-      if: github.event_name != 'pull_request'
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request'
+    env:
+      IS_PRERELEASE: true
+      RELEASE_TITLE: v0.0.1
+      VERSION_NAME: 0.0.1
+      ARTIFACT_NAME: 'drop'
+      ARTIFACTS: 'Artifacts/**/*.nupkg'
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        global-json-file: global.json
+
+    - name: Download artifacts
+      id: download-artifact
+      uses: dawidd6/action-download-artifact@v6
+      with:
+        name: ${{ env.ARTIFACT_NAME }}
+        repo: Axemasta/Mocale
+        workflow: mocale-ci.yml
+        path: Artifacts/
+        search_artifacts: true
+
+    - name: Process NuGet Version
+      shell: pwsh
+      working-directory: Artifacts/
+      id: process-version
+      run: |
+        $Artifact = Get-ChildItem -Recurse | Where-Object { $_.Name.EndsWith('.nupkg') -and $_.Name.StartsWith('Mocale.') } | Select-Object -First 1
+        $ArtifactName = $Artifact.Name
+        $Pattern = '\b\d+\.\d+\.\d+(-\w+)?\b'
+
+        $Match = [regex]::Match($ArtifactName, $Pattern)
+
+        if (!$Match.Success) {
+            Write-Host "Unable to parse version number for artifact: $($ArtifactName)"
+            exit 1
+        }
+
+        $ArtifactName = $Match.Value
+
+        $IsPreRelease = $false
+
+        if ($ArtifactName.EndsWith("-pre")) {
+            $IsPreRelease = $true
+        }
+
+        if ($IsPreRelease) {
+          echo "IS_PRERELEASE=true" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        } else {
+          echo "IS_PRERELEASE=false" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        }
+
+        echo "action_state=$ArtifactName" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        echo "VERSION_NAME=$ArtifactName" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        echo "RELEASE_TITLE=v$ArtifactName" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+        Write-Host "ArtifactName = $ArtifactName"
+        Write-Host "Is PreRelease = $IsPreRelease"
+
+    - name: Bump version and push tag
+      id: tag_version
+      uses: mathieudutour/github-tag-action@v6.1
+      with:
+        custom_tag: ${{ env.VERSION_NAME }}
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+
+    - uses: ncipollo/release-action@main
+      name: Create Release
+      with:
+        artifacts: ${{ env.ARTIFACTS }}
+        artifactErrorsFailBuild: true
+        draft: true
+        generateReleaseNotes: true
+        name: ${{ env.RELEASE_TITLE }}
+        tag: ${{ env.VERSION_NAME }}
+        prerelease: ${{ env.IS_PRERELEASE }}
+        body: 'TODO'
+
+    - name: Publish NuGet
+      run: dotnet nuget push ${{ env.ARTIFACTS }} --source 'https://api.nuget.org/v3/index.json' --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
