@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <LangVersion>preview</LangVersion>
     <TargetFrameworks>$(MauiPlatformTargetFrameworks);</TargetFrameworks>
     <UseMaui>true</UseMaui>
     <OutputType Condition="'$(TargetFramework)' != '$(StandardTargetFramework)'">Exe</OutputType>
@@ -10,6 +11,7 @@
     <NoWarn>$(NoWarn);IDE0005</NoWarn>
     <GenerateSatelliteAssembliesForCore>true</GenerateSatelliteAssembliesForCore>
     <MauiEnableXamlCBindingWithSourceCompilation>true</MauiEnableXamlCBindingWithSourceCompilation>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 
     <!-- Display name -->
     <ApplicationTitle>Mocale.Samples</ApplicationTitle>
@@ -22,7 +24,7 @@
     <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
     <ApplicationVersion>1</ApplicationVersion>
 
-    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">12.2</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">15.0</SupportedOSPlatformVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
@@ -63,8 +65,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.0" />
+    <PackageReference Include="CommunityToolkit.Maui" />
+    <PackageReference Include="CommunityToolkit.Maui.Markup" />
+    <PackageReference Include="CommunityToolkit.Mvvm" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" />
   </ItemGroup>
 
   <ItemGroup>
@@ -91,8 +95,7 @@
     </EmbeddedResource>
   </ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\Locales\*.json" />
-    <AdditionalFiles Include="Resources\Locales\*.json" />
-  </ItemGroup>
+  <Import Project="..\..\src\Mocale.SourceGenerators\build\Package.props" />
+  <Import Project="..\..\src\Mocale.SourceGenerators\build\Package.targets" />
+
 </Project>

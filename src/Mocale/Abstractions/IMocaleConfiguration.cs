@@ -35,4 +35,9 @@ public interface IMocaleConfiguration
     /// Indicated whether culture changes are saved for use in future app sessions.
     /// </summary>
     bool SaveCultureChanged { get; }
+
+    /// <summary>
+    /// Configuration for the behavior of enum localization
+    /// </summary>
+    LocalizeEnumBehavior EnumBehavior { get; }
 }

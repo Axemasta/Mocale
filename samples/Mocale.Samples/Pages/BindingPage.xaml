@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
-    Title="{mocale:Localize Key={x:Static keys:TranslationKeys.BindingPageTitle}}"
     x:Class="Mocale.Samples.Pages.BindingPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:converters="clr-namespace:Mocale.Samples.Converters"
+    xmlns:enums="clr-namespace:Mocale.Samples.Enums"
     xmlns:keys="clr-namespace:Mocale.Translations"
     xmlns:mocale="http://axemasta.com/schemas/2022/mocale"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    Title="{mocale:Localize Key={x:Static keys:TranslationKeys.BindingPageTitle}}">
 
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -27,18 +28,19 @@
                     <Label Text="{mocale:Localize Key={x:Static keys:TranslationKeys.BindingPageCityDemoTitle}}" />
                     <Label Text="{mocale:Localize Key={x:Static keys:TranslationKeys.BindingPageCityDemoHeading}}" />
 
-                    <Picker Title="{mocale:Localize Key={x:Static keys:TranslationKeys.BindingPageCityDemoPickerPlaceholder}}" x:Name="CityPicker">
+                    <Picker x:Name="CityPicker" Title="{mocale:Localize Key={x:Static keys:TranslationKeys.BindingPageCityDemoPickerPlaceholder}}">
                         <Picker.ItemsSource>
-                            <x:Array Type="{x:Type x:String}">
-                                <x:String>London</x:String>
-                                <x:String>Manchester</x:String>
-                                <x:String>Nottingham</x:String>
-                                <x:String>Newcastle</x:String>
+                            <x:Array Type="{x:Type enums:Cities}">
+                                <enums:Cities>London</enums:Cities>
+                                <enums:Cities>Manchester</enums:Cities>
+                                <enums:Cities>Nottingham</enums:Cities>
+                                <enums:Cities>Newcastle</enums:Cities>
                             </x:Array>
                         </Picker.ItemsSource>
                     </Picker>
 
-                    <Label Text="{Binding Source={x:Reference CityPicker}, Path=SelectedItem, Converter={StaticResource CityDescriptionConverter}, x:DataType=Picker}" />
+                    <Label Text="{mocale:LocalizeEnum Source={x:Reference CityPicker}, Path=SelectedItem}" />
+                    <!--<Label Text="{Binding Source={x:Reference CityPicker}, Path=SelectedItem, Converter={StaticResource CityDescriptionConverter}, x:DataType=Picker}" />-->
 
                 </VerticalStackLayout>
             </Border>

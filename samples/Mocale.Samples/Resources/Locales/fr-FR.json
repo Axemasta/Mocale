@@ -29,5 +29,7 @@
   "ParameterPage_MultipleFormatsSameValue_Label": "Un format de chaîne avec la même valeur plusieurs fois",
   "ParameterPage_MultipleFormatsSameValue": "Bonjour {0}, Bonjour {0}, Bonjour {0}",
   "ParameterPage_SectionTwo_Heading": "Localisations liées",
-  "ParameterPage_SectionTwo_SubHeading": "Toutes les valeurs suivantes ont été localisées à l'aide de liaisons. Si les valeurs liées sont mises à jour, les chaînes seront mises à jour en conséquence"
+  "ParameterPage_SectionTwo_SubHeading": "Toutes les valeurs suivantes ont été localisées à l'aide de liaisons. Si les valeurs liées sont mises à jour, les chaînes seront mises à jour en conséquence",
+  "CodePage_Title": "Code",
+  "CodePage_Heading": "Cette page est entièrement construite grâce au code derrière, vous pouvez voir des exemples de tout ce que Mocale a à offrir lorsque vous n'utilisez pas xaml!"
 }

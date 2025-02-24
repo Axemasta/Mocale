@@ -29,5 +29,7 @@
   "ParameterPage_MultipleFormatsSameValue_Label": "A string format with the same value multiple times",
   "ParameterPage_MultipleFormatsSameValue": "Hello {0}, Hello {0}, Hello {0}",
   "ParameterPage_SectionTwo_Heading": "Binded Localizations",
-  "ParameterPage_SectionTwo_SubHeading": "All of the following values have been localized using bindings. If the binded values update the strings will update accordingly"
+  "ParameterPage_SectionTwo_SubHeading": "All of the following values have been localized using bindings. If the binded values update the strings will update accordingly",
+  "CodePage_Title": "Code",
+  "CodePage_Heading": "This page is built entirely through code behind, you can see examples of everything Mocale has to offer when not using xaml!"
 }

@@ -6,7 +6,9 @@ internal class MocaleInitializeService : IMauiInitializeService
     {
         var localizationManager = services.GetRequiredService<ILocalizationManager>();
         var translatorManager = services.GetRequiredService<ITranslatorManager>();
+        var configManager = services.GetRequiredService<IConfigurationManager<IMocaleConfiguration>>();
 
+        MocaleLocator.MocaleConfiguration = configManager.Configuration;
         MocaleLocator.TranslatorManager = translatorManager;
 
         Task.Run(localizationManager.Initialize);

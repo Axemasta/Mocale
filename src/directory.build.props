@@ -5,6 +5,7 @@
   <PropertyGroup>
     <ImplicitUsings>true</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <PropertyGroup Label="NuGet">
@@ -36,8 +37,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ardalis.GuardClauses" Version="5.0.0"/>
-    <PackageReference Include="Nerdbank.GitVersioning" Version="3.6.146">
+    <PackageReference Include="Ardalis.GuardClauses"/>
+    <PackageReference Include="Nerdbank.GitVersioning">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>

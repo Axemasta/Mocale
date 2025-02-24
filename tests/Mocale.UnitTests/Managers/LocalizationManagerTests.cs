@@ -5,6 +5,7 @@ using Mocale.Abstractions;
 using Mocale.Enums;
 using Mocale.Managers;
 using Mocale.Models;
+using Mocale.Testing;
 
 namespace Mocale.UnitTests.Managers;
 
@@ -17,7 +18,7 @@ public class LocalizationManagerTests : FixtureBase<ILocalizationManager>
     private readonly Mock<ILogger<LocalizationManager>> logger;
     private readonly Mock<IMocaleConfiguration> mocaleConfiguration;
     private readonly Mock<ITranslationResolver> translationResolver;
-    private readonly Mock<ITranslationUpdater> translationUpdater;
+    private readonly Mock<IInternalTranslatorManager> internalTranslatorManager;
 
     public LocalizationManagerTests()
     {
@@ -26,7 +27,7 @@ public class LocalizationManagerTests : FixtureBase<ILocalizationManager>
         logger = new Mock<ILogger<LocalizationManager>>();
         mocaleConfiguration = new Mock<IMocaleConfiguration>();
         translationResolver = new Mock<ITranslationResolver>();
-        translationUpdater = new Mock<ITranslationUpdater>();
+        internalTranslatorManager = new Mock<IInternalTranslatorManager>();
 
         mocaleConfiguration = new Mock<IMocaleConfiguration>();
 
@@ -44,7 +45,7 @@ public class LocalizationManagerTests : FixtureBase<ILocalizationManager>
             configurationManager.Object,
             logger.Object,
             translationResolver.Object,
-            translationUpdater.Object
+            internalTranslatorManager.Object
             );
     }
 
@@ -151,8 +152,8 @@ public class LocalizationManagerTests : FixtureBase<ILocalizationManager>
         // Assert
         Assert.True(initialized);
 
-        translationUpdater.Verify(
-            m => m.UpdateTranslations(loadResult.Localization, TranslationSource.WarmCache),
+        internalTranslatorManager.Verify(
+            m => m.UpdateTranslations(loadResult.Localization, TranslationSource.WarmCache, true),
             Times.Once());
 
         logger.VerifyLog(
@@ -196,8 +197,8 @@ public class LocalizationManagerTests : FixtureBase<ILocalizationManager>
         // Assert
         Assert.True(initialized);
 
-        translationUpdater.Verify(
-            m => m.UpdateTranslations(loadResult.Localization, TranslationSource.ColdCache),
+        internalTranslatorManager.Verify(
+            m => m.UpdateTranslations(loadResult.Localization, TranslationSource.ColdCache, true),
             Times.Once());
 
         logger.VerifyLog(
@@ -241,8 +242,8 @@ public class LocalizationManagerTests : FixtureBase<ILocalizationManager>
         // Assert
         Assert.True(initialized);
 
-        translationUpdater.Verify(
-            m => m.UpdateTranslations(loadResult.Localization, TranslationSource.Internal),
+        internalTranslatorManager.Verify(
+            m => m.UpdateTranslations(loadResult.Localization, TranslationSource.Internal, true),
             Times.Once());
 
         logger.VerifyLog(
@@ -300,12 +301,12 @@ public class LocalizationManagerTests : FixtureBase<ILocalizationManager>
         // Assert
         Assert.True(initialized);
 
-        translationUpdater.Verify(
-            m => m.UpdateTranslations(localLoadResult.Localization, TranslationSource.Internal),
+        internalTranslatorManager.Verify(
+            m => m.UpdateTranslations(localLoadResult.Localization, TranslationSource.Internal, true),
             Times.Once());
 
-        translationUpdater.Verify(
-            m => m.UpdateTranslations(It.IsAny<Localization>(), TranslationSource.External),
+        internalTranslatorManager.Verify(
+            m => m.UpdateTranslations(It.IsAny<Localization>(), TranslationSource.External, true),
             Times.Never());
 
         logger.VerifyLog(
@@ -374,12 +375,12 @@ public class LocalizationManagerTests : FixtureBase<ILocalizationManager>
         // Assert
         Assert.True(initialized);
 
-        translationUpdater.Verify(
-            m => m.UpdateTranslations(localLoadResult.Localization, TranslationSource.Internal),
+        internalTranslatorManager.Verify(
+            m => m.UpdateTranslations(localLoadResult.Localization, TranslationSource.Internal, true),
             Times.Once());
 
-        translationUpdater.Verify(
-            m => m.UpdateTranslations(externalLoadResult.Localization, TranslationSource.External),
+        internalTranslatorManager.Verify(
+            m => m.UpdateTranslations(externalLoadResult.Localization, TranslationSource.External, true),
             Times.Once());
 
         logger.VerifyLog(
@@ -460,8 +461,8 @@ public class LocalizationManagerTests : FixtureBase<ILocalizationManager>
         // Assert
         Assert.True(initialized);
 
-        translationUpdater.Verify(
-            m => m.UpdateTranslations(loadResult.Localization, TranslationSource.Internal),
+        internalTranslatorManager.Verify(
+            m => m.UpdateTranslations(loadResult.Localization, TranslationSource.Internal, true),
             Times.Once());
 
         logger.VerifyLog(
@@ -508,8 +509,8 @@ public class LocalizationManagerTests : FixtureBase<ILocalizationManager>
         // Assert
         Assert.True(initialized);
 
-        translationUpdater.Verify(
-            m => m.UpdateTranslations(loadResult.Localization, TranslationSource.ColdCache),
+        internalTranslatorManager.Verify(
+            m => m.UpdateTranslations(loadResult.Localization, TranslationSource.ColdCache, true),
             Times.Once());
 
         logger.VerifyLog(
@@ -556,8 +557,8 @@ public class LocalizationManagerTests : FixtureBase<ILocalizationManager>
         // Assert
         Assert.True(initialized);
 
-        translationUpdater.Verify(
-            m => m.UpdateTranslations(loadResult.Localization, TranslationSource.WarmCache),
+        internalTranslatorManager.Verify(
+            m => m.UpdateTranslations(loadResult.Localization, TranslationSource.WarmCache, true),
             Times.Once());
 
         logger.VerifyLog(
@@ -686,13 +687,15 @@ public class LocalizationManagerTests : FixtureBase<ILocalizationManager>
             log => log.LogInformation("No internal translations found for culture: {CultureName}, consider adding them as a backup", newCulture.Name),
             Times.Never());
 
-        translationUpdater.Verify(
-            m => m.UpdateTranslations(externalLoadResult.Localization, TranslationSource.External),
+        internalTranslatorManager.Verify(
+            m => m.UpdateTranslations(externalLoadResult.Localization, TranslationSource.External, false),
             Times.Once());
 
-        translationUpdater.Verify(
-            m => m.UpdateTranslations(localLoadResult.Localization, TranslationSource.Internal),
+        internalTranslatorManager.Verify(
+            m => m.UpdateTranslations(localLoadResult.Localization, TranslationSource.Internal, false),
             Times.Once());
+
+        internalTranslatorManager.Verify(m => m.RaisePropertyChanged(null), Times.Once);
     }
 
     [Fact]
@@ -752,13 +755,15 @@ public class LocalizationManagerTests : FixtureBase<ILocalizationManager>
             log => log.LogInformation("No internal translations found for culture: {CultureName}, consider adding them as a backup", newCulture.Name),
             Times.Once());
 
-        translationUpdater.Verify(
-            m => m.UpdateTranslations(externalLoadResult.Localization, TranslationSource.External),
+        internalTranslatorManager.Verify(
+            m => m.UpdateTranslations(externalLoadResult.Localization, TranslationSource.External, false),
             Times.Once());
 
-        translationUpdater.Verify(
-            m => m.UpdateTranslations(localLoadResult.Localization, TranslationSource.Internal),
+        internalTranslatorManager.Verify(
+            m => m.UpdateTranslations(localLoadResult.Localization, TranslationSource.Internal, false),
             Times.Never());
+
+        internalTranslatorManager.Verify(m => m.RaisePropertyChanged(null), Times.Once);
     }
 
     [Fact]
@@ -850,13 +855,15 @@ public class LocalizationManagerTests : FixtureBase<ILocalizationManager>
             log => log.LogInformation("No internal translations found for culture: {CultureName}, consider adding them as a backup", newCulture.Name),
             Times.Never);
 
-        translationUpdater.Verify(
-            m => m.UpdateTranslations(It.IsAny<Localization>(), TranslationSource.External),
+        internalTranslatorManager.Verify(
+            m => m.UpdateTranslations(It.IsAny<Localization>(), TranslationSource.External, false),
             Times.Never());
 
-        translationUpdater.Verify(
-            m => m.UpdateTranslations(localLoadResult.Localization, TranslationSource.Internal),
+        internalTranslatorManager.Verify(
+            m => m.UpdateTranslations(localLoadResult.Localization, TranslationSource.Internal, false),
             Times.Once());
+
+        internalTranslatorManager.Verify(m => m.RaisePropertyChanged(null), Times.Once);
     }
 
     #endregion Tests

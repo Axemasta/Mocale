@@ -1,0 +1,6 @@
+<Project>
+  <PropertyGroup>
+    <MocaleResourcePath Condition="'$(MocaleResourcePath)' == ''">Resources\Locales\*.json</MocaleResourcePath>
+  </PropertyGroup>
+</Project>
+

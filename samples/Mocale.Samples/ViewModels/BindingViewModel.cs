@@ -1,3 +1,3 @@
 namespace Mocale.Samples.ViewModels;
 
-public sealed class BindingViewModel : BaseViewModel;
+public sealed partial class BindingViewModel : BaseViewModel;

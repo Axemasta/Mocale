@@ -3,7 +3,13 @@ namespace Mocale.Samples.ViewModels;
 public sealed partial class ParameterViewModel : BaseViewModel
 {
     [ObservableProperty]
-    private string name;
+    public partial string Name { get; set; }
+
+    [ObservableProperty]
+    public partial DateTime Date { get; set; }
+
+    [ObservableProperty]
+    public partial int Number { get; set; }
 
     private static readonly Random Random = new();
 
@@ -26,6 +32,8 @@ public sealed partial class ParameterViewModel : BaseViewModel
     public ParameterViewModel()
     {
         Name = ChooseRandomName();
+        Date = new DateTime(2015, 11, 14);
+        Number = Random.Next(1, 1000);
     }
 
     private string ChooseRandomName()
