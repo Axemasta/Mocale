@@ -5,7 +5,7 @@ using Mocale.Translations;
 
 namespace Mocale.Samples.Pages;
 
-internal partial class CodePage : ContentPage
+internal sealed partial class CodePage : ContentPage
 {
     public CodePage()
     {

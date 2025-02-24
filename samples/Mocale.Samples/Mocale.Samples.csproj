@@ -11,6 +11,7 @@
     <NoWarn>$(NoWarn);IDE0005</NoWarn>
     <GenerateSatelliteAssembliesForCore>true</GenerateSatelliteAssembliesForCore>
     <MauiEnableXamlCBindingWithSourceCompilation>true</MauiEnableXamlCBindingWithSourceCompilation>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 
     <!-- Display name -->
     <ApplicationTitle>Mocale.Samples</ApplicationTitle>

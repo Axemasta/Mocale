@@ -1,16 +1,23 @@
 using System.Globalization;
-using System.Reflection;
 using Ardalis.GuardClauses;
-using Mocale.Managers;
 
 namespace Mocale.Extensions;
 
+/// <summary>
+/// Localize Multi Binding Markup Extension.
+/// Used to localize using a format string with multiple binded parameters
+/// </summary>
+/// <param name="translatorManager">Translator manager</param>
+[AcceptEmptyServiceProvider]
 [ContentProperty(nameof(Bindings))]
 public class LocalizeMultiBindingExtension(ITranslatorManager translatorManager) : IMarkupExtension, IMultiValueConverter
 {
     private readonly ITranslatorManager translatorManager = Guard.Against.Null(translatorManager, nameof(translatorManager));
 
-    public IList<BindingBase> Bindings { get; set; } = new List<BindingBase>();
+    /// <summary>
+    /// The bindings to use as format parameters
+    /// </summary>
+    public IList<BindingBase> Bindings { get; set; } = [];
 
     /// <summary>
     /// The translation key
@@ -48,6 +55,7 @@ public class LocalizeMultiBindingExtension(ITranslatorManager translatorManager)
     {
     }
 
+    /// <inheritdoc/>
     public object ProvideValue(IServiceProvider serviceProvider)
     {
         var bindings = new List<BindingBase>()

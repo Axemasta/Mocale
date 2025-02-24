@@ -4,7 +4,7 @@ using Ardalis.GuardClauses;
 
 namespace Mocale.Managers;
 
-internal class ParameterTranslatorManager : IParameterTranslatorManager, INotifyPropertyChanged
+internal partial class ParameterTranslatorManager : IParameterTranslatorManager, INotifyPropertyChanged
 {
     private readonly ITranslatorManager translatorManager;
 

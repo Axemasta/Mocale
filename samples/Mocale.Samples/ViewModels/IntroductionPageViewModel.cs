@@ -9,7 +9,7 @@ public partial class IntroductionPageViewModel : BaseViewModel
     public ObservableRangeCollection<string> Locales { get; }
 
     [ObservableProperty]
-    private string selectedLocale;
+    public partial string SelectedLocale { get; set; }
 
     public IntroductionPageViewModel(ILocalizationManager localizationManager)
     {

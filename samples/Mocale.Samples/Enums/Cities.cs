@@ -21,7 +21,7 @@ public enum Cities
     Manchester,
 }
 
-
+[AttributeUsage(AttributeTargets.Field)]
 public class MocaleTranslationKeyAttribute(string key) : Attribute
 {
     public string Key { get; set; } = key;

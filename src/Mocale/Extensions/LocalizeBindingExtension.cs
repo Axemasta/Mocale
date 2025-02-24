@@ -4,7 +4,8 @@ using Ardalis.GuardClauses;
 namespace Mocale.Extensions;
 
 /// <summary>
-/// Localize Binding Markup Extension
+/// Localize Binding Markup Extension.
+/// Used to localize using a format string with a single binded parameter
 /// </summary>
 /// <param name="translatorManager">Translator Manager</param>
 [AcceptEmptyServiceProvider]
@@ -49,6 +50,7 @@ public class LocalizeBindingExtension(ITranslatorManager translatorManager) : IM
     {
     }
 
+    /// <inheritdoc/>
     public object ProvideValue(IServiceProvider serviceProvider)
     {
         return new MultiBinding()

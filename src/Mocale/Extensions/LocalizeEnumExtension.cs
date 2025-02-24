@@ -47,6 +47,7 @@ public class LocalizeEnumExtension(IMocaleConfiguration mocaleConfiguration, ITr
     {
     }
 
+    /// <inheritdoc/>
     public object ProvideValue(IServiceProvider serviceProvider)
     {
         return new MultiBinding()

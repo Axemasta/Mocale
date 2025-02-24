@@ -15,8 +15,10 @@ public static class MauiProgram
     public static MauiApp CreateMauiApp()
     {
         var builder = MauiApp.CreateBuilder();
+#pragma warning disable CA1416
         builder
             .UseMauiApp<App>()
+#pragma warning restore CA1416
             .UseMauiCommunityToolkit()
             .UseMauiCommunityToolkitMarkup()
             .UseMocale(mocale =>

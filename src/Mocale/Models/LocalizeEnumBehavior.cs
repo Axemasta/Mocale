@@ -28,6 +28,9 @@ public record LocalizeEnumBehavior
     public Dictionary<Type, LocalizeEnumRule> OverrideRules { get; } = [];
 }
 
+/// <summary>
+/// Localize Enum Rule
+/// </summary>
 public record LocalizeEnumRule
 {
     /// <summary>
