@@ -25,6 +25,9 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Moq" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" />
+    <PackageReference Include="Ardalis.GuardClauses" />
+    <PackageReference Include="ResXResourceReader.NetStandard" />
   </ItemGroup>
 
   <ItemGroup>

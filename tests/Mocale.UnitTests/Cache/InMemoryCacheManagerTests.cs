@@ -1,11 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Options;
 using Mocale.Cache;
 
 namespace Mocale.UnitTests.Cache;
@@ -79,11 +73,17 @@ public class InMemoryCacheManagerTests : FixtureBase, IDisposable
     public void ClearCache_CallsClearMethod()
     {
         // Arrange
+        memoryCache.Set(new CultureInfo("en-US"), new Dictionary<string, string>());
+        memoryCache.Set(new CultureInfo("en-GB"), new Dictionary<string, string>());
+        memoryCache.Set(new CultureInfo("fr-FR"), new Dictionary<string, string>());
+
+        Assert.Equal(3, memoryCache.Count);
 
         // Act
         GetSut<InMemoryCacheManager>().ClearCache();
 
         // Assert
+        Assert.Equal(0, memoryCache.Count);
     }
 
     [Fact]
