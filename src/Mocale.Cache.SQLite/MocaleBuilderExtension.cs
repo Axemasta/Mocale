@@ -18,9 +18,14 @@ public static class MocaleBuilderExtension
     /// <returns></returns>
     public static MocaleBuilder UseSqliteCache(this MocaleBuilder builder, Action<SqliteConfig> configureSql)
     {
+        return UseSqliteCache(builder, FileSystem.Current, configureSql);
+    }
+
+    internal static MocaleBuilder UseSqliteCache(this MocaleBuilder builder, IFileSystem fileSystem, Action<SqliteConfig> configureSql)
+    {
         var config = new SqliteConfig
         {
-            DatabaseDirectory = FileSystem.AppDataDirectory,
+            DatabaseDirectory = fileSystem.AppDataDirectory,
         };
 
         configureSql(config);

@@ -25,7 +25,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="ResXResourceReader.NetStandard" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" PrivateAssets="all" />
+    <PackageReference Include="ResXResourceReader.NetStandard" PrivateAssets="all" />
   </ItemGroup>
 
 </Project>

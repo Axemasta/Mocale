@@ -34,10 +34,10 @@ public static class MauiProgram
                             AttributePropertyName = nameof(MocaleTranslationKeyAttribute.Key),
                         });
                     })
-                    .UseSqliteCache(config =>
-                    {
-                        config.UpdateInterval = TimeSpan.FromDays(1);
-                    })
+                    //.UseSqliteCache(config =>
+                    //{
+                    //    config.UpdateInterval = TimeSpan.FromDays(1);
+                    //})
                     .UseEmbeddedResources(config =>
                     {
                         config.ResourcesPath = "Locales";

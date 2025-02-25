@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Caching.Memory;
+using Mocale.Cache;
 using Mocale.Exceptions;
 using Mocale.Managers;
 using Mocale.Providers;
@@ -68,8 +70,10 @@ public static class AppBuilderExtensions
 
         if (!mocaleBuilder.CacheProviderRegistered)
         {
-            // TODO: Initialize in memory provider
-            throw new InitializationException("No cache provider has been registered. In the future there will be an in memory provider, for now please install and register the SQLite cache provider");
+            mauiAppBuilder.Services.AddTransient<MemoryCache>();
+            mauiAppBuilder.Services.AddSingleton<InMemoryCacheManager>();
+            mauiAppBuilder.Services.AddSingleton<ILocalisationCacheManager>(x => x.GetRequiredService<InMemoryCacheManager>());
+            mauiAppBuilder.Services.AddSingleton<ICacheUpdateManager>(x => x.GetRequiredService<InMemoryCacheManager>());
         }
 
         return mauiAppBuilder;
