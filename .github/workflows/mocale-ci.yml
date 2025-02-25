@@ -101,13 +101,10 @@ jobs:
 
     - name: Download artifacts
       id: download-artifact
-      uses: dawidd6/action-download-artifact@v6
+      uses: actions/download-artifact@v4
       with:
-        name: ${{ env.ARTIFACT_NAME }}
-        repo: Axemasta/Mocale
-        workflow: mocale-ci.yml
+        name: drop
         path: Artifacts/
-        search_artifacts: true
 
     - name: Process NuGet Version
       shell: pwsh
