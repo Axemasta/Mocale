@@ -2,7 +2,7 @@
 
 ![Mocale Logo](assets/Mocale_Inverted_Color_Crop.png)
 
-![Build status](https://img.shields.io/github/actions/workflow/status/axemasta/mocale/mocale-ci.yml)
+[![Build status](https://github.com/Axemasta/Mocale/actions/workflows/mocale-ci.yml/badge.svg)](https://github.com/Axemasta/Mocale/actions/workflows/mocale-ci.yml)
 
 Localization framework for .NET Maui
 
