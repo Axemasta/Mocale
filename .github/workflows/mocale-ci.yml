@@ -107,7 +107,7 @@ jobs:
         repo: Axemasta/Mocale
         workflow: mocale-ci.yml
         path: Artifacts/
-        search_artifacts: true
+        run_id: ${{ github.event.workflow_run.id }}
 
     - name: Process NuGet Version
       shell: pwsh
