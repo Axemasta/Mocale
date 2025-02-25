@@ -41,7 +41,7 @@ jobs:
       - name: Build
         run: dotnet build --no-restore --configuration Release
       - name: Test
-        run: dotnet test --no-build --verbosity normal --collect:"XPlat Code Coverage"
+        run: dotnet test --no-build --configuration Release --verbosity normal --collect:"XPlat Code Coverage"
         if: github.event_name == 'pull_request'
       - name: Publish Code Coverage To PR
         uses: 5monkeys/cobertura-action@v13
