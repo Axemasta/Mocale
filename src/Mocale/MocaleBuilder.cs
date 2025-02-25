@@ -39,6 +39,7 @@ public class MocaleBuilder
     /// <exception cref="InvalidCastException"></exception>
     public MocaleBuilder WithConfiguration(Action<MocaleConfiguration> configureMocale)
     {
+        // I do this so that IMocaleConfiguration preserves its immutability with only getters, little jank...
         var config = ConfigurationManager.Configuration as MocaleConfiguration
             ?? throw new InvalidCastException($"Unable to cast {nameof(IMocaleConfiguration)} as {nameof(MocaleConfiguration)}");
 
