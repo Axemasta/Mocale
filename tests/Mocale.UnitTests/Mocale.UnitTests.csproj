@@ -41,7 +41,20 @@
 
   <ItemGroup>
     <!-- Some fake files embedded to allow testing embedded resource loading -->
-    <EmbeddedResource Include="Resources/**/*" />
+    <EmbeddedResource Include="Resources/**/*.json" />
+    <EmbeddedResource Include="Resources/**/*.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Resx\TestResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>TestResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <Compile Update="Resources\Resx\TestResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TestResources.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
 
 </Project>

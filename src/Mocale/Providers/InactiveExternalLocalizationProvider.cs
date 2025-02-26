@@ -8,6 +8,7 @@ internal sealed class InactiveExternalLocalizationProvider : IExternalLocalizati
         IExternalLocalizationResult blankResult = new ExternalLocalizationResult()
         {
             Success = false,
+            Localizations = null,
         };
 
         return Task.FromResult(blankResult);
