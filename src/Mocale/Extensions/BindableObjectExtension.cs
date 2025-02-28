@@ -71,6 +71,7 @@ public static class BindableObjectExtension
     public static void SetEnumTranslation(this BindableObject bindableObject, BindableProperty property, Binding binding, string stringFormat = "{0}")
     {
         ArgumentNullException.ThrowIfNull(bindableObject, nameof(bindableObject));
+        ArgumentNullException.ThrowIfNull(binding, nameof(binding));
 
         var multiBinding = new MultiBinding()
         {

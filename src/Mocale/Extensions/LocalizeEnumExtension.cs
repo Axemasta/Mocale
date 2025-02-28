@@ -71,14 +71,14 @@ public class LocalizeEnumExtension(IMocaleConfiguration mocaleConfiguration, ITr
             return string.Empty;
         }
 
-        if (values[0] is null)
+        if (values[1] is not Enum enumValue)
         {
             return string.Empty;
         }
 
-        if (values[1] is not Enum enumValue)
+        if (!mocaleConfiguration.EnumBehavior.UseAttribute)
         {
-            return string.Empty;
+            return enumValue.ToString();
         }
 
         var translationKey = enumTranslationKeyHelper.GetTranslationKey(enumValue);

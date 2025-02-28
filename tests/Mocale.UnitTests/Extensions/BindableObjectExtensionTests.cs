@@ -754,97 +754,609 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
     [Fact]
     public void SetEnumTranslationVoid_WhenBindableObjectIsNull_ShouldThrow()
     {
-        Assert.Fail();
+        // Arrange
+        var viewModel = new SomeViewModel();
+
+        BindableObject bindableObject = null!;
+        var binding = new Binding(nameof(SomeViewModel.SelectedFruit), source: viewModel);
+
+        // Act
+        var ex = Assert.Throws<ArgumentNullException>(() => bindableObject.SetEnumTranslation(Label.TextProperty, binding));
+
+        // Assert
+        Assert.Equal("Value cannot be null. (Parameter 'bindableObject')", ex.Message);
     }
 
     [Fact]
     public void SetEnumTranslationVoid_WhenBindingIsNull_ShouldThrow()
     {
-        Assert.Fail();
+        // Arrange
+        BindableObject bindableObject = new Label();
+
+        // Act
+        var ex = Assert.Throws<ArgumentNullException>(() => bindableObject.SetEnumTranslation(Label.TextProperty, null!));
+
+        // Assert
+        Assert.Equal("Value cannot be null. (Parameter 'binding')", ex.Message);
     }
 
     [Fact]
     public void SetEnumTranslationVoid_WhenConfiguredNotToUseAttribute_ShouldEnumString()
     {
-        Assert.Fail();
+        // Arrange
+        MocaleLocator.MocaleConfiguration = new MocaleConfiguration()
+        {
+            EnumBehavior = new LocalizeEnumBehavior()
+            {
+                UseAttribute = false,
+            }
+        };
+
+        var viewModel = new SomeViewModel()
+        {
+            SelectedFruit = Fruit.Apple,
+        };
+
+        BindableObject bindableObject = new Label();
+        var binding = new Binding(nameof(SomeViewModel.SelectedFruit), source: viewModel);
+
+        // Act
+        bindableObject.SetEnumTranslation(Label.TextProperty, binding);
+
+        // Assert
+        var label = Assert.IsType<Label>(bindableObject);
+        Assert.Equal("Apple", label.Text);
     }
 
     [Fact]
     public void SetEnumTranslationVoid_WhenTranslationKeyDoesNotExist_ShouldSetNotFoundKey()
     {
-        Assert.Fail();
+        // Arrange
+        MocaleLocator.MocaleConfiguration = new MocaleConfiguration()
+        {
+            EnumBehavior = new LocalizeEnumBehavior()
+            {
+                UseAttribute = true,
+                AttributePropertyName = nameof(DescriptionAttribute.Description),
+                LocalizeAttribute = typeof(DescriptionAttribute),
+            }
+        };
+
+        var enGbLocalization = new Localization()
+        {
+            CultureInfo = new CultureInfo("en-GB"),
+            Translations = new Dictionary<string, string>()
+            {
+                { "MapplicationTitle", "Mocale!" },
+            }
+        };
+
+        translatorManager.UpdateTranslations(enGbLocalization, TranslationSource.Internal);
+
+        var viewModel = new SomeViewModel()
+        {
+            SelectedFruit = Fruit.Apple,
+        };
+
+        BindableObject bindableObject = new Label();
+        var binding = new Binding(nameof(SomeViewModel.SelectedFruit), source: viewModel);
+
+        // Act
+        bindableObject.SetEnumTranslation(Label.TextProperty, binding);
+
+        // Assert
+        var label = Assert.IsType<Label>(bindableObject);
+        Assert.Equal("$Fruit_Apple$", label.Text);
     }
 
     [Fact]
     public void SetEnumTranslationVoid_WhenTranslationKeyExists_ShouldFormatTranslation()
     {
-        Assert.Fail();
+        // Arrange
+        MocaleLocator.MocaleConfiguration = new MocaleConfiguration()
+        {
+            EnumBehavior = new LocalizeEnumBehavior()
+            {
+                UseAttribute = true,
+                AttributePropertyName = nameof(DescriptionAttribute.Description),
+                LocalizeAttribute = typeof(DescriptionAttribute),
+            }
+        };
+
+        var enGbLocalization = new Localization()
+        {
+            CultureInfo = new CultureInfo("en-GB"),
+            Translations = new Dictionary<string, string>()
+            {
+                { "Fruit_Apple", "Apple" },
+                { "Fruit_Banana", "Banana" },
+                { "Fruit_Cherry", "Cherry" },
+            }
+        };
+
+        translatorManager.UpdateTranslations(enGbLocalization, TranslationSource.Internal);
+
+        var viewModel = new SomeViewModel()
+        {
+            SelectedFruit = Fruit.Banana,
+        };
+
+        BindableObject bindableObject = new Label();
+        var binding = new Binding(nameof(SomeViewModel.SelectedFruit), source: viewModel);
+
+        // Act
+        bindableObject.SetEnumTranslation(Label.TextProperty, binding);
+
+        // Assert
+        var label = Assert.IsType<Label>(bindableObject);
+        Assert.Equal("Banana", label.Text);
     }
 
     [Fact]
     public void SetEnumTranslationVoid_WhenBindedValueChanges_ShouldUpdateTranslation()
     {
-        Assert.Fail();
+        // Arrange
+        MocaleLocator.MocaleConfiguration = new MocaleConfiguration()
+        {
+            EnumBehavior = new LocalizeEnumBehavior()
+            {
+                UseAttribute = true,
+                AttributePropertyName = nameof(DescriptionAttribute.Description),
+                LocalizeAttribute = typeof(DescriptionAttribute),
+            }
+        };
+
+        var enGbLocalization = new Localization()
+        {
+            CultureInfo = new CultureInfo("en-GB"),
+            Translations = new Dictionary<string, string>()
+            {
+                { "Fruit_Apple", "Apple" },
+                { "Fruit_Banana", "Banana" },
+                { "Fruit_Cherry", "Cherry" },
+            }
+        };
+
+        translatorManager.UpdateTranslations(enGbLocalization, TranslationSource.Internal);
+
+        var viewModel = new SomeViewModel()
+        {
+            SelectedFruit = Fruit.Banana,
+        };
+
+        BindableObject bindableObject = new Label();
+        var binding = new Binding(nameof(SomeViewModel.SelectedFruit), source: viewModel);
+
+        // Act & Assert
+        bindableObject.SetEnumTranslation(Label.TextProperty, binding);
+
+        var label = Assert.IsType<Label>(bindableObject);
+        Assert.Equal("Banana", label.Text);
+
+        viewModel.SelectedFruit = Fruit.Cherry;
+
+        Assert.Equal("Cherry", label.Text);
     }
 
     [Fact]
     public void SetEnumTranslationVoid_WhenTranslationKeyExistsForCultureOneButNotCultureTwo_ShouldFormatTranslationCorrectly()
     {
-        Assert.Fail();
+        // Arrange
+        MocaleLocator.MocaleConfiguration = new MocaleConfiguration()
+        {
+            EnumBehavior = new LocalizeEnumBehavior()
+            {
+                UseAttribute = true,
+                AttributePropertyName = nameof(DescriptionAttribute.Description),
+                LocalizeAttribute = typeof(DescriptionAttribute),
+            }
+        };
+
+        var enGbLocalization = new Localization()
+        {
+            CultureInfo = new CultureInfo("en-GB"),
+            Translations = new Dictionary<string, string>()
+            {
+                { "Fruit_Apple", "Apple" },
+                { "Fruit_Banana", "Banana" },
+                { "Fruit_Cherry", "Cherry" },
+            }
+        };
+
+        var frFrLocalization = new Localization()
+        {
+            CultureInfo = new CultureInfo("fr-FR"),
+            Translations = new Dictionary<string, string>()
+            {
+                { "NotFruit", "Ce n'est pas un fruit" },
+            }
+        };
+
+        translatorManager.UpdateTranslations(enGbLocalization, TranslationSource.Internal);
+
+        var viewModel = new SomeViewModel()
+        {
+            SelectedFruit = Fruit.Banana,
+        };
+
+        BindableObject bindableObject = new Label();
+        var binding = new Binding(nameof(SomeViewModel.SelectedFruit), source: viewModel);
+
+        bindableObject.SetEnumTranslation(Label.TextProperty, binding);
+
+        var label = Assert.IsType<Label>(bindableObject);
+        Assert.Equal("Banana", label.Text);
+
+        // Act
+        translatorManager.UpdateTranslations(frFrLocalization, TranslationSource.Internal);
+
+        // Assert
+        Assert.Equal("$Fruit_Banana$", label.Text);
     }
 
     [Fact]
     public void SetEnumTranslationVoid_WhenTranslationKeyExistsForAllCultures_ShouldUpdateTranslationCorrectly()
     {
-        Assert.Fail();
+        // Arrange
+        MocaleLocator.MocaleConfiguration = new MocaleConfiguration()
+        {
+            EnumBehavior = new LocalizeEnumBehavior()
+            {
+                UseAttribute = true,
+                AttributePropertyName = nameof(DescriptionAttribute.Description),
+                LocalizeAttribute = typeof(DescriptionAttribute),
+            }
+        };
+
+        var enGbLocalization = new Localization()
+        {
+            CultureInfo = new CultureInfo("en-GB"),
+            Translations = new Dictionary<string, string>()
+            {
+                { "Fruit_Apple", "Apple" },
+                { "Fruit_Banana", "Banana" },
+                { "Fruit_Cherry", "Cherry" },
+            }
+        };
+
+        var frFrLocalization = new Localization()
+        {
+            CultureInfo = new CultureInfo("fr-FR"),
+            Translations = new Dictionary<string, string>()
+            {
+                { "Fruit_Apple", "Pomme" },
+                { "Fruit_Banana", "Banane" },
+                { "Fruit_Cherry", "Cerise" },
+            }
+        };
+
+        translatorManager.UpdateTranslations(enGbLocalization, TranslationSource.Internal);
+
+        var viewModel = new SomeViewModel()
+        {
+            SelectedFruit = Fruit.Banana,
+        };
+
+        BindableObject bindableObject = new Label();
+        var binding = new Binding(nameof(SomeViewModel.SelectedFruit), source: viewModel);
+
+        bindableObject.SetEnumTranslation(Label.TextProperty, binding);
+
+        var label = Assert.IsType<Label>(bindableObject);
+        Assert.Equal("Banana", label.Text);
+
+        // Act
+        translatorManager.UpdateTranslations(frFrLocalization, TranslationSource.Internal);
+
+        // Assert
+        Assert.Equal("Banane", label.Text);
     }
 
     [Fact]
     public void SetEnumTranslationView_WhenBindableObjectIsNull_ShouldThrow()
     {
-        Assert.Fail();
+        // Arrange
+        var viewModel = new SomeViewModel();
+
+        Label label = null!;
+        var binding = new Binding(nameof(SomeViewModel.SelectedFruit), source: viewModel);
+
+        // Act
+        var ex = Assert.Throws<ArgumentNullException>(() => label.SetEnumTranslation(Label.TextProperty, binding));
+
+        // Assert
+        Assert.Equal("Value cannot be null. (Parameter 'bindableObject')", ex.Message);
     }
 
     [Fact]
     public void SetEnumTranslationView_WhenBindingIsNull_ShouldThrow()
     {
-        Assert.Fail();
+        // Arrange
+        var label = new Label();
+
+        // Act
+        var ex = Assert.Throws<ArgumentNullException>(() => label.SetEnumTranslation(Label.TextProperty, null!));
+
+        // Assert
+        Assert.Equal("Value cannot be null. (Parameter 'binding')", ex.Message);
     }
 
     [Fact]
     public void SetEnumTranslationView_WhenConfiguredNotToUseAttribute_ShouldEnumString()
     {
-        Assert.Fail();
+        // Arrange
+        MocaleLocator.MocaleConfiguration = new MocaleConfiguration()
+        {
+            EnumBehavior = new LocalizeEnumBehavior()
+            {
+                UseAttribute = false,
+            }
+        };
+
+        var viewModel = new SomeViewModel()
+        {
+            SelectedFruit = Fruit.Apple,
+        };
+
+        var label = new Label();
+        var binding = new Binding(nameof(SomeViewModel.SelectedFruit), source: viewModel);
+
+        // Act
+        var view = label.SetEnumTranslation(Label.TextProperty, binding);
+
+        // Assert
+        Assert.IsType<Label>(view);
+        Assert.Equal(label, view);
+        Assert.Equal("Apple", label.Text);
     }
 
     [Fact]
     public void SetEnumTranslationView_WhenTranslationKeyDoesNotExist_ShouldSetNotFoundKey()
     {
-        Assert.Fail();
+        // Arrange
+        MocaleLocator.MocaleConfiguration = new MocaleConfiguration()
+        {
+            EnumBehavior = new LocalizeEnumBehavior()
+            {
+                UseAttribute = true,
+                AttributePropertyName = nameof(DescriptionAttribute.Description),
+                LocalizeAttribute = typeof(DescriptionAttribute),
+            }
+        };
+
+        var enGbLocalization = new Localization()
+        {
+            CultureInfo = new CultureInfo("en-GB"),
+            Translations = new Dictionary<string, string>()
+            {
+                { "MapplicationTitle", "Mocale!" },
+            }
+        };
+
+        translatorManager.UpdateTranslations(enGbLocalization, TranslationSource.Internal);
+
+        var viewModel = new SomeViewModel()
+        {
+            SelectedFruit = Fruit.Apple,
+        };
+
+        var label = new Label();
+        var binding = new Binding(nameof(SomeViewModel.SelectedFruit), source: viewModel);
+
+        // Act
+        var view = label.SetEnumTranslation(Label.TextProperty, binding);
+
+        // Assert
+        Assert.IsType<Label>(view);
+        Assert.Equal(label, view);
+        Assert.Equal("$Fruit_Apple$", label.Text);
     }
 
     [Fact]
     public void SetEnumTranslationView_WhenTranslationKeyExists_ShouldFormatTranslation()
     {
-        Assert.Fail();
+        // Arrange
+        MocaleLocator.MocaleConfiguration = new MocaleConfiguration()
+        {
+            EnumBehavior = new LocalizeEnumBehavior()
+            {
+                UseAttribute = true,
+                AttributePropertyName = nameof(DescriptionAttribute.Description),
+                LocalizeAttribute = typeof(DescriptionAttribute),
+            }
+        };
+
+        var enGbLocalization = new Localization()
+        {
+            CultureInfo = new CultureInfo("en-GB"),
+            Translations = new Dictionary<string, string>()
+            {
+                { "Fruit_Apple", "Apple" },
+                { "Fruit_Banana", "Banana" },
+                { "Fruit_Cherry", "Cherry" },
+            }
+        };
+
+        translatorManager.UpdateTranslations(enGbLocalization, TranslationSource.Internal);
+
+        var viewModel = new SomeViewModel()
+        {
+            SelectedFruit = Fruit.Banana,
+        };
+
+        var label = new Label();
+        var binding = new Binding(nameof(SomeViewModel.SelectedFruit), source: viewModel);
+
+        // Act
+        var view = label.SetEnumTranslation(Label.TextProperty, binding);
+
+        // Assert
+        Assert.IsType<Label>(view);
+        Assert.Equal(label, view);
+        Assert.Equal("Banana", label.Text);
     }
 
     [Fact]
     public void SetEnumTranslationView_WhenBindedValueChanges_ShouldUpdateTranslation()
     {
-        Assert.Fail();
+        // Arrange
+        MocaleLocator.MocaleConfiguration = new MocaleConfiguration()
+        {
+            EnumBehavior = new LocalizeEnumBehavior()
+            {
+                UseAttribute = true,
+                AttributePropertyName = nameof(DescriptionAttribute.Description),
+                LocalizeAttribute = typeof(DescriptionAttribute),
+            }
+        };
+
+        var enGbLocalization = new Localization()
+        {
+            CultureInfo = new CultureInfo("en-GB"),
+            Translations = new Dictionary<string, string>()
+            {
+                { "Fruit_Apple", "Apple" },
+                { "Fruit_Banana", "Banana" },
+                { "Fruit_Cherry", "Cherry" },
+            }
+        };
+
+        translatorManager.UpdateTranslations(enGbLocalization, TranslationSource.Internal);
+
+        var viewModel = new SomeViewModel()
+        {
+            SelectedFruit = Fruit.Banana,
+        };
+
+        var label = new Label();
+        var binding = new Binding(nameof(SomeViewModel.SelectedFruit), source: viewModel);
+
+        // Act & Assert
+        var view = label.SetEnumTranslation(Label.TextProperty, binding);
+
+        Assert.IsType<Label>(view);
+        Assert.Equal(label, view);
+        Assert.Equal("Banana", label.Text);
+
+        viewModel.SelectedFruit = Fruit.Cherry;
+
+        Assert.Equal("Cherry", label.Text);
     }
 
     [Fact]
     public void SetEnumTranslationView_WhenTranslationKeyExistsForCultureOneButNotCultureTwo_ShouldFormatTranslationCorrectly()
     {
-        Assert.Fail();
+        // Arrange
+        MocaleLocator.MocaleConfiguration = new MocaleConfiguration()
+        {
+            EnumBehavior = new LocalizeEnumBehavior()
+            {
+                UseAttribute = true,
+                AttributePropertyName = nameof(DescriptionAttribute.Description),
+                LocalizeAttribute = typeof(DescriptionAttribute),
+            }
+        };
+
+        var enGbLocalization = new Localization()
+        {
+            CultureInfo = new CultureInfo("en-GB"),
+            Translations = new Dictionary<string, string>()
+            {
+                { "Fruit_Apple", "Apple" },
+                { "Fruit_Banana", "Banana" },
+                { "Fruit_Cherry", "Cherry" },
+            }
+        };
+
+        var frFrLocalization = new Localization()
+        {
+            CultureInfo = new CultureInfo("fr-FR"),
+            Translations = new Dictionary<string, string>()
+            {
+                { "NotFruit", "Ce n'est pas un fruit" },
+            }
+        };
+
+        translatorManager.UpdateTranslations(enGbLocalization, TranslationSource.Internal);
+
+        var viewModel = new SomeViewModel()
+        {
+            SelectedFruit = Fruit.Banana,
+        };
+
+        var label = new Label();
+        var binding = new Binding(nameof(SomeViewModel.SelectedFruit), source: viewModel);
+
+        var view = label.SetEnumTranslation(Label.TextProperty, binding);
+
+        Assert.IsType<Label>(view);
+        Assert.Equal(label, view);
+        Assert.Equal("Banana", label.Text);
+
+        // Act
+        translatorManager.UpdateTranslations(frFrLocalization, TranslationSource.Internal);
+
+        // Assert
+        Assert.Equal("$Fruit_Banana$", label.Text);
     }
 
     [Fact]
     public void SetEnumTranslationView_WhenTranslationKeyExistsForAllCultures_ShouldUpdateTranslationCorrectly()
     {
-        Assert.Fail();
+        // Arrange
+        MocaleLocator.MocaleConfiguration = new MocaleConfiguration()
+        {
+            EnumBehavior = new LocalizeEnumBehavior()
+            {
+                UseAttribute = true,
+                AttributePropertyName = nameof(DescriptionAttribute.Description),
+                LocalizeAttribute = typeof(DescriptionAttribute),
+            }
+        };
+
+        var enGbLocalization = new Localization()
+        {
+            CultureInfo = new CultureInfo("en-GB"),
+            Translations = new Dictionary<string, string>()
+            {
+                { "Fruit_Apple", "Apple" },
+                { "Fruit_Banana", "Banana" },
+                { "Fruit_Cherry", "Cherry" },
+            }
+        };
+
+        var frFrLocalization = new Localization()
+        {
+            CultureInfo = new CultureInfo("fr-FR"),
+            Translations = new Dictionary<string, string>()
+            {
+                { "Fruit_Apple", "Pomme" },
+                { "Fruit_Banana", "Banane" },
+                { "Fruit_Cherry", "Cerise" },
+            }
+        };
+
+        translatorManager.UpdateTranslations(enGbLocalization, TranslationSource.Internal);
+
+        var viewModel = new SomeViewModel()
+        {
+            SelectedFruit = Fruit.Banana,
+        };
+
+        var label = new Label();
+        var binding = new Binding(nameof(SomeViewModel.SelectedFruit), source: viewModel);
+
+        var view = label.SetEnumTranslation(Label.TextProperty, binding);
+
+        Assert.IsType<Label>(view);
+        Assert.Equal(label, view);
+        Assert.Equal("Banana", label.Text);
+
+        // Act
+        translatorManager.UpdateTranslations(frFrLocalization, TranslationSource.Internal);
+
+        // Assert
+        Assert.Equal("Banane", label.Text);
     }
 
     #endregion Tests
@@ -873,6 +1385,21 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
 
         [ObservableProperty]
         public partial string Name { get; set; }
+
+        [ObservableProperty]
+        public partial Fruit? SelectedFruit { get; set; }
+    }
+
+    private enum Fruit
+    {
+        [Description("Fruit_Banana")]
+        Banana,
+
+        [Description("Fruit_Apple")]
+        Apple,
+
+        [Description("Fruit_Cherry")]
+        Cherry
     }
 
     #endregion Test Data
