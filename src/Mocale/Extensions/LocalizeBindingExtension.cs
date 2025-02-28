@@ -79,12 +79,20 @@ public class LocalizeBindingExtension(ITranslatorManager translatorManager) : IM
             return string.Empty;
         }
 
-        // if (values[1] is not string localizeParameter)
-        // {
-        //     return string.Empty;
-        // }
+        string? formatParameter;
 
-        return string.Format(translatorManager.CurrentCulture, localizedFormat, values[1]);
+        if (values[1] is string localizeParameter)
+        {
+            formatParameter = localizeParameter;
+        }
+        else
+        {
+            // We need to ToString() here otherwise the formatting can go a bit wierd on other cultures...
+            // TODO: This might need some future consideration ie hungarian would use decimal commas 1.000.000,01 and comma decimals!
+            formatParameter = values[1].ToString();
+        }
+
+        return string.Format(translatorManager.CurrentCulture, localizedFormat, formatParameter);
     }
 
     /// <inheritdoc/>

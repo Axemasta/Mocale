@@ -102,22 +102,7 @@ public static class BindableObjectExtension
     public static TView SetTranslation<TView>(this TView view, BindableProperty property, string translationKey, IValueConverter? converter = null)
         where TView : View
     {
-        ArgumentNullException.ThrowIfNull(view, nameof(view));
-
-        var binding = new Binding
-        {
-            Mode = BindingMode.OneWay,
-            Path = $"[{translationKey}]",
-            Source = MocaleLocator.TranslatorManager
-        };
-
-        if (converter is not null)
-        {
-            binding.Converter = converter;
-        }
-
-        view.SetBinding(property, binding);
-
+        SetTranslation(view as BindableObject, property, translationKey, converter);
         return view;
     }
 
@@ -132,21 +117,7 @@ public static class BindableObjectExtension
     public static TView SetTranslationBinding<TView>(this TView view, BindableProperty property, Binding source, string translationKey)
         where TView : View
     {
-        ArgumentNullException.ThrowIfNull(view, nameof(view));
-
-        var binding = new MultiBinding()
-        {
-            Converter = new LocalizeBindingExtension(),
-            Mode = BindingMode.OneWay,
-            Bindings =
-            [
-                new Binding($"[{translationKey}]", BindingMode.OneWay, source: MocaleLocator.TranslatorManager),
-                source,
-            ]
-        };
-
-        view.SetBinding(property, binding);
-
+        SetTranslationBinding(view as BindableObject, property, source, translationKey);
         return view;
     }
 
@@ -159,28 +130,9 @@ public static class BindableObjectExtension
     /// <param name="binding">The binding you wish to localize, the type must be an enum</param>
     /// <param name="stringFormat">The string format to apply to the binding</param>
     public static TView SetEnumTranslation<TView>(this TView view, BindableProperty property, Binding binding, string stringFormat = "{0}")
+        where TView : View
     {
-        ArgumentNullException.ThrowIfNull(view, nameof(view));
-
-        if (view is not BindableObject bindableObject)
-        {
-            throw new NotSupportedException($"View {view.GetType().Name} must be a BindableObject to apply translation...");
-        }
-
-        var multiBinding = new MultiBinding()
-        {
-            StringFormat = stringFormat,
-            Converter = new LocalizeEnumExtension(),
-            Mode = BindingMode.OneWay,
-            Bindings =
-            [
-                new Binding(nameof(TranslatorManager.CurrentCulture), BindingMode.OneWay, source: MocaleLocator.TranslatorManager),
-                new Binding(binding.Path, binding.Mode, binding.Converter, binding.ConverterParameter, source: binding.Source),
-            ]
-        };
-
-        bindableObject.SetBinding(property, multiBinding);
-
+        SetEnumTranslation(view as BindableObject, property, binding, stringFormat);
         return view;
     }
 

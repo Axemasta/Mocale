@@ -11,11 +11,12 @@ using Mocale.Managers;
 using Mocale.Models;
 using Mocale.Testing;
 using Mocale.UnitTests.Collections;
+using Mocale.UnitTests.Fixtures;
 
 namespace Mocale.UnitTests.Extensions;
 
 [Collection(CollectionNames.MocaleLocatorTests)]
-public partial class BindableObjectExtensionTests
+public partial class BindableObjectExtensionTests : ControlsFixtureBase
 {
     #region Setup
 
@@ -160,7 +161,7 @@ public partial class BindableObjectExtensionTests
         var ex = Assert.Throws<ArgumentNullException>(() => BindableObjectExtension.SetTranslation(label, Label.TextProperty, "ApplicationTitle"));
 
         // Assert
-        Assert.Equal("Value cannot be null. (Parameter 'view')", ex.Message);
+        Assert.Equal("Value cannot be null. (Parameter 'bindableObject')", ex.Message);
     }
 
     [Fact]
@@ -299,7 +300,7 @@ public partial class BindableObjectExtensionTests
     }
 
     [Fact]
-    public void SetTranslationBindingVoid_WhenTranslationKeyExistsForOneCulture_ShouldFormatTranslation()
+    public void SetTranslationBindingVoid_WhenTranslationKeyExists_ShouldFormatTranslation()
     {
         // Arrange
         var localization = new Localization()
@@ -329,6 +330,76 @@ public partial class BindableObjectExtensionTests
         // Assert
         var label = Assert.IsType<Label>(bindableObject);
         Assert.Equal("The temperature is 21.3\u00b0C", label.Text);
+    }
+
+    [Fact]
+    public void SetTranslationBindingVoid_WhenBindedValueChanges_ShouldUpdatedTranslation()
+    {
+        // Arrange
+        var localization = new Localization()
+        {
+            CultureInfo = new CultureInfo("en-GB"),
+            Translations = new Dictionary<string, string>()
+            {
+                { "MapplicationTitle", "Mocale!" },
+                { "CurrentTemperatureLabel", "The temperature is {0}\u00b0C" }
+            }
+        };
+
+        translatorManager.UpdateTranslations(localization, TranslationSource.Internal);
+
+        var viewModel = new SomeViewModel
+        {
+            Temperature = 21.3
+        };
+
+        var binding = new Binding(nameof(SomeViewModel.Temperature), source: viewModel);
+
+        BindableObject bindableObject = new Label();
+
+        bindableObject.SetTranslationBinding(Label.TextProperty, binding, "CurrentTemperatureLabel");
+        var label = Assert.IsType<Label>(bindableObject);
+        Assert.Equal("The temperature is 21.3\u00b0C", label.Text);
+
+        // Act
+        viewModel.Temperature = 37.8;
+
+        // Assert
+        Assert.Equal("The temperature is 37.8\u00b0C", label.Text);
+    }
+
+    [Fact]
+    public void SetTranslationBindingVoid_WhenBindedValueString_ShouldUpdatedTranslation()
+    {
+        // Arrange
+        var localization = new Localization()
+        {
+            CultureInfo = new CultureInfo("en-GB"),
+            Translations = new Dictionary<string, string>()
+            {
+                { "MapplicationTitle", "Mocale!" },
+                { "WelcomeMessage", "Hello {0}, Welcome Back!" }
+            }
+        };
+
+        translatorManager.UpdateTranslations(localization, TranslationSource.Internal);
+
+        var viewModel = new SomeViewModel
+        {
+            Temperature = 21.3,
+            Name = "Morty"
+        };
+
+        var binding = new Binding(nameof(SomeViewModel.Name), source: viewModel);
+
+        BindableObject bindableObject = new Entry();
+
+        // Act
+        bindableObject.SetTranslationBinding(Entry.TextProperty, binding, "WelcomeMessage");
+
+        // Assert
+        var entry = Assert.IsType<Entry>(bindableObject);
+        Assert.Equal("Hello Morty, Welcome Back!", entry.Text);
     }
 
     [Fact]
@@ -396,7 +467,7 @@ public partial class BindableObjectExtensionTests
             Translations = new Dictionary<string, string>()
             {
                 { "MapplicationTitle", "Mocale!" },
-                { "CurrentTemperatureLabel", "La température est {0}\u00b0C" }
+                { "CurrentTemperatureLabel", "La température est {0} \u00b0C" }
             }
         };
 
@@ -419,7 +490,361 @@ public partial class BindableObjectExtensionTests
 
         translatorManager.UpdateTranslations(frFrLocalization, TranslationSource.Internal);
 
-        Assert.Equal("La température est 21.3\u00b0C", label.Text);
+        Assert.Equal("La température est 21.3 \u00b0C", label.Text);
+    }
+
+    [Fact]
+    public void SetTranslationBindingView_WhenBindableObjectIsNull_ShouldThrow()
+    {
+        // Arrange
+        var viewModel = new SomeViewModel();
+
+        View view = null!;
+        var binding = new Binding(nameof(SomeViewModel.Temperature), source: viewModel);
+
+        // Act
+        var ex = Assert.Throws<ArgumentNullException>(() => view.SetTranslationBinding(Label.TextProperty, binding, "ApplicationTitle"));
+
+        // Assert
+        Assert.Equal("Value cannot be null. (Parameter 'bindableObject')", ex.Message);
+    }
+
+    [Fact]
+    public void SetTranslationBindingView_WhenBindingIsNull_ShouldThrow()
+    {
+        // Arrange
+        var view = new Label();
+
+        // Act
+        var ex = Assert.Throws<ArgumentNullException>(() => view.SetTranslationBinding(Label.TextProperty, null!, "ApplicationTitle"));
+
+        // Assert
+        Assert.Equal("Value cannot be null. (Parameter 'source')", ex.Message);
+    }
+
+    [Fact]
+    public void SetTranslationBindingView_WhenTranslationKeyDoesNotExist_ShouldSetNotFoundKey()
+    {
+        // Arrange
+        var localization = new Localization()
+        {
+            CultureInfo = new CultureInfo("en-GB"),
+            Translations = new Dictionary<string, string>()
+            {
+                { "MapplicationTitle", "Mocale!"},
+            }
+        };
+
+        translatorManager.UpdateTranslations(localization, TranslationSource.Internal);
+
+        var viewModel = new SomeViewModel();
+        var binding = new Binding(nameof(SomeViewModel.Temperature), source: viewModel);
+
+        var label = new Label();
+
+        // Act
+        var view = label.SetTranslationBinding(Label.TextProperty, binding, "CurrentTemperatureLabel");
+
+        // Assert
+        Assert.Equal("$CurrentTemperatureLabel$", label.Text);
+        Assert.IsType<Label>(view);
+        Assert.Equal(label, view);
+    }
+
+    [Fact]
+    public void SetTranslationBindingView_WhenTranslationKeyExists_ShouldFormatTranslation()
+    {
+        // Arrange
+        var localization = new Localization()
+        {
+            CultureInfo = new CultureInfo("en-GB"),
+            Translations = new Dictionary<string, string>()
+            {
+                { "MapplicationTitle", "Mocale!" },
+                { "CurrentTemperatureLabel", "The temperature is {0}\u00b0C" }
+            }
+        };
+
+        translatorManager.UpdateTranslations(localization, TranslationSource.Internal);
+
+        var viewModel = new SomeViewModel
+        {
+            Temperature = 21.3
+        };
+
+        var binding = new Binding(nameof(SomeViewModel.Temperature), source: viewModel);
+
+        var label = new Label();
+
+        // Act
+        var view = label.SetTranslationBinding(Label.TextProperty, binding, "CurrentTemperatureLabel");
+
+        // Assert
+        Assert.Equal("The temperature is 21.3\u00b0C", label.Text);
+        Assert.IsType<Label>(view);
+        Assert.Equal(label, view);
+    }
+
+    [Fact]
+    public void SetTranslationBindingView_WhenBindedValueChanges_ShouldUpdatedTranslation()
+    {
+        // Arrange
+        var localization = new Localization()
+        {
+            CultureInfo = new CultureInfo("en-GB"),
+            Translations = new Dictionary<string, string>()
+            {
+                { "MapplicationTitle", "Mocale!" },
+                { "CurrentTemperatureLabel", "The temperature is {0}\u00b0C" }
+            }
+        };
+
+        translatorManager.UpdateTranslations(localization, TranslationSource.Internal);
+
+        var viewModel = new SomeViewModel
+        {
+            Temperature = 21.3
+        };
+
+        var binding = new Binding(nameof(SomeViewModel.Temperature), source: viewModel);
+
+        var label = new Label();
+
+        var view = label.SetTranslationBinding(Label.TextProperty, binding, "CurrentTemperatureLabel");
+        Assert.IsType<Label>(view);
+        Assert.Equal(label, view);
+
+        Assert.Equal("The temperature is 21.3\u00b0C", label.Text);
+
+        // Act
+        viewModel.Temperature = 37.8;
+
+        // Assert
+        Assert.Equal("The temperature is 37.8\u00b0C", label.Text);
+    }
+
+    [Fact]
+    public void SetTranslationBindingView_WhenBindedValueString_ShouldUpdatedTranslation()
+    {
+        // Arrange
+        var localization = new Localization()
+        {
+            CultureInfo = new CultureInfo("en-GB"),
+            Translations = new Dictionary<string, string>()
+            {
+                { "MapplicationTitle", "Mocale!" },
+                { "WelcomeMessage", "Hello {0}, Welcome Back!" }
+            }
+        };
+
+        translatorManager.UpdateTranslations(localization, TranslationSource.Internal);
+
+        var viewModel = new SomeViewModel
+        {
+            Temperature = 21.3,
+            Name = "Morty"
+        };
+
+        var binding = new Binding(nameof(SomeViewModel.Name), source: viewModel);
+
+        var entry = new Entry();
+
+        // Act
+        var view = entry.SetTranslationBinding(Entry.TextProperty, binding, "WelcomeMessage");
+
+        // Assert
+        Assert.Equal("Hello Morty, Welcome Back!", entry.Text);
+        Assert.IsType<Entry>(view);
+        Assert.Equal(entry, view);
+    }
+
+    [Fact]
+    public void SetTranslationBindingView_WhenTranslationKeyExistsForCultureOneButNotCultureTwo_ShouldFormatTranslationCorrectly()
+    {
+        // Arrange
+        var enGbLocalization = new Localization()
+        {
+            CultureInfo = new CultureInfo("en-GB"),
+            Translations = new Dictionary<string, string>()
+            {
+                { "MapplicationTitle", "Mocale!" },
+                { "CurrentTemperatureLabel", "The temperature is {0}\u00b0C" }
+            }
+        };
+
+        var frFrLocalization = new Localization()
+        {
+            CultureInfo = new CultureInfo("fr-FR"),
+            Translations = new Dictionary<string, string>()
+            {
+                { "MapplicationTitle", "Mocale!" },
+            }
+        };
+
+        translatorManager.UpdateTranslations(enGbLocalization, TranslationSource.Internal);
+
+        var viewModel = new SomeViewModel
+        {
+            Temperature = 21.3
+        };
+
+        var binding = new Binding(nameof(SomeViewModel.Temperature), source: viewModel);
+
+        var label = new Label();
+
+        // Act & Assert
+        var view = label.SetTranslationBinding(Label.TextProperty, binding, "CurrentTemperatureLabel");
+
+        Assert.IsType<Label>(view);
+        Assert.Equal(label, view);
+        Assert.Equal("The temperature is 21.3\u00b0C", label.Text);
+
+        translatorManager.UpdateTranslations(frFrLocalization, TranslationSource.Internal);
+
+        Assert.Equal("$CurrentTemperatureLabel$", label.Text);
+    }
+
+    [Fact]
+    public void SetTranslationBindingView_WhenTranslationKeyExistsForAllCultures_ShouldFormatTranslationCorrectly()
+    {
+        // Arrange
+        var enGbLocalization = new Localization()
+        {
+            CultureInfo = new CultureInfo("en-GB"),
+            Translations = new Dictionary<string, string>()
+            {
+                { "MapplicationTitle", "Mocale!" },
+                { "CurrentTemperatureLabel", "The temperature is {0}\u00b0C" }
+            }
+        };
+
+        var frFrLocalization = new Localization()
+        {
+            CultureInfo = new CultureInfo("fr-FR"),
+            Translations = new Dictionary<string, string>()
+            {
+                { "MapplicationTitle", "Mocale!" },
+                { "CurrentTemperatureLabel", "La température est {0} \u00b0C" }
+            }
+        };
+
+        translatorManager.UpdateTranslations(enGbLocalization, TranslationSource.Internal);
+
+        var viewModel = new SomeViewModel
+        {
+            Temperature = 21.3
+        };
+
+        var binding = new Binding(nameof(SomeViewModel.Temperature), source: viewModel);
+
+        var label = new Label();
+
+        // Act & Assert
+        var view = label.SetTranslationBinding(Label.TextProperty, binding, "CurrentTemperatureLabel");
+
+        Assert.IsType<Label>(view);
+        Assert.Equal(label, view);
+        Assert.Equal("The temperature is 21.3\u00b0C", label.Text);
+
+        translatorManager.UpdateTranslations(frFrLocalization, TranslationSource.Internal);
+
+        Assert.Equal("La température est 21.3 \u00b0C", label.Text);
+    }
+
+    [Fact]
+    public void SetEnumTranslationVoid_WhenBindableObjectIsNull_ShouldThrow()
+    {
+        Assert.Fail();
+    }
+
+    [Fact]
+    public void SetEnumTranslationVoid_WhenBindingIsNull_ShouldThrow()
+    {
+        Assert.Fail();
+    }
+
+    [Fact]
+    public void SetEnumTranslationVoid_WhenConfiguredNotToUseAttribute_ShouldEnumString()
+    {
+        Assert.Fail();
+    }
+
+    [Fact]
+    public void SetEnumTranslationVoid_WhenTranslationKeyDoesNotExist_ShouldSetNotFoundKey()
+    {
+        Assert.Fail();
+    }
+
+    [Fact]
+    public void SetEnumTranslationVoid_WhenTranslationKeyExists_ShouldFormatTranslation()
+    {
+        Assert.Fail();
+    }
+
+    [Fact]
+    public void SetEnumTranslationVoid_WhenBindedValueChanges_ShouldUpdateTranslation()
+    {
+        Assert.Fail();
+    }
+
+    [Fact]
+    public void SetEnumTranslationVoid_WhenTranslationKeyExistsForCultureOneButNotCultureTwo_ShouldFormatTranslationCorrectly()
+    {
+        Assert.Fail();
+    }
+
+    [Fact]
+    public void SetEnumTranslationVoid_WhenTranslationKeyExistsForAllCultures_ShouldUpdateTranslationCorrectly()
+    {
+        Assert.Fail();
+    }
+
+    [Fact]
+    public void SetEnumTranslationView_WhenBindableObjectIsNull_ShouldThrow()
+    {
+        Assert.Fail();
+    }
+
+    [Fact]
+    public void SetEnumTranslationView_WhenBindingIsNull_ShouldThrow()
+    {
+        Assert.Fail();
+    }
+
+    [Fact]
+    public void SetEnumTranslationView_WhenConfiguredNotToUseAttribute_ShouldEnumString()
+    {
+        Assert.Fail();
+    }
+
+    [Fact]
+    public void SetEnumTranslationView_WhenTranslationKeyDoesNotExist_ShouldSetNotFoundKey()
+    {
+        Assert.Fail();
+    }
+
+    [Fact]
+    public void SetEnumTranslationView_WhenTranslationKeyExists_ShouldFormatTranslation()
+    {
+        Assert.Fail();
+    }
+
+    [Fact]
+    public void SetEnumTranslationView_WhenBindedValueChanges_ShouldUpdateTranslation()
+    {
+        Assert.Fail();
+    }
+
+    [Fact]
+    public void SetEnumTranslationView_WhenTranslationKeyExistsForCultureOneButNotCultureTwo_ShouldFormatTranslationCorrectly()
+    {
+        Assert.Fail();
+    }
+
+    [Fact]
+    public void SetEnumTranslationView_WhenTranslationKeyExistsForAllCultures_ShouldUpdateTranslationCorrectly()
+    {
+        Assert.Fail();
     }
 
     #endregion Tests
@@ -445,6 +870,9 @@ public partial class BindableObjectExtensionTests
     {
         [ObservableProperty]
         public partial double Temperature { get; set; }
+
+        [ObservableProperty]
+        public partial string Name { get; set; }
     }
 
     #endregion Test Data
