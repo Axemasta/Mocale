@@ -18,6 +18,8 @@ public static class BindableObjectExtension
     /// <param name="converter">An optional converter</param>
     public static void SetTranslation(this BindableObject bindableObject, BindableProperty property, string translationKey, IValueConverter? converter = null)
     {
+        ArgumentNullException.ThrowIfNull(bindableObject, nameof(bindableObject));
+
         var binding = new Binding
         {
             Mode = BindingMode.OneWay,
@@ -42,6 +44,9 @@ public static class BindableObjectExtension
     /// <param name="translationKey">The translation key</param>
     public static void SetTranslationBinding(this BindableObject bindableObject, BindableProperty property, Binding source, string translationKey)
     {
+        ArgumentNullException.ThrowIfNull(bindableObject, nameof(bindableObject));
+        ArgumentNullException.ThrowIfNull(source, nameof(source));
+
         var binding = new MultiBinding()
         {
             Converter = new LocalizeBindingExtension(),
@@ -65,6 +70,8 @@ public static class BindableObjectExtension
     /// <param name="stringFormat">The string format to apply to the binding</param>
     public static void SetEnumTranslation(this BindableObject bindableObject, BindableProperty property, Binding binding, string stringFormat = "{0}")
     {
+        ArgumentNullException.ThrowIfNull(bindableObject, nameof(bindableObject));
+
         var multiBinding = new MultiBinding()
         {
             StringFormat = stringFormat,
@@ -92,15 +99,10 @@ public static class BindableObjectExtension
     /// <param name="property">The bindable property to target for translation</param>
     /// <param name="translationKey">The translation key</param>
     /// <param name="converter">An optional converter</param>
-    public static TView SetTranslation<TView>(this TView? view, BindableProperty property, string translationKey, IValueConverter? converter = null)
+    public static TView SetTranslation<TView>(this TView view, BindableProperty property, string translationKey, IValueConverter? converter = null)
         where TView : View
     {
         ArgumentNullException.ThrowIfNull(view, nameof(view));
-
-        if (view is not BindableObject bindableObject)
-        {
-            throw new NotSupportedException($"View {view.GetType().Name} must be a BindableObject to apply translation...");
-        }
 
         var binding = new Binding
         {
@@ -114,7 +116,7 @@ public static class BindableObjectExtension
             binding.Converter = converter;
         }
 
-        bindableObject.SetBinding(property, binding);
+        view.SetBinding(property, binding);
 
         return view;
     }
@@ -127,15 +129,10 @@ public static class BindableObjectExtension
     /// <param name="property">The bindable property to target for translation</param>
     /// <param name="source">The source binding</param>
     /// <param name="translationKey">The translation key</param>
-    public static TView SetTranslationBinding<TView>(this TView? view, BindableProperty property, Binding source, string translationKey)
+    public static TView SetTranslationBinding<TView>(this TView view, BindableProperty property, Binding source, string translationKey)
         where TView : View
     {
         ArgumentNullException.ThrowIfNull(view, nameof(view));
-
-        if (view is not BindableObject bindableObject)
-        {
-            throw new NotSupportedException($"View {view.GetType().Name} must be a BindableObject to apply translation...");
-        }
 
         var binding = new MultiBinding()
         {
@@ -148,7 +145,7 @@ public static class BindableObjectExtension
             ]
         };
 
-        bindableObject.SetBinding(property, binding);
+        view.SetBinding(property, binding);
 
         return view;
     }
@@ -161,7 +158,7 @@ public static class BindableObjectExtension
     /// <param name="property">The bindable property to target for translation</param>
     /// <param name="binding">The binding you wish to localize, the type must be an enum</param>
     /// <param name="stringFormat">The string format to apply to the binding</param>
-    public static TView SetEnumTranslation<TView>(this TView? view, BindableProperty property, Binding binding, string stringFormat = "{0}")
+    public static TView SetEnumTranslation<TView>(this TView view, BindableProperty property, Binding binding, string stringFormat = "{0}")
     {
         ArgumentNullException.ThrowIfNull(view, nameof(view));
 

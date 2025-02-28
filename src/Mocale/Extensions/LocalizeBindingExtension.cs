@@ -79,12 +79,12 @@ public class LocalizeBindingExtension(ITranslatorManager translatorManager) : IM
             return string.Empty;
         }
 
-        if (values[1] is not string localizeParameter)
-        {
-            return string.Empty;
-        }
+        // if (values[1] is not string localizeParameter)
+        // {
+        //     return string.Empty;
+        // }
 
-        return string.Format(translatorManager.CurrentCulture, localizedFormat, localizeParameter);
+        return string.Format(translatorManager.CurrentCulture, localizedFormat, values[1]);
     }
 
     /// <inheritdoc/>

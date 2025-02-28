@@ -1,4 +1,4 @@
-namespace Mocale.UnitTests.TestHelpers;
+namespace Mocale.UnitTests.TestUtils;
 
 public static class ServiceCollectionAssertions
 {

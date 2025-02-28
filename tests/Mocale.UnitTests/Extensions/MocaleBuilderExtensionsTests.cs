@@ -14,7 +14,7 @@ using Mocale.Providers;
 using Mocale.Providers.Azure.Blob;
 using Mocale.Providers.Azure.Blob.Models;
 using Mocale.Providers.GitHub.Raw.Models;
-using Mocale.UnitTests.TestHelpers;
+using Mocale.UnitTests.TestUtils;
 
 namespace Mocale.UnitTests.Extensions;
 
