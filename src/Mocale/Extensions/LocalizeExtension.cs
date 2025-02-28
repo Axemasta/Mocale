@@ -9,11 +9,8 @@ namespace Mocale.Extensions;
 /// <param name="translatorManager">Translator Manager</param>
 [AcceptEmptyServiceProvider]
 [ContentProperty(nameof(Key))]
-public class LocalizeExtension(ITranslatorManager translatorManager) : IMarkupExtension<BindingBase>
+public class LocalizeExtension(ITranslatorManager translatorManager) : LocalizeBindingExtensionBase(translatorManager)
 {
-    private readonly ITranslatorManager translatorManager =
-        Guard.Against.Null(translatorManager, nameof(translatorManager));
-
     /// <summary>
     ///     Localize Extension
     /// </summary>
@@ -33,7 +30,7 @@ public class LocalizeExtension(ITranslatorManager translatorManager) : IMarkupEx
     public IValueConverter? Converter { get; set; }
 
     /// <inheritdoc />
-    public BindingBase ProvideValue(IServiceProvider serviceProvider)
+    public override Binding ProvideValue(IServiceProvider serviceProvider)
     {
         Guard.Against.NullOrEmpty(Key, nameof(Key));
 
@@ -44,15 +41,5 @@ public class LocalizeExtension(ITranslatorManager translatorManager) : IMarkupEx
             Source = translatorManager,
             Converter = Converter
         };
-    }
-
-    object IMarkupExtension.ProvideValue(IServiceProvider serviceProvider)
-    {
-        return ProvideValue(serviceProvider);
-    }
-
-    internal ITranslatorManager GetTranslatorManager()
-    {
-        return translatorManager;
     }
 }

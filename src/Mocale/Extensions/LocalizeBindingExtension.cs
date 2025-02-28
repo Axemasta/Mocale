@@ -10,19 +10,12 @@ namespace Mocale.Extensions;
 /// <param name="translatorManager">Translator Manager</param>
 [AcceptEmptyServiceProvider]
 [ContentProperty(nameof(Path))]
-public class LocalizeBindingExtension(ITranslatorManager translatorManager) : IMarkupExtension, IMultiValueConverter
+public class LocalizeBindingExtension(ITranslatorManager translatorManager) : LocalizeMultiBindingExtensionBase(translatorManager), IMultiValueConverter
 {
-    private readonly ITranslatorManager translatorManager = Guard.Against.Null(translatorManager, nameof(translatorManager));
-
     /// <summary>
     /// The translation key
     /// </summary>
     public string? TranslationKey { get; set; }
-
-    /// <summary>
-    /// Translation parameters
-    /// </summary>
-    public string? Parameters { get; set; }
 
     /// <inheritdoc/>
     public string Path { get; set; } = ".";
@@ -51,8 +44,10 @@ public class LocalizeBindingExtension(ITranslatorManager translatorManager) : IM
     }
 
     /// <inheritdoc/>
-    public object ProvideValue(IServiceProvider serviceProvider)
+    public override MultiBinding ProvideValue(IServiceProvider serviceProvider)
     {
+        Guard.Against.NullOrEmpty(TranslationKey, nameof(TranslationKey));
+
         return new MultiBinding()
         {
             StringFormat = StringFormat,
