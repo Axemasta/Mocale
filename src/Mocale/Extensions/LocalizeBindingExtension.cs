@@ -64,6 +64,8 @@ public class LocalizeBindingExtension(ITranslatorManager translatorManager) : Lo
     /// <inheritdoc/>
     public object Convert(object[]? values, Type targetType, object parameter, CultureInfo culture)
     {
+        // values[0] will be translated value
+        // values[1] will be the binded value
         if (values is null || values.Length != 2)
         {
             return string.Empty;

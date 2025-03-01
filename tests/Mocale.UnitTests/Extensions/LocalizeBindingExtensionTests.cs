@@ -1,3 +1,4 @@
+using System.Globalization;
 using Mocale.Abstractions;
 using Mocale.Extensions;
 using Mocale.Testing;
@@ -151,5 +152,76 @@ public class LocalizeMultiBindingExtensionTests : FixtureBase<LocalizeBindingExt
         Assert.Equal(source, bindingTwo.Source);
     }
 
+    [Fact]
+    public void Convert_WhenThereArentTwoInputs_ShouldReturnEmptyString()
+    {
+        var noArgs = Sut.Convert([], typeof(Label), null!, CultureInfo.InvariantCulture);
+        var oneArg = Sut.Convert(["en-GB"], typeof(Label), null!, CultureInfo.InvariantCulture);
+        var argsThrice = Sut.Convert(["sausage roll", "sausage roll", "sausage roll"], typeof(Label), null!, CultureInfo.InvariantCulture);
+
+        Assert.Equal(string.Empty, noArgs);
+        Assert.Equal(string.Empty, oneArg);
+        Assert.Equal(string.Empty, argsThrice);
+    }
+
+    [Fact]
+    public void Convert_WhenFirstValueIsNotString_ShouldReturnEmpty()
+    {
+        var invalidInput = Sut.Convert([1234, "Name"], typeof(Label), null!, CultureInfo.InvariantCulture);
+
+        Assert.Equal(string.Empty, invalidInput);
+    }
+
+    [Fact]
+    public void Convert_WhenTranslationIsNotFormatString_ShouldNotPlaceBindedValueInString()
+    {
+        // This test is to show that parameterization won't work when not working with parameterized strings!
+        var formattedString = Sut.Convert(["I am not a format string", "Format me in your string!"], typeof(Label), null!, CultureInfo.InvariantCulture);
+
+        Assert.Equal("I am not a format string", formattedString);
+    }
+
+    [Fact]
+    public void Convert_WhenSecondValueIsString_ShouldFormatCorrectly()
+    {
+        var result = Sut.Convert(["Hello {0}", "Name"], typeof(Label), null!, CultureInfo.InvariantCulture);
+
+        Assert.Equal("Hello Name", result);
+    }
+
+    [Fact]
+    public void Convert_WhenSecondValueIsNull_ShouldNotThrow()
+    {
+        // When bindings first attach they will fire a pass null, inspite of what #nullable has to say about it!!!
+        var result = Sut.Convert(["Hello '{0}'", null!], typeof(Label), null!, CultureInfo.InvariantCulture);
+
+        Assert.Equal("Hello ''", result);
+    }
+
+    [Theory]
+    [MemberData(nameof(SecondValueNotStringTestData))]
+    public void Convert_WhenSecondValueIsNotString_ShouldFormatCorrectly(string formatString, object value, string expectedValue, CultureInfo cultureInfo)
+    {
+        var result = Sut.Convert([formatString, value], typeof(Label), null!, cultureInfo);
+
+        Assert.Equal(expectedValue, result);
+    }
+
+    [Fact]
+    public void ConvertBack_ShouldNotBeImplemented()
+    {
+        Assert.Throws<NotImplementedException>(() => Sut.ConvertBack("Hello Name", [typeof(Label)], null!, CultureInfo.InvariantCulture));
+    }
+
     #endregion Tests
+
+    #region Test Data
+
+    public static TheoryData<string, object, string, CultureInfo> SecondValueNotStringTestData => new()
+    {
+        { "The temperature is {0}\u00b0C", 28.3d, "The temperature is 28.3\u00b0C", new CultureInfo("en-GB") },
+        { "La température est {0}\u00b0C", 28.3d, "La température est 28.3\u00b0C", new CultureInfo("fr-FR") }
+    };
+
+    #endregion Test Data
 }

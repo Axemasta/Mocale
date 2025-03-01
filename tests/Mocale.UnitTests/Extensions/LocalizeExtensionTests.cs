@@ -54,10 +54,9 @@ public class LocalizeExtensionTests : FixtureBase<LocalizeExtension>
         Sut.Key = "KeyOne";
 
         // Act
-        var bindingBase = Sut.ProvideValue(serviceProvider);
+        var binding = Sut.ProvideValue(serviceProvider);
 
         // Assert
-        var binding = Assert.IsType<Binding>(bindingBase);
         Assert.Equal("[KeyOne]", binding.Path);
         Assert.Equal(BindingMode.OneWay, binding.Mode);
         Assert.Equal(translatorManager, binding.Source);
@@ -74,10 +73,9 @@ public class LocalizeExtensionTests : FixtureBase<LocalizeExtension>
         Sut.Converter = converter;
 
         // Act
-        var bindingBase = Sut.ProvideValue(serviceProvider);
+        var binding = Sut.ProvideValue(serviceProvider);
 
         // Assert
-        var binding = Assert.IsType<Binding>(bindingBase);
         Assert.Equal("[KeyOne]", binding.Path);
         Assert.Equal(BindingMode.OneWay, binding.Mode);
         Assert.Equal(translatorManager, binding.Source);
