@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Globalization;
 using Ardalis.GuardClauses;
 using Mocale.Helper;
@@ -11,32 +12,40 @@ namespace Mocale.Extensions;
 /// <param name="translatorManager"></param>
 [AcceptEmptyServiceProvider]
 [ContentProperty(nameof(Path))]
-public class LocalizeEnumExtension(IMocaleConfiguration mocaleConfiguration, ITranslatorManager translatorManager) : IMarkupExtension, IMultiValueConverter
+public class LocalizeEnumExtension(IMocaleConfiguration mocaleConfiguration, ITranslatorManager translatorManager)
+    : LocalizeMultiBindingExtensionBase(translatorManager), IMultiValueConverter
 {
     private readonly EnumTranslationKeyHelper enumTranslationKeyHelper = new(mocaleConfiguration);
-    private readonly ITranslatorManager translatorManager = Guard.Against.Null(translatorManager, nameof(translatorManager));
+    private readonly IMocaleConfiguration mocaleConfiguration = Guard.Against.Null(mocaleConfiguration, nameof(mocaleConfiguration));
 
     /// <summary>
-    /// Translation parameters
+    /// Path for the binding
     /// </summary>
-    public string? Parameters { get; set; }
-
-    /// <inheritdoc/>
     public string Path { get; set; } = ".";
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Binding mode for the binding
+    /// </summary>
     public BindingMode Mode { get; set; } = BindingMode.OneWay;
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// String format for the binding
+    /// </summary>
     public string StringFormat { get; set; } = "{0}";
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Converter for the binding
+    /// </summary>
     public IValueConverter? Converter { get; set; }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Converter parameter for the binding
+    /// </summary>
     public object? ConverterParameter { get; set; }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Source of the binding
+    /// </summary>
     public object? Source { get; set; }
 
     /// <summary>
@@ -48,7 +57,7 @@ public class LocalizeEnumExtension(IMocaleConfiguration mocaleConfiguration, ITr
     }
 
     /// <inheritdoc/>
-    public object ProvideValue(IServiceProvider serviceProvider)
+    public override MultiBinding ProvideValue(IServiceProvider serviceProvider)
     {
         return new MultiBinding()
         {
@@ -71,12 +80,17 @@ public class LocalizeEnumExtension(IMocaleConfiguration mocaleConfiguration, ITr
             return string.Empty;
         }
 
-        if (values[1] is not Enum enumValue)
+        if (values[1] is null)
         {
             return string.Empty;
         }
 
-        if (!mocaleConfiguration.EnumBehavior.UseAttribute)
+        if (values[1] is not Enum enumValue)
+        {
+            throw new NotSupportedException($"Value must be of type {nameof(Enum)}, instead value was of type {values[1].GetType().Name}. Use LocalizeBinding to localize non enum values!");
+        }
+
+        if (!mocaleConfiguration.EnumBehavior.UseAttribute && mocaleConfiguration.EnumBehavior.OverrideRules.All(r => r.Key != enumValue.GetType()))
         {
             return enumValue.ToString();
         }
@@ -90,5 +104,12 @@ public class LocalizeEnumExtension(IMocaleConfiguration mocaleConfiguration, ITr
     public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
     {
         throw new NotImplementedException();
+    }
+
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    internal IMocaleConfiguration GetMocaleConfiguration()
+    {
+        // Testing method
+        return mocaleConfiguration;
     }
 }

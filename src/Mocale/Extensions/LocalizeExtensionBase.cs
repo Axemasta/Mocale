@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using Ardalis.GuardClauses;
 
 namespace Mocale.Extensions;
@@ -7,6 +8,7 @@ public abstract class LocalizeExtensionBase(ITranslatorManager translatorManager
     // ReSharper disable once InconsistentNaming
     internal readonly ITranslatorManager translatorManager = Guard.Against.Null(translatorManager, nameof(translatorManager));
 
+    [EditorBrowsable(EditorBrowsableState.Never)]
     internal ITranslatorManager GetTranslatorManager()
     {
         return translatorManager;
