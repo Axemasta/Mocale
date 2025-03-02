@@ -10,10 +10,9 @@ namespace Mocale.Extensions;
 /// <param name="translatorManager">Translator manager</param>
 [AcceptEmptyServiceProvider]
 [ContentProperty(nameof(Bindings))]
-public class LocalizeMultiBindingExtension(ITranslatorManager translatorManager) : IMarkupExtension, IMultiValueConverter
+public class LocalizeMultiBindingExtension(ITranslatorManager translatorManager)
+    : LocalizeMultiBindingExtensionBase(translatorManager), IMultiValueConverter
 {
-    private readonly ITranslatorManager translatorManager = Guard.Against.Null(translatorManager, nameof(translatorManager));
-
     /// <summary>
     /// The bindings to use as format parameters
     /// </summary>
@@ -25,27 +24,9 @@ public class LocalizeMultiBindingExtension(ITranslatorManager translatorManager)
     public string? TranslationKey { get; set; }
 
     /// <summary>
-    /// Translation parameters
+    /// String format for the multibinding
     /// </summary>
-    public string? Parameters { get; set; }
-
-    /// <inheritdoc/>
-    public string Path { get; set; } = ".";
-
-    /// <inheritdoc/>
-    public BindingMode Mode { get; set; } = BindingMode.OneWay;
-
-    /// <inheritdoc/>
     public string StringFormat { get; set; } = "{0}";
-
-    /// <inheritdoc/>
-    public IValueConverter? Converter { get; set; }
-
-    /// <inheritdoc/>
-    public object? ConverterParameter { get; set; }
-
-    /// <inheritdoc/>
-    public object? Source { get; set; }
 
     /// <summary>
     /// Localize Extension
@@ -56,8 +37,11 @@ public class LocalizeMultiBindingExtension(ITranslatorManager translatorManager)
     }
 
     /// <inheritdoc/>
-    public object ProvideValue(IServiceProvider serviceProvider)
+    public override MultiBinding ProvideValue(IServiceProvider serviceProvider)
     {
+        Guard.Against.NullOrEmpty(TranslationKey, nameof(TranslationKey));
+        Guard.Against.NullOrEmpty(Bindings, nameof(Bindings));
+
         var bindings = new List<BindingBase>()
         {
             new Binding($"[{TranslationKey}]", BindingMode.OneWay, source: translatorManager),
@@ -82,9 +66,14 @@ public class LocalizeMultiBindingExtension(ITranslatorManager translatorManager)
             return string.Empty;
         }
 
-        if (values[0] is not string localizedFormat)
+        if (values[0] is null)
         {
             return string.Empty;
+        }
+
+        if (values[0] is not string localizedFormat)
+        {
+            throw new InvalidOperationException($"The first value was not a string, actual type: {values[0].GetType().Name}, if this method has been automatically called by Mocale please raise an issue on GitHub!");
         }
 
         var arguments = values.Skip(1).ToArray();
