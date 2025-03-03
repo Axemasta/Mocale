@@ -164,7 +164,9 @@ public class SqlCacheUpdateManagerTests : FixtureBase<ICacheUpdateManager>
             .Returns(false);
 
         // Act
+#pragma warning disable CA1304
         Sut.ClearCache();
+#pragma warning restore CA1304
 
         // Assert
         logger.VerifyLog(log => log.LogWarning("Unable to delete cache for all cultures"), Times.Once);
@@ -179,7 +181,9 @@ public class SqlCacheUpdateManagerTests : FixtureBase<ICacheUpdateManager>
             .Returns(true);
 
         // Act
+#pragma warning disable CA1304
         Sut.ClearCache();
+#pragma warning restore CA1304
 
         // Assert
         logger.VerifyLog(log => log.LogWarning("Unable to delete cache for all cultures"), Times.Never);

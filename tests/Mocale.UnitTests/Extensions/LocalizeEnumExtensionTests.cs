@@ -374,12 +374,13 @@ public partial class LocalizeEnumExtensionTests : FixtureBase<LocalizeEnumExtens
         [FoodGroupLocalization("Key_Dairy")] Dairy
     }
 
-    private class FoodGroupLocalizationAttribute(string value) : Attribute
+    [AttributeUsage(AttributeTargets.Field)]
+    private sealed class FoodGroupLocalizationAttribute(string value) : Attribute
     {
         public string CustomTranslationKey { get; } = value;
     }
 
-    private partial class VehicleViewModel : ObservableObject
+    private sealed partial class VehicleViewModel : ObservableObject
     {
         [ObservableProperty]
         public partial Vehicle? SelectedVehicle { get; set; }

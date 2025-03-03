@@ -411,7 +411,7 @@ public partial class LocalizeMultiBindingTests : FixtureBase<LocalizeMultiBindin
 
     #region Test Data
 
-    private partial class GreetingsViewModel : ObservableObject
+    private sealed partial class GreetingsViewModel : ObservableObject
     {
         [ObservableProperty]
         public partial string Name { get; set; }

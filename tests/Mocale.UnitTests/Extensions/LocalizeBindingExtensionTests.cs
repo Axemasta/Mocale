@@ -278,7 +278,7 @@ public partial class LocalizeMultiBindingExtensionTests : FixtureBase<LocalizeBi
         { "La température est {0}\u00b0C", 28.3d, "La température est 28.3\u00b0C", new CultureInfo("fr-FR") }
     };
 
-    private partial class GreetingViewModel : ObservableObject
+    private sealed partial class GreetingViewModel : ObservableObject
     {
         [ObservableProperty]
         public partial string Name { get; set; }

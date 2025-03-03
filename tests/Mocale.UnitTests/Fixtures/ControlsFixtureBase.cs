@@ -13,16 +13,13 @@ public class ControlsFixtureBase
         TestApplication = app;
     }
 
-    private void SetDispatcher(BindableObject target)
+    private static void SetDispatcher(BindableObject target)
     {
         var bindableObjectType = typeof(BindableObject);
 
-        var dispatcherField = bindableObjectType.GetField("_dispatcher", BindingFlags.Instance | BindingFlags.NonPublic);
-
-        if (dispatcherField is null)
-        {
-            throw new InvalidOperationException("Could not find _dispatcher field on BindableObject");
-        }
+        var dispatcherField =
+            bindableObjectType.GetField("_dispatcher", BindingFlags.Instance | BindingFlags.NonPublic)
+            ?? throw new InvalidOperationException("Could not find _dispatcher field on BindableObject");
 
         dispatcherField.SetValue(target, new DispatcherStub());
     }

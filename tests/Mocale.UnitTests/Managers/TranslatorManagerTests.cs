@@ -24,6 +24,197 @@ public class TranslatorManagerTests : FixtureBase
     #region Tests
 
     [Fact]
+    public void UpdateTranslations_WhenCurrentCultureIsNotSet_ShouldSetCurrentCultureAndClearPreviousValues()
+    {
+        // Arrange
+        var sut = GetSut<TranslatorManager>();
+        sut.PreferredLocalizations.Add("KeyOne", "Value One");
+        sut.BackupLocalizations.Add("BackupKeyOne", "Backup Value One");
+
+        Assert.Null(sut.CurrentCulture);
+
+        var localization = new Localization()
+        {
+            CultureInfo = new CultureInfo("en-GB"),
+            Translations = []
+        };
+
+        // Act
+        sut.UpdateTranslations(localization, TranslationSource.Internal);
+
+        // Assert
+        Assert.Equal(new CultureInfo("en-GB"), sut.CurrentCulture);
+        Assert.Empty(sut.PreferredLocalizations);
+        Assert.Empty(sut.BackupLocalizations);
+    }
+
+    [Fact]
+    public void UpdateTranslations_WhenTranslationSourceIsInternal_ShouldUpdateBackupLocalizations()
+    {
+        // Arrange
+        var sut = GetSut<TranslatorManager>();
+
+        var localization = new Localization()
+        {
+            CultureInfo = new CultureInfo("en-GB"),
+            Translations = new Dictionary<string, string>()
+            {
+                { "HelloWorld", "Hello World" },
+            }
+        };
+
+        // Act
+        sut.UpdateTranslations(localization, TranslationSource.Internal);
+
+        // Assert
+        Assert.Equal(new CultureInfo("en-GB"), sut.CurrentCulture);
+        Assert.Empty(sut.PreferredLocalizations);
+        Assert.Equivalent(new Dictionary<string, string>()
+        {
+            { "HelloWorld", "Hello World" },
+        }, sut.BackupLocalizations);
+    }
+
+    [Fact]
+    public void UpdateTranslations_WhenTranslationSourceIsExternal_ShouldUpdatePreferredLocalizations()
+    {
+        // Arrange
+        var sut = GetSut<TranslatorManager>();
+
+        var localization = new Localization()
+        {
+            CultureInfo = new CultureInfo("en-GB"),
+            Translations = new Dictionary<string, string>()
+            {
+                { "HelloWorld", "Hello World" },
+            }
+        };
+
+        // Act
+        sut.UpdateTranslations(localization, TranslationSource.External);
+
+        // Assert
+        Assert.Equal(new CultureInfo("en-GB"), sut.CurrentCulture);
+        Assert.Empty(sut.BackupLocalizations);
+        Assert.Equivalent(new Dictionary<string, string>()
+        {
+            { "HelloWorld", "Hello World" },
+        }, sut.PreferredLocalizations);
+    }
+
+    [Fact]
+    public void UpdateTranslations_WhenTranslationSourceIsWarmCache_ShouldUpdatePreferredLocalizations()
+    {
+        // Arrange
+        var sut = GetSut<TranslatorManager>();
+
+        var localization = new Localization()
+        {
+            CultureInfo = new CultureInfo("en-GB"),
+            Translations = new Dictionary<string, string>()
+            {
+                { "HelloWorld", "Hello World" },
+            }
+        };
+
+        // Act
+        sut.UpdateTranslations(localization, TranslationSource.WarmCache);
+
+        // Assert
+        Assert.Equal(new CultureInfo("en-GB"), sut.CurrentCulture);
+        Assert.Empty(sut.BackupLocalizations);
+        Assert.Equivalent(new Dictionary<string, string>()
+        {
+            { "HelloWorld", "Hello World" },
+        }, sut.PreferredLocalizations);
+    }
+
+    [Fact]
+    public void UpdateTranslations_WhenTranslationSourceIsColdCache_ShouldUpdatePreferredLocalizations()
+    {
+        // Arrange
+        var sut = GetSut<TranslatorManager>();
+
+        var localization = new Localization()
+        {
+            CultureInfo = new CultureInfo("en-GB"),
+            Translations = new Dictionary<string, string>()
+            {
+                { "HelloWorld", "Hello World" },
+            }
+        };
+
+        // Act
+        sut.UpdateTranslations(localization, TranslationSource.ColdCache);
+
+        // Assert
+        Assert.Equal(new CultureInfo("en-GB"), sut.CurrentCulture);
+        Assert.Empty(sut.BackupLocalizations);
+        Assert.Equivalent(new Dictionary<string, string>()
+        {
+            { "HelloWorld", "Hello World" },
+        }, sut.PreferredLocalizations);
+    }
+
+    [Fact]
+    public void UpdateTranslations_WhenNotify_ShouldRaisePropertyChanged()
+    {
+        // Arrange
+        var sut = GetSut<TranslatorManager>();
+
+        var localization = new Localization()
+        {
+            CultureInfo = new CultureInfo("en-GB"),
+            Translations = new Dictionary<string, string>()
+            {
+                { "HelloWorld", "Hello World" },
+            }
+        };
+
+        var invocations = 0;
+        sut.PropertyChanged += (_, _) =>
+        {
+            invocations++;
+        };
+
+        // Act
+        sut.UpdateTranslations(localization, TranslationSource.External, true);
+
+        // Assert
+        Assert.Equal(new CultureInfo("en-GB"), sut.CurrentCulture);
+        Assert.Equal(1, invocations);
+    }
+
+    [Fact]
+    public void UpdateTranslations_WhenNotNotify_ShouldNotRaisePropertyChanged()
+    {
+        // Arrange
+        var sut = GetSut<TranslatorManager>();
+
+        var localization = new Localization()
+        {
+            CultureInfo = new CultureInfo("en-GB"),
+            Translations = new Dictionary<string, string>()
+            {
+                { "HelloWorld", "Hello World" },
+            }
+        };
+
+        var invocations = 0;
+        sut.PropertyChanged += (_, _) =>
+        {
+            invocations++;
+        };
+
+        // Act
+        sut.UpdateTranslations(localization, TranslationSource.External, false);
+
+        // Assert
+        Assert.Equal(new CultureInfo("en-GB"), sut.CurrentCulture);
+        Assert.Equal(0, invocations);
+    }
+
+    [Fact]
     public void Translate_WhenExternalLocalizationsContainsKey_ShouldReturnLocalization()
     {
         // Arrange
@@ -170,6 +361,109 @@ public class TranslatorManagerTests : FixtureBase
 
         // Assert
         Assert.Equal("_KeyOne_", translation);
+    }
+
+    [Fact]
+    public void TranslateWithParameters_WhenTranslatedKeyIsEmpty_ShouldReturnEmptyString()
+    {
+        // Arrange
+        configManager.Setup(m => m.Configuration)
+            .Returns(new MocaleConfiguration()
+            {
+                ShowMissingKeys = false,
+            });
+
+        var sut = GetSut<TranslatorManager>();
+
+        // Act
+        var translation = sut.Translate("MissingKey", [123, 456]);
+
+        // Assert
+        Assert.Equal(string.Empty, translation);
+    }
+
+    [Fact]
+    public void TranslateWithParameters_WhenTranslatedKeyIsMissingKey_ShouldReturnMissingKey()
+    {
+        // Arrange
+        configManager.Setup(m => m.Configuration)
+            .Returns(new MocaleConfiguration()
+            {
+                ShowMissingKeys = true,
+                NotFoundSymbol = "$"
+            });
+
+        var sut = GetSut<TranslatorManager>();
+
+        // Act
+        var translation = sut.Translate("MissingKey", [123, 456]);
+
+        // Assert
+        Assert.Equal("$MissingKey$", translation);
+    }
+
+    [Fact]
+    public void TranslateWithParameters_WhenNoFormatString_ShouldReturnTranslation()
+    {
+        // Arrange
+        var sut = GetSut<TranslatorManager>();
+        sut.PreferredLocalizations.Add("FormatKey", "Hello stranger, welcome!");
+
+        // Act
+        var translation = sut.Translate("FormatKey", ["Stranger"]);
+
+        // Assert
+        Assert.Equal("Hello stranger, welcome!", translation);
+    }
+
+    [Fact]
+    public void TranslateWithParameters_WhenFormatStringInvalid_ShouldCatchExceptionAndReturnEmptyString()
+    {
+        // Arrange
+        var sut = GetSut<TranslatorManager>();
+        sut.PreferredLocalizations.Add("TooManyFormats", "Hello {0}, welcome to {1} where we are {2} tonight!!");
+
+        // Act
+        var translation = sut.Translate("TooManyFormats", ["Stranger"]);
+
+        // Assert
+        Assert.Equal("Hello {0}, welcome to {1} where we are {2} tonight!!", translation);
+
+        logger.VerifyLog(log => log.LogError(
+            It.IsAny<Exception>(),
+            "An exception occurred formating translation for key {Key}: '{Translation}' with parameters: {Parameters}",
+            "TooManyFormats",
+            "Hello {0}, welcome to {1} where we are {2} tonight!!",
+            new object[] { "Stranger" }), Times.Once);
+    }
+
+    [Fact]
+    public void TranslateWithParameters_FormatStringValid_ShouldFormatCorrectly()
+    {
+        // Arrange
+        var sut = GetSut<TranslatorManager>();
+        sut.PreferredLocalizations.Add("TooManyFormats", "Hello {0}, welcome to {1} where we are {2} tonight!!");
+
+        // Act
+        var translation = sut.Translate("TooManyFormats", ["Stranger", "the shop", "buying rare things"]);
+
+        // Assert
+        Assert.Equal("Hello Stranger, welcome to the shop where we are buying rare things tonight!!", translation);
+    }
+
+    [Fact]
+    public void Translate_WhenUsingExtension_ShouldTranslate()
+    {
+        // Arrange
+        var sut = GetSut<TranslatorManager>();
+
+        sut.PreferredLocalizations.Add("KeyOne", "Value One");
+
+        // Act
+        var translation = sut["KeyOne"];
+
+        // Assert
+        Assert.Equal("Value One", translation);
     }
 
     #endregion Tests

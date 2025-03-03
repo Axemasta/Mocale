@@ -150,10 +150,10 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
     public void SetTranslationView_WhenViewIsNull_ShouldThrow()
     {
         // Arrange
-        Label? label = null;
+        Label label = null!;
 
         // Act
-        var ex = Assert.Throws<ArgumentNullException>(() => BindableObjectExtension.SetTranslation(label, Label.TextProperty, "ApplicationTitle"));
+        var ex = Assert.Throws<ArgumentNullException>(() => label.SetTranslation(Label.TextProperty, "ApplicationTitle"));
 
         // Assert
         Assert.Equal("Value cannot be null. (Parameter 'bindableObject')", ex.Message);
@@ -1734,12 +1734,12 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
 
     #region Test Data
 
-    private class UpperCaseConverter : IValueConverter
+    private sealed class UpperCaseConverter : IValueConverter
     {
         public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             return value is string str
-                ? str.ToUpper()
+                ? str.ToUpper(CultureInfo.InvariantCulture)
                 : null;
         }
 
@@ -1749,7 +1749,7 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
         }
     }
 
-    private partial class SomeViewModel : ObservableObject
+    private sealed partial class SomeViewModel : ObservableObject
     {
         [ObservableProperty]
         public partial double Temperature { get; set; }

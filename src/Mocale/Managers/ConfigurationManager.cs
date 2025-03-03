@@ -10,7 +10,7 @@ public class ConfigurationManager<TConfig>(TConfig config)
     : IConfigurationManager<TConfig>, IConfigurationUpdateManager<TConfig>
 {
     /// <inheritdoc/>
-    public TConfig Configuration { get; set; } = Guard.Against.Null(config, nameof(config));
+    public TConfig Configuration { get; } = Guard.Against.Null(config, nameof(config));
 
     /// <inheritdoc/>
     public void UpdateConfiguration(Action<TConfig> configuration)
