@@ -7,20 +7,20 @@ namespace Mocale.Cache.SQLite.Managers;
 internal class SqlCacheUpdateManager : ICacheUpdateManager
 {
     private readonly ICacheRepository cacheRepository;
-    private readonly IDateTime dateTime;
     private readonly ILogger logger;
 
     private readonly ISqliteConfig sqliteConfig;
+    private readonly TimeProvider timeProvider;
 
     public SqlCacheUpdateManager(
         ICacheRepository cacheRepository,
-        IDateTime dateTime,
         ILogger<SqlCacheUpdateManager> logger,
-        IConfigurationManager<ISqliteConfig> sqliteConfigurationManager)
+        IConfigurationManager<ISqliteConfig> sqliteConfigurationManager,
+        TimeProvider timeProvider)
     {
-        this.dateTime = Guard.Against.Null(dateTime, nameof(dateTime));
-        this.logger = Guard.Against.Null(logger, nameof(logger));
         this.cacheRepository = Guard.Against.Null(cacheRepository, nameof(cacheRepository));
+        this.logger = Guard.Against.Null(logger, nameof(logger));
+        this.timeProvider = Guard.Against.Null(timeProvider, nameof(timeProvider));
 
         sqliteConfigurationManager = Guard.Against.Null(sqliteConfigurationManager, nameof(sqliteConfigurationManager));
         this.sqliteConfig = sqliteConfigurationManager.Configuration;
@@ -40,13 +40,13 @@ internal class SqlCacheUpdateManager : ICacheUpdateManager
 
         var nextUpdateWindow = updateItem.LastUpdated.Add(sqliteConfig.UpdateInterval);
 
-        return nextUpdateWindow < dateTime.UtcNow;
+        return nextUpdateWindow < timeProvider.GetUtcNow();
     }
 
     /// <inheritdoc/>
     public bool SetCacheUpdated(CultureInfo cultureInfo)
     {
-        return cacheRepository.AddOrUpdateItem(cultureInfo, dateTime.UtcNow);
+        return cacheRepository.AddOrUpdateItem(cultureInfo, timeProvider.GetUtcNow().DateTime);
     }
 
     /// <inheritdoc/>

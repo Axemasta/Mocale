@@ -17,39 +17,16 @@
             VerticalOptions="Start">
 
             <Label Text="{mocale:Localize Key={x:Static keys:TranslationKeys.ParameterPageHeading}}" />
-
-            <Label Text="This feature is experimental and not yet mature, use at your own discretion!" />
-
-
             <Border Padding="20">
                 <VerticalStackLayout Spacing="10">
 
-                    <Label FontSize="Title" Text="{mocale:Localize Key={x:Static keys:TranslationKeys.ParameterPageSectionOneHeading}}" />
-                    <Label Margin="0,0,0,10" Text="{mocale:Localize Key={x:Static keys:TranslationKeys.ParameterPageSectionOneSubHeading}}" />
-
-                    <Label FontAttributes="Bold" Text="{mocale:Localize Key={x:Static keys:TranslationKeys.ParameterPageBasicStringFormatLabel}}" />
-                    <Label Margin="0,0,0,10" Text="{mocale:Localize Key={x:Static keys:TranslationKeys.ParameterPageBasicStringFormat}, Parameters='W O R L D!'}" />
-
-                    <Label FontAttributes="Bold" Text="{mocale:Localize Key={x:Static keys:TranslationKeys.ParameterPageLargeStringFormatLabel}}" />
-                    <Label Margin="0,0,0,10" Text="{mocale:Localize Key={x:Static keys:TranslationKeys.ParameterPageLargeStringFormat}, Parameters='World|23-07-2024|23'}" />
-
-                    <Label FontAttributes="Bold" Text="{mocale:Localize Key={x:Static keys:TranslationKeys.ParameterPageMultipleFormatsSameValueLabel}}" />
-                    <Label Text="{mocale:Localize Key={x:Static keys:TranslationKeys.ParameterPageMultipleFormatsSameValue}, Parameters='mate'}" />
-
-                </VerticalStackLayout>
-            </Border>
-
-            <Border Padding="20">
-                <VerticalStackLayout Spacing="10">
-
-                    <Label FontSize="Title" Text="{mocale:Localize Key={x:Static keys:TranslationKeys.ParameterPageSectionTwoHeading}}" />
-                    <Label Margin="0,0,0,10" Text="{mocale:Localize Key={x:Static keys:TranslationKeys.ParameterPageSectionTwoSubHeading}}" />
+                    <Label FontSize="Title" Text="{mocale:Localize Key={x:Static keys:TranslationKeys.ParameterPageSectionHeading}}" />
+                    <Label Margin="0,0,0,10" Text="{mocale:Localize Key={x:Static keys:TranslationKeys.ParameterPageSectionSubHeading}}" />
 
                     <Label FontAttributes="Bold" Text="{mocale:Localize Key={x:Static keys:TranslationKeys.ParameterPageBasicStringFormatLabel}}" />
                     <Label Margin="0,0,0,10" Text="{mocale:LocalizeBinding Name, TranslationKey={x:Static keys:TranslationKeys.ParameterPageBasicStringFormat}}" />
 
                     <Label FontAttributes="Bold" Text="{mocale:Localize Key={x:Static keys:TranslationKeys.ParameterPageLargeStringFormatLabel}}" />
-                    <!--<Label Margin="0,0,0,10" Text="{mocale:Localize Key={x:Static keys:TranslationKeys.ParameterPageLargeStringFormat}}" />-->
                     <Label Margin="0,0,0,10">
                         <Label.Text>
                             <mocale:LocalizeMultiBinding TranslationKey="{x:Static keys:TranslationKeys.ParameterPageLargeStringFormat}">

@@ -7,7 +7,7 @@ using Mocale.Exceptions;
 using Mocale.Managers;
 using Mocale.Models;
 using Mocale.Providers;
-using Mocale.UnitTests.TestHelpers;
+using Mocale.UnitTests.TestUtils;
 
 namespace Mocale.UnitTests.Extensions;
 

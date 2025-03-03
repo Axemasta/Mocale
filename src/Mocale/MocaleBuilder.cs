@@ -7,19 +7,14 @@ namespace Mocale;
 public class MocaleBuilder
 {
     /// <summary>
-    /// Internal Localization Provider
-    /// </summary>
-    public IInternalLocalizationProvider? LocalizationProvider { get; set; }
-
-    /// <summary>
     /// Maui App Builder
     /// </summary>
-    public required MauiAppBuilder AppBuilder { get; set; }
+    public required MauiAppBuilder AppBuilder { get; init; }
 
     /// <summary>
     /// Configuration Manager
     /// </summary>
-    public required ConfigurationManager<IMocaleConfiguration> ConfigurationManager { get; set; }
+    public required ConfigurationManager<IMocaleConfiguration> ConfigurationManager { get; init; }
 
     internal string? LocalProviderName { get; set; }
 
@@ -39,6 +34,7 @@ public class MocaleBuilder
     /// <exception cref="InvalidCastException"></exception>
     public MocaleBuilder WithConfiguration(Action<MocaleConfiguration> configureMocale)
     {
+        // I do this so that IMocaleConfiguration preserves its immutability with only getters, little jank...
         var config = ConfigurationManager.Configuration as MocaleConfiguration
             ?? throw new InvalidCastException($"Unable to cast {nameof(IMocaleConfiguration)} as {nameof(MocaleConfiguration)}");
 

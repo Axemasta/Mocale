@@ -1,21 +1,25 @@
 using System.Collections;
 using System.Globalization;
 using System.Resources;
+using Ardalis.GuardClauses;
 using Mocale.Exceptions;
 
 namespace Mocale.Providers;
 
 internal class AppResourceProvider : IInternalLocalizationProvider
 {
-    private readonly ResourceManager resourceManager;
-    private readonly IAppResourcesConfig appResourcesConfig;
+    private readonly ILogger logger;
     private readonly IMocaleConfiguration mocaleConfiguration;
+    private readonly ResourceManager resourceManager;
 
     public AppResourceProvider(
         IConfigurationManager<IAppResourcesConfig> appResourcesConfigurationManager,
-        IConfigurationManager<IMocaleConfiguration> mocaleConfigurationManager)
+        IConfigurationManager<IMocaleConfiguration> mocaleConfigurationManager,
+        ILogger<AppResourceProvider> logger)
     {
-        appResourcesConfig = appResourcesConfigurationManager.Configuration;
+        this.logger = Guard.Against.Null(logger, nameof(logger));
+
+        var appResourcesConfig = appResourcesConfigurationManager.Configuration;
         mocaleConfiguration = mocaleConfigurationManager.Configuration;
 
         if (appResourcesConfig.AppResourcesType is null)
@@ -24,16 +28,6 @@ internal class AppResourceProvider : IInternalLocalizationProvider
         }
 
         resourceManager = new ResourceManager(appResourcesConfig.AppResourcesType);
-    }
-
-    private static Dictionary<string, string> ConvertResourceSet(ResourceSet resourceSet)
-    {
-        // This cast wants to fight me and I can't figure out a nullable friendly way of doing this.
-        // Instead of wasting time on syntax, leave it here and figure it out later!
-#nullable disable
-        return resourceSet.Cast<DictionaryEntry>().ToDictionary(r => r.Key.ToString(), r => r.Value.ToString())
-            ?? new Dictionary<string, string>();
-#nullable enable
     }
 
     public Dictionary<string, string>? GetValuesForCulture(CultureInfo cultureInfo)
@@ -51,17 +45,26 @@ internal class AppResourceProvider : IInternalLocalizationProvider
 
                 if (defaultSet is null)
                 {
+                    logger.LogWarning("Unable to load default resource set");
                     return null;
                 }
 
                 return ConvertResourceSet(defaultSet);
             }
 
-            // Since we don't know about this culture, lets not return a default
-
+            logger.LogWarning("No resources found for culture {CultureName}", cultureInfo.Name);
             return null;
         }
 
         return ConvertResourceSet(resourceSet);
+    }
+
+    private static Dictionary<string, string> ConvertResourceSet(ResourceSet resourceSet)
+    {
+        return resourceSet
+            .OfType<DictionaryEntry>()
+            .ToDictionary(r =>
+                    r.Key.ToString() ?? string.Empty,
+                r => r.Value?.ToString() ?? string.Empty);
     }
 }

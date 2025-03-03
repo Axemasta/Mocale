@@ -63,7 +63,7 @@ internal class EmbeddedResourceProvider(
         return fileName.Equals(culture.Name, StringComparison.OrdinalIgnoreCase);
     }
 
-    private Dictionary<string, string>? ParseFile(string filePath, Assembly assembly)
+    internal Dictionary<string, string>? ParseFile(string filePath, Assembly assembly)
     {
         using var fileStream = assembly.GetManifestResourceStream(filePath);
 

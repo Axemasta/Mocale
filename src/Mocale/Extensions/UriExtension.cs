@@ -12,15 +12,15 @@ internal static class UriExtension
     {
         result = default!;
 
-        try
-        {
-            result = uri.Append(paths);
+        var appendedUri = uri.Append(paths);
 
-            return true;
-        }
-        catch
+        var wellFormed = Uri.IsWellFormedUriString(appendedUri.ToString(), UriKind.Absolute);
+
+        if (wellFormed)
         {
-            return false;
+            result = appendedUri;
         }
+
+        return wellFormed;
     }
 }

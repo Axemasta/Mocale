@@ -3,7 +3,6 @@ using Mocale.Cache;
 using Mocale.Exceptions;
 using Mocale.Managers;
 using Mocale.Providers;
-using Mocale.Wrappers;
 namespace Mocale;
 
 /// <summary>
@@ -35,7 +34,7 @@ public static class AppBuilderExtensions
         // - Maui Dependencies
         mauiAppBuilder.Services.AddSingleton(Preferences.Default);
         mauiAppBuilder.Services.AddSingleton(FileSystem.Current);
-        mauiAppBuilder.Services.AddTransient<IDateTime, DateTimeWrapper>();
+        mauiAppBuilder.Services.AddSingleton(TimeProvider.System);
 
         // - Localization
         mauiAppBuilder.Services.AddSingleton<IConfigurationManager<IMocaleConfiguration>>(mocaleBuilder.ConfigurationManager);

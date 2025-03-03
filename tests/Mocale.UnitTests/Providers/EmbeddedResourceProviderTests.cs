@@ -176,5 +176,23 @@ public class EmbeddedResourceProviderTests : FixtureBase<IInternalLocalizationPr
             .BeEquivalentTo(expectedLocalizations);
     }
 
+    [Fact]
+    public void ParseFile_WhenFileStreamIsNull_ShouldLogAndReturnNull()
+    {
+        // Arrange
+        var sut = (EmbeddedResourceProvider)Sut;
+
+
+        // Act
+        var translations = sut.ParseFile("ThisIsNotAValidPath!", typeof(EmbeddedResourceProviderTests).Assembly);
+
+        // Assert
+        Assert.Null(translations);
+        logger.VerifyLog(log => log.LogWarning(
+                "File stream was null for assembly resource: {FilePath}",
+                "ThisIsNotAValidPath!"),
+            Times.Once());
+    }
+
     #endregion Tests
 }

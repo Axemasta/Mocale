@@ -24,7 +24,6 @@ namespace Mocale;
 /// </summary>
 public static class MocaleLocator
 {
-
     /// <summary>
     /// Localization Manager
     /// </summary>

@@ -23,5 +23,5 @@ public class MocaleConfiguration : IMocaleConfiguration
     public bool SaveCultureChanged { get; set; } = true;
 
     /// <inheritdoc/>
-    public LocalizeEnumBehavior EnumBehavior { get; } = new();
+    public LocalizeEnumBehavior EnumBehavior { get; set; } = new();
 }

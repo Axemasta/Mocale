@@ -9,7 +9,7 @@ public interface IConfigurationManager<TConfig>
     /// <summary>
     /// The configuration for the given area
     /// </summary>
-    TConfig Configuration { get; set; }
+    TConfig Configuration { get; }
 }
 
 /// <summary>
