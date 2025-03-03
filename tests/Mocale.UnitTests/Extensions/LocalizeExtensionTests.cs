@@ -1,6 +1,10 @@
+using System.Globalization;
 using Mocale.Abstractions;
+using Mocale.Enums;
 using Mocale.Extensions;
+using Mocale.Models;
 using Mocale.Testing;
+using Mocale.UnitTests.Fixtures;
 
 namespace Mocale.UnitTests.Extensions;
 
@@ -100,6 +104,45 @@ public class LocalizeExtensionTests : FixtureBase<LocalizeExtension>
         Assert.Equal(BindingMode.OneWay, binding.Mode);
         Assert.Equal(translatorManager, binding.Source);
         Assert.Equal(converter, binding.Converter);
+    }
+
+    [Fact]
+    public void IntegrationTest()
+    {
+        _ = new ControlsFixtureBase();
+        var label = new Label();
+
+        Sut.Key = "IntegrationTestMessage";
+
+        label.SetBinding(Label.TextProperty, Sut.ProvideValue(Mock.Of<IServiceProvider>()));
+
+        Assert.Equal("$IntegrationTestMessage$", label.Text);
+
+        var enGbLocalization = new Localization()
+        {
+            CultureInfo = new CultureInfo("en-GB"),
+            Translations = new Dictionary<string, string>()
+            {
+                { "IntegrationTestMessage", "This is my localization running in an integration test" }
+            }
+        };
+
+        translatorManager.UpdateTranslations(enGbLocalization, TranslationSource.Internal);
+
+        Assert.Equal("This is my localization running in an integration test", label.Text);
+
+        var frFRLocalization = new Localization()
+        {
+            CultureInfo = new CultureInfo("fr-FR"),
+            Translations = new Dictionary<string, string>()
+            {
+                { "IntegrationTestMessage", "Ceci est ma localisation en cours d'exécution dans un test d'intégration" }
+            }
+        };
+
+        translatorManager.UpdateTranslations(frFRLocalization, TranslationSource.Internal);
+
+        Assert.Equal("Ceci est ma localisation en cours d'exécution dans un test d'intégration", label.Text);
     }
 
     #endregion Tests

@@ -1,14 +1,16 @@
 using System.ComponentModel;
 using System.Globalization;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Mocale.Abstractions;
 using Mocale.Enums;
 using Mocale.Extensions;
 using Mocale.Models;
 using Mocale.Testing;
+using Mocale.UnitTests.Fixtures;
 
 namespace Mocale.UnitTests.Extensions;
 
-public class LocalizeEnumExtensionTests : FixtureBase<LocalizeEnumExtension>
+public partial class LocalizeEnumExtensionTests : FixtureBase<LocalizeEnumExtension>
 {
     #region Setup
 
@@ -272,6 +274,70 @@ public class LocalizeEnumExtensionTests : FixtureBase<LocalizeEnumExtension>
         Assert.Throws<NotImplementedException>(() => Sut.ConvertBack("Fruits And Vegetables", [typeof(Label)], null!, CultureInfo.InvariantCulture));
     }
 
+    [Fact]
+    public void IntegrationTest()
+    {
+        _ = new ControlsFixtureBase();
+        var label = new Label();
+
+        var viewModel = new VehicleViewModel();
+
+        Sut.Path = nameof(viewModel.SelectedVehicle);
+        Sut.Source = viewModel;
+
+        label.SetBinding(Label.TextProperty, Sut.ProvideValue(Mock.Of<IServiceProvider>()));
+
+        Assert.Equal("", label.Text);
+
+        var enGbLocalization = new Localization()
+        {
+            CultureInfo = new CultureInfo("en-GB"),
+            Translations = new Dictionary<string, string>()
+            {
+                { "Key_Car",  "Car (English)" },
+                { "Key_Lorry", "Lorry (English)" },
+                { "Key_Van", "Van (English)" },
+                { "Key_Bike", "Bike (English)" },
+                { "Key_Bicycle", "Bicycle (English)" },
+                { "Key_Train", "Train (English)" },
+            }
+        };
+
+        translatorManager.UpdateTranslations(enGbLocalization, TranslationSource.Internal);
+
+        Assert.Equal("", label.Text);
+
+        viewModel.SelectedVehicle = Vehicle.Bicycle;
+
+        Assert.Equal("Bicycle (English)", label.Text);
+
+        var frFRLocalization = new Localization()
+        {
+            CultureInfo = new CultureInfo("fr-FR"),
+            Translations = new Dictionary<string, string>()
+            {
+                { "Key_Car",  "Voiture (Français)" },
+                { "Key_Lorry", "Camion (Français)" },
+                { "Key_Van", "Van (Français)" },
+                { "Key_Bike", "Moto (Français)" },
+                { "Key_Bicycle", "Vélo (Français)" },
+                { "Key_Train", "Former (Français)" },
+            }
+        };
+
+        translatorManager.UpdateTranslations(frFRLocalization, TranslationSource.Internal);
+
+        Assert.Equal("Vélo (Français)", label.Text);
+
+        viewModel.SelectedVehicle = Vehicle.Car;
+
+        Assert.Equal("Voiture (Français)", label.Text);
+
+        viewModel.SelectedVehicle = null;
+
+        Assert.Equal("", label.Text);
+    }
+
     #endregion Tests
 
     #region Test Data
@@ -311,6 +377,12 @@ public class LocalizeEnumExtensionTests : FixtureBase<LocalizeEnumExtension>
     private class FoodGroupLocalizationAttribute(string value) : Attribute
     {
         public string CustomTranslationKey { get; } = value;
+    }
+
+    private partial class VehicleViewModel : ObservableObject
+    {
+        [ObservableProperty]
+        public partial Vehicle? SelectedVehicle { get; set; }
     }
 
     #endregion Test Data

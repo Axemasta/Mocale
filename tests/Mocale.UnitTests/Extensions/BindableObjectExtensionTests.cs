@@ -1,13 +1,8 @@
 using System.ComponentModel;
 using System.Globalization;
-using System.Runtime.CompilerServices;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.Extensions.Logging;
-using Microsoft.Maui.Handlers;
-using Mocale.Abstractions;
 using Mocale.Enums;
 using Mocale.Extensions;
-using Mocale.Managers;
 using Mocale.Models;
 using Mocale.Testing;
 using Mocale.UnitTests.Collections;
@@ -777,7 +772,7 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
         var ex = Assert.Throws<ArgumentNullException>(() => bindableObject.SetEnumTranslation(Label.TextProperty, null!));
 
         // Assert
-        Assert.Equal("Value cannot be null. (Parameter 'binding')", ex.Message);
+        Assert.Equal("Value cannot be null. (Parameter 'source')", ex.Message);
     }
 
     [Fact]
@@ -1078,7 +1073,7 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
         var ex = Assert.Throws<ArgumentNullException>(() => label.SetEnumTranslation(Label.TextProperty, null!));
 
         // Assert
-        Assert.Equal("Value cannot be null. (Parameter 'binding')", ex.Message);
+        Assert.Equal("Value cannot be null. (Parameter 'source')", ex.Message);
     }
 
     [Fact]
@@ -1357,6 +1352,382 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
 
         // Assert
         Assert.Equal("Banane", label.Text);
+    }
+
+    [Fact]
+    public void SetTranslationMultiBindingVoid_WhenBindableObjectIsNull_ShouldThrow()
+    {
+        // Arrange
+        var viewModel = new SomeViewModel();
+
+        BindableObject bindableObject = null!;
+        var temperatureBinding = new Binding(nameof(SomeViewModel.Temperature), source: viewModel);
+        var nameBinding = new Binding(nameof(SomeViewModel.Name), source: viewModel);
+
+        // Act
+        var ex = Assert.Throws<ArgumentNullException>(() => bindableObject.SetTranslationMultiBinding(Label.TextProperty, "NameAndTemperatureLabel", [temperatureBinding, nameBinding]));
+
+        // Assert
+        Assert.Equal("Value cannot be null. (Parameter 'bindableObject')", ex.Message);
+    }
+
+    [Fact]
+    public void SetTranslationMultiBindingVoid_WhenBindingsAreEmpty_ShouldThrow()
+    {
+        // Arrange
+        BindableObject bindableObject = new Label();
+
+        // Act
+        var ex = Assert.Throws<ArgumentException>(() => bindableObject.SetTranslationMultiBinding(Label.TextProperty, "NameAndTemperatureLabel", []));
+
+        // Assert
+        Assert.Equal("Required input Bindings was empty. (Parameter 'Bindings')", ex.Message);
+    }
+
+    [Fact]
+    public void SetTranslationMultiBindingVoid_WhenTranslationKeyDoesNotExist_ShouldSetNotFoundKey()
+    {
+        // Arrange
+        BindableObject bindableObject = new Label();
+
+        var viewModel = new SomeViewModel();
+        var temperatureBinding = new Binding(nameof(SomeViewModel.Temperature), source: viewModel);
+        var nameBinding = new Binding(nameof(SomeViewModel.Name), source: viewModel);
+        var fruitBinding = new Binding(nameof(SomeViewModel.SelectedFruit), source: viewModel);
+
+        // Act
+        bindableObject.SetTranslationMultiBinding(Label.TextProperty, "NameTemperatureAndFruitLabel", [temperatureBinding, nameBinding, fruitBinding]);
+
+        // Assert
+        var label = Assert.IsType<Label>(bindableObject);
+        Assert.Equal("$NameTemperatureAndFruitLabel$", label.Text);
+    }
+
+    [Fact]
+    public void SetTranslationMultiBindingVoid_WhenTranslationKeyExists_ShouldFormatTranslation()
+    {
+        // Arrange
+        BindableObject bindableObject = new Label();
+
+        var viewModel = new SomeViewModel();
+        var temperatureBinding = new Binding(nameof(SomeViewModel.Temperature), source: viewModel);
+        var nameBinding = new Binding(nameof(SomeViewModel.Name), source: viewModel);
+        var fruitBinding = new Binding(nameof(SomeViewModel.SelectedFruit), source: viewModel);
+
+        var enGbLocalization = new Localization()
+        {
+            CultureInfo = new CultureInfo("en-GB"),
+            Translations = new Dictionary<string, string>()
+            {
+                { "NameTemperatureAndFruitLabel", "{0} likes {1}s when its {2} outside" }
+            }
+        };
+
+        bindableObject.SetTranslationMultiBinding(Label.TextProperty, "NameTemperatureAndFruitLabel", [nameBinding, fruitBinding, temperatureBinding]);
+
+        var label = Assert.IsType<Label>(bindableObject);
+        Assert.Equal("$NameTemperatureAndFruitLabel$", label.Text);
+
+        // Act
+        translatorManager.UpdateTranslations(enGbLocalization, TranslationSource.Internal);
+
+        // Assert
+        Assert.Equal(" likes s when its 0 outside", label.Text);
+
+        viewModel.Name = "Billy";
+
+        Assert.Equal("Billy likes s when its 0 outside", label.Text);
+
+        viewModel.SelectedFruit = Fruit.Apple;
+
+        Assert.Equal("Billy likes Apples when its 0 outside", label.Text);
+
+        viewModel.Temperature = 24.5;
+
+        Assert.Equal("Billy likes Apples when its 24.5 outside", label.Text);
+    }
+
+    [Fact]
+    public void SetTranslationMultiBindingVoid_WhenTranslationKeyExistsForCultureOneButNotCultureTwo_ShouldFormatTranslationCorrectly()
+    {
+        // Arrange
+        BindableObject bindableObject = new Label();
+
+        var viewModel = new SomeViewModel()
+        {
+            Name = "Jimmy",
+            SelectedFruit = Fruit.Cherry,
+            Temperature = 19.2,
+        };
+
+        var temperatureBinding = new Binding(nameof(SomeViewModel.Temperature), source: viewModel);
+        var nameBinding = new Binding(nameof(SomeViewModel.Name), source: viewModel);
+        var fruitBinding = new Binding(nameof(SomeViewModel.SelectedFruit), source: viewModel);
+
+        var enGbLocalization = new Localization()
+        {
+            CultureInfo = new CultureInfo("en-GB"),
+            Translations = new Dictionary<string, string>()
+            {
+                { "NameTemperatureAndFruitLabel", "{0} likes {1}s when its {2} outside" }
+            }
+        };
+
+        translatorManager.UpdateTranslations(enGbLocalization, TranslationSource.Internal);
+
+        bindableObject.SetTranslationMultiBinding(Label.TextProperty, "NameTemperatureAndFruitLabel", [nameBinding, fruitBinding, temperatureBinding]);
+
+        var label = Assert.IsType<Label>(bindableObject);
+        Assert.Equal("Jimmy likes Cherrys when its 19.2 outside", label.Text);
+
+        // Act
+        var frFrLocalization = new Localization()
+        {
+            CultureInfo = new CultureInfo("frFr"),
+            Translations = [],
+        };
+
+        translatorManager.UpdateTranslations(frFrLocalization, TranslationSource.Internal);
+
+        // Assert
+        Assert.Equal("$NameTemperatureAndFruitLabel$", label.Text);
+    }
+
+    [Fact]
+    public void SetTranslationMultiBindingVoid_WhenTranslationKeyExistsForAllCultures_ShouldFormatTranslationCorrectly()
+    {
+        // Arrange
+        BindableObject bindableObject = new Label();
+
+        var viewModel = new SomeViewModel()
+        {
+            Name = "Jimmy",
+            SelectedFruit = Fruit.Cherry,
+            Temperature = 19.2,
+        };
+
+        var temperatureBinding = new Binding(nameof(SomeViewModel.Temperature), source: viewModel);
+        var nameBinding = new Binding(nameof(SomeViewModel.Name), source: viewModel);
+        var fruitBinding = new Binding(nameof(SomeViewModel.SelectedFruit), source: viewModel);
+
+        var enGbLocalization = new Localization()
+        {
+            CultureInfo = new CultureInfo("en-GB"),
+            Translations = new Dictionary<string, string>()
+            {
+                { "NameTemperatureAndFruitLabel", "{0} likes {1}s when its {2} outside" }
+            }
+        };
+
+        translatorManager.UpdateTranslations(enGbLocalization, TranslationSource.Internal);
+
+        bindableObject.SetTranslationMultiBinding(Label.TextProperty, "NameTemperatureAndFruitLabel", [nameBinding, fruitBinding, temperatureBinding]);
+
+        var label = Assert.IsType<Label>(bindableObject);
+        Assert.Equal("Jimmy likes Cherrys when its 19.2 outside", label.Text);
+
+        // Act
+        var frFrLocalization = new Localization()
+        {
+            CultureInfo = new CultureInfo("frFr"),
+            Translations = new Dictionary<string, string>()
+            {
+                { "NameTemperatureAndFruitLabel", "{0} aime les {1} quand il est {2} dehors" }
+            }
+        };
+
+        translatorManager.UpdateTranslations(frFrLocalization, TranslationSource.Internal);
+
+        // Assert
+        Assert.Equal("Jimmy aime les Cherry quand il est 19.2 dehors", label.Text);
+    }
+
+    [Fact]
+    public void SetTranslationMultiBindingView_WhenTranslationKeyDoesNotExist_ShouldSetNotFoundKey()
+    {
+        // Arrange
+        var view = new Label();
+
+        var viewModel = new SomeViewModel();
+        var temperatureBinding = new Binding(nameof(SomeViewModel.Temperature), source: viewModel);
+        var nameBinding = new Binding(nameof(SomeViewModel.Name), source: viewModel);
+        var fruitBinding = new Binding(nameof(SomeViewModel.SelectedFruit), source: viewModel);
+
+        // Act
+        view.SetTranslationMultiBinding(Label.TextProperty, "NameTemperatureAndFruitLabel", [temperatureBinding, nameBinding, fruitBinding]);
+
+        // Assert
+        Assert.IsType<Label>(view);
+        Assert.Equal("$NameTemperatureAndFruitLabel$", view.Text);
+    }
+
+    [Fact]
+    public void SetTranslationMultiBindingView_WhenTranslationKeyExists_ShouldFormatTranslation()
+    {
+        // Arrange
+        var view = new Label();
+
+        var viewModel = new SomeViewModel();
+        var temperatureBinding = new Binding(nameof(SomeViewModel.Temperature), source: viewModel);
+        var nameBinding = new Binding(nameof(SomeViewModel.Name), source: viewModel);
+        var fruitBinding = new Binding(nameof(SomeViewModel.SelectedFruit), source: viewModel);
+
+        var enGbLocalization = new Localization()
+        {
+            CultureInfo = new CultureInfo("en-GB"),
+            Translations = new Dictionary<string, string>()
+            {
+                { "NameTemperatureAndFruitLabel", "{0} likes {1}s when its {2} outside" }
+            }
+        };
+
+        view.SetTranslationMultiBinding(Label.TextProperty, "NameTemperatureAndFruitLabel", [nameBinding, fruitBinding, temperatureBinding]);
+
+        Assert.IsType<Label>(view);
+        Assert.Equal("$NameTemperatureAndFruitLabel$", view.Text);
+
+        // Act
+        translatorManager.UpdateTranslations(enGbLocalization, TranslationSource.Internal);
+
+        // Assert
+        Assert.Equal(" likes s when its 0 outside", view.Text);
+
+        viewModel.Name = "Billy";
+
+        Assert.Equal("Billy likes s when its 0 outside", view.Text);
+
+        viewModel.SelectedFruit = Fruit.Apple;
+
+        Assert.Equal("Billy likes Apples when its 0 outside", view.Text);
+
+        viewModel.Temperature = 24.5;
+
+        Assert.Equal("Billy likes Apples when its 24.5 outside", view.Text);
+    }
+
+    [Fact]
+    public void SetTranslationMultiBindingView_WhenTranslationKeyExistsForCultureOneButNotCultureTwo_ShouldFormatTranslationCorrectly()
+    {
+        // Arrange
+        var view = new Label();
+
+        var viewModel = new SomeViewModel()
+        {
+            Name = "Jimmy",
+            SelectedFruit = Fruit.Cherry,
+            Temperature = 19.2,
+        };
+
+        var temperatureBinding = new Binding(nameof(SomeViewModel.Temperature), source: viewModel);
+        var nameBinding = new Binding(nameof(SomeViewModel.Name), source: viewModel);
+        var fruitBinding = new Binding(nameof(SomeViewModel.SelectedFruit), source: viewModel);
+
+        var enGbLocalization = new Localization()
+        {
+            CultureInfo = new CultureInfo("en-GB"),
+            Translations = new Dictionary<string, string>()
+            {
+                { "NameTemperatureAndFruitLabel", "{0} likes {1}s when its {2} outside" }
+            }
+        };
+
+        translatorManager.UpdateTranslations(enGbLocalization, TranslationSource.Internal);
+
+        view.SetTranslationMultiBinding(Label.TextProperty, "NameTemperatureAndFruitLabel", [nameBinding, fruitBinding, temperatureBinding]);
+
+        Assert.IsType<Label>(view);
+        Assert.Equal("Jimmy likes Cherrys when its 19.2 outside", view.Text);
+
+        // Act
+        var frFrLocalization = new Localization()
+        {
+            CultureInfo = new CultureInfo("frFr"),
+            Translations = [],
+        };
+
+        translatorManager.UpdateTranslations(frFrLocalization, TranslationSource.Internal);
+
+        // Assert
+        Assert.Equal("$NameTemperatureAndFruitLabel$", view.Text);
+    }
+
+    [Fact]
+    public void SetTranslationMultiBindingView_WhenTranslationKeyExistsForAllCultures_ShouldFormatTranslationCorrectly()
+    {
+        // Arrange
+        var view = new Label();
+
+        var viewModel = new SomeViewModel()
+        {
+            Name = "Jimmy",
+            SelectedFruit = Fruit.Cherry,
+            Temperature = 19.2,
+        };
+
+        var temperatureBinding = new Binding(nameof(SomeViewModel.Temperature), source: viewModel);
+        var nameBinding = new Binding(nameof(SomeViewModel.Name), source: viewModel);
+        var fruitBinding = new Binding(nameof(SomeViewModel.SelectedFruit), source: viewModel);
+
+        var enGbLocalization = new Localization()
+        {
+            CultureInfo = new CultureInfo("en-GB"),
+            Translations = new Dictionary<string, string>()
+            {
+                { "NameTemperatureAndFruitLabel", "{0} likes {1}s when its {2} outside" }
+            }
+        };
+
+        translatorManager.UpdateTranslations(enGbLocalization, TranslationSource.Internal);
+
+        view.SetTranslationMultiBinding(Label.TextProperty, "NameTemperatureAndFruitLabel", [nameBinding, fruitBinding, temperatureBinding]);
+
+        Assert.IsType<Label>(view);
+        Assert.Equal("Jimmy likes Cherrys when its 19.2 outside", view.Text);
+
+        // Act
+        var frFrLocalization = new Localization()
+        {
+            CultureInfo = new CultureInfo("frFr"),
+            Translations = new Dictionary<string, string>()
+            {
+                { "NameTemperatureAndFruitLabel", "{0} aime les {1} quand il est {2} dehors" }
+            }
+        };
+
+        translatorManager.UpdateTranslations(frFrLocalization, TranslationSource.Internal);
+
+        // Assert
+        Assert.Equal("Jimmy aime les Cherry quand il est 19.2 dehors", view.Text);
+    }
+
+    [Fact]
+    public void SetTranslationMultiBindingView_WhenBindableObjectIsNull_ShouldThrow()
+    {
+        // Arrange
+        var viewModel = new SomeViewModel();
+
+        View view = null!;
+        var temperatureBinding = new Binding(nameof(SomeViewModel.Temperature), source: viewModel);
+        var nameBinding = new Binding(nameof(SomeViewModel.Name), source: viewModel);
+
+        // Act
+        var ex = Assert.Throws<ArgumentNullException>(() => view.SetTranslationMultiBinding(Label.TextProperty, "NameAndTemperatureLabel", [temperatureBinding, nameBinding]));
+
+        // Assert
+        Assert.Equal("Value cannot be null. (Parameter 'bindableObject')", ex.Message);
+    }
+
+    [Fact]
+    public void SetTranslationMultiBindingView_WhenBindingIsNull_ShouldThrow()
+    {
+        // Arrange
+        var view = new Label();
+
+        // Act
+        var ex = Assert.Throws<ArgumentException>(() => view.SetTranslationMultiBinding(Label.TextProperty, "NameAndTemperatureLabel", []));
+
+        // Assert
+        Assert.Equal("Required input Bindings was empty. (Parameter 'Bindings')", ex.Message);
     }
 
     #endregion Tests

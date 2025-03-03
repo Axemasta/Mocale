@@ -77,7 +77,7 @@ public class LocalizeMultiBindingExtension(ITranslatorManager translatorManager)
         }
 
         var arguments = values.Skip(1)
-            .Select(v => v.ToString())
+            .Select(v => v?.ToString())
             .ToArray() as object[];
 
         return string.Format(translatorManager.CurrentCulture, localizedFormat, arguments);

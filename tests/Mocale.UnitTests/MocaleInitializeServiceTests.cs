@@ -3,9 +3,11 @@ using Mocale.Abstractions;
 using Mocale.Enums;
 using Mocale.Managers;
 using Mocale.Models;
+using Mocale.UnitTests.Collections;
 
 namespace Mocale.UnitTests;
 
+[Collection(CollectionNames.MocaleLocatorTests)]
 public class MocaleInitializeServiceTests : FixtureBase
 {
     #region Setup

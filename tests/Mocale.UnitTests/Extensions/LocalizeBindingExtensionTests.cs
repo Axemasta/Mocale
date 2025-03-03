@@ -1,12 +1,16 @@
 using System.Globalization;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Mocale.Abstractions;
+using Mocale.Enums;
 using Mocale.Extensions;
+using Mocale.Models;
 using Mocale.Testing;
+using Mocale.UnitTests.Fixtures;
 using Xunit.Sdk;
 
 namespace Mocale.UnitTests.Extensions;
 
-public class LocalizeMultiBindingExtensionTests : FixtureBase<LocalizeBindingExtension>
+public partial class LocalizeMultiBindingExtensionTests : FixtureBase<LocalizeBindingExtension>
 {
     #region Setup
 
@@ -213,6 +217,57 @@ public class LocalizeMultiBindingExtensionTests : FixtureBase<LocalizeBindingExt
         Assert.Throws<NotImplementedException>(() => Sut.ConvertBack("Hello Name", [typeof(Label)], null!, CultureInfo.InvariantCulture));
     }
 
+    [Fact]
+    public void IntegrationTest()
+    {
+        _ = new ControlsFixtureBase();
+        var label = new Label();
+
+        var viewModel = new GreetingViewModel();
+
+        Sut.TranslationKey = "GreetingMessage";
+        Sut.Path = nameof(GreetingViewModel.Name);
+        Sut.Source = viewModel;
+
+        label.SetBinding(Label.TextProperty, Sut.ProvideValue(Mock.Of<IServiceProvider>()));
+
+        Assert.Equal("$GreetingMessage$", label.Text);
+
+        var enGbLocalization = new Localization()
+        {
+            CultureInfo = new CultureInfo("en-GB"),
+            Translations = new Dictionary<string, string>()
+            {
+                { "GreetingMessage",  "Hello {0}" },
+            }
+        };
+
+        translatorManager.UpdateTranslations(enGbLocalization, TranslationSource.Internal);
+
+        Assert.Equal("Hello ", label.Text);
+
+        viewModel.Name = "Sir Dotsworth";
+
+        Assert.Equal("Hello Sir Dotsworth", label.Text);
+
+        var frFRLocalization = new Localization()
+        {
+            CultureInfo = new CultureInfo("fr-FR"),
+            Translations = new Dictionary<string, string>()
+            {
+                { "GreetingMessage",  "Bonjour {0}" },
+            }
+        };
+
+        translatorManager.UpdateTranslations(frFRLocalization, TranslationSource.Internal);
+
+        Assert.Equal("Bonjour Sir Dotsworth", label.Text);
+
+        viewModel.Name = "Alex";
+
+        Assert.Equal("Bonjour Alex", label.Text);
+    }
+
     #endregion Tests
 
     #region Test Data
@@ -222,6 +277,12 @@ public class LocalizeMultiBindingExtensionTests : FixtureBase<LocalizeBindingExt
         { "The temperature is {0}\u00b0C", 28.3d, "The temperature is 28.3\u00b0C", new CultureInfo("en-GB") },
         { "La température est {0}\u00b0C", 28.3d, "La température est 28.3\u00b0C", new CultureInfo("fr-FR") }
     };
+
+    private partial class GreetingViewModel : ObservableObject
+    {
+        [ObservableProperty]
+        public partial string Name { get; set; }
+    }
 
     #endregion Test Data
 }
