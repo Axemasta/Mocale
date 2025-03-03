@@ -1483,7 +1483,7 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
         // Act
         var frFrLocalization = new Localization()
         {
-            CultureInfo = new CultureInfo("frFr"),
+            CultureInfo = new CultureInfo("fr-Fr"),
             Translations = [],
         };
 
@@ -1529,7 +1529,7 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
         // Act
         var frFrLocalization = new Localization()
         {
-            CultureInfo = new CultureInfo("frFr"),
+            CultureInfo = new CultureInfo("fr-Fr"),
             Translations = new Dictionary<string, string>()
             {
                 { "NameTemperatureAndFruitLabel", "{0} aime les {1} quand il est {2} dehors" }
@@ -1641,7 +1641,7 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
         // Act
         var frFrLocalization = new Localization()
         {
-            CultureInfo = new CultureInfo("frFr"),
+            CultureInfo = new CultureInfo("fr-Fr"),
             Translations = [],
         };
 
@@ -1687,7 +1687,7 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
         // Act
         var frFrLocalization = new Localization()
         {
-            CultureInfo = new CultureInfo("frFr"),
+            CultureInfo = new CultureInfo("fr-Fr"),
             Translations = new Dictionary<string, string>()
             {
                 { "NameTemperatureAndFruitLabel", "{0} aime les {1} quand il est {2} dehors" }
