@@ -35,7 +35,7 @@ public partial class LocalizeMultiBindingTests : FixtureBase<LocalizeMultiBindin
         MocaleLocator.SetInstance(translatorManagerMock.Object);
 
         // Act
-        var localizeExtension = new LocalizeBindingExtension();
+        var localizeExtension = new LocalizeMultiBindingExtension();
         var extensionTranslatorManager = localizeExtension.GetTranslatorManager();
 
         // Assert
@@ -92,6 +92,63 @@ public partial class LocalizeMultiBindingTests : FixtureBase<LocalizeMultiBindin
 
         // Assert
         Assert.Equal("{0}", multiBinding.StringFormat);
+        Assert.Equal(Sut, multiBinding.Converter);
+        Assert.Equal(BindingMode.OneWay, multiBinding.Mode);
+        Assert.Equal(4, multiBinding.Bindings.Count);
+
+        var bindingOne = Assert.IsType<Binding>(multiBinding.Bindings[0]);
+        Assert.Equal("[WelcomeMessage]", bindingOne.Path);
+        Assert.Equal(BindingMode.OneWay, bindingOne.Mode);
+        Assert.Equal(translatorManager, bindingOne.Source);
+
+        var bindingTwo = Assert.IsType<Binding>(multiBinding.Bindings[1]);
+        Assert.Equal("Name", bindingTwo.Path);
+        Assert.Equal(BindingMode.Default, bindingTwo.Mode);
+        Assert.Null(bindingTwo.Converter);
+        Assert.Null(bindingTwo.ConverterParameter);
+        Assert.Equal(viewModel, bindingTwo.Source);
+
+        var bindingThree = Assert.IsType<Binding>(multiBinding.Bindings[2]);
+        Assert.Equal("Date", bindingThree.Path);
+        Assert.Equal(BindingMode.Default, bindingThree.Mode);
+        Assert.Null(bindingThree.Converter);
+        Assert.Null(bindingThree.ConverterParameter);
+        Assert.Equal(viewModel, bindingThree.Source);
+
+        var bindingFour = Assert.IsType<Binding>(multiBinding.Bindings[3]);
+        Assert.Equal("Temperature", bindingFour.Path);
+        Assert.Equal(BindingMode.Default, bindingFour.Mode);
+        Assert.Null(bindingFour.Converter);
+        Assert.Null(bindingFour.ConverterParameter);
+        Assert.Equal(viewModel, bindingFour.Source);
+    }
+
+    [Fact]
+    public void ProvideValue_WhenStringFormatIsSet_ShouldCreateMultiBindingWithFormat()
+    {
+        // Arrange
+        var viewModel = new GreetingsViewModel()
+        {
+            Name = "Gary",
+            Date = new DateTime(2025, 3, 2, 13, 42, 23),
+            Temperature = 10.0d
+        };
+
+        var nameBinding = new Binding(nameof(GreetingsViewModel.Name), source: viewModel);
+        var dateBinding = new Binding(nameof(GreetingsViewModel.Date), source: viewModel);
+        var temperatureBinding = new Binding(nameof(GreetingsViewModel.Temperature), source: viewModel);
+
+        Sut.TranslationKey = "WelcomeMessage";
+        Sut.Bindings.Add(nameBinding);
+        Sut.Bindings.Add(dateBinding);
+        Sut.Bindings.Add(temperatureBinding);
+        Sut.StringFormat = "{0:N}";
+
+        // Act
+        var multiBinding = Sut.ProvideValue(serviceProvider);
+
+        // Assert
+        Assert.Equal("{0:N}", multiBinding.StringFormat);
         Assert.Equal(Sut, multiBinding.Converter);
         Assert.Equal(BindingMode.OneWay, multiBinding.Mode);
         Assert.Equal(4, multiBinding.Bindings.Count);

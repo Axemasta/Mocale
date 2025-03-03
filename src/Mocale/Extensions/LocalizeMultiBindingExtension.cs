@@ -16,7 +16,7 @@ public class LocalizeMultiBindingExtension(ITranslatorManager translatorManager)
     /// <summary>
     /// The bindings to use as format parameters
     /// </summary>
-    public IList<BindingBase> Bindings { get; set; } = [];
+    public IList<BindingBase> Bindings { get; } = [];
 
     /// <summary>
     /// The translation key
