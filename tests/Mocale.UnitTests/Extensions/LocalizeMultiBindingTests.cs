@@ -23,6 +23,12 @@ public partial class LocalizeMultiBindingTests : FixtureBase<LocalizeMultiBindin
         return new LocalizeMultiBindingExtension(translatorManager);
     }
 
+    public LocalizeMultiBindingTests()
+    {
+        // Prevent test flakiness on GitHub actions
+        Thread.CurrentThread.CurrentCulture = new CultureInfo("en-GB");
+    }
+
     #endregion Setup
 
     #region Tests

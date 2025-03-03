@@ -38,6 +38,7 @@ public static class BindableObjectExtension
     /// <param name="property">The bindable property to target for translation</param>
     /// <param name="source">The source binding</param>
     /// <param name="translationKey">The translation key</param>
+    /// <param name="stringFormat">The string format to pass to the binding</param>
     public static void SetTranslationBinding(this BindableObject bindableObject, BindableProperty property, Binding source, string translationKey, string stringFormat = "{0}")
     {
         ArgumentNullException.ThrowIfNull(bindableObject, nameof(bindableObject));

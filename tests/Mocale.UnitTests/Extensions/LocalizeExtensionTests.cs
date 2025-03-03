@@ -4,10 +4,12 @@ using Mocale.Enums;
 using Mocale.Extensions;
 using Mocale.Models;
 using Mocale.Testing;
+using Mocale.UnitTests.Collections;
 using Mocale.UnitTests.Fixtures;
 
 namespace Mocale.UnitTests.Extensions;
 
+[Collection(CollectionNames.MocaleLocatorTests)]
 public class LocalizeExtensionTests : FixtureBase<LocalizeExtension>
 {
     #region Setup
