@@ -76,7 +76,9 @@ public class LocalizeMultiBindingExtension(ITranslatorManager translatorManager)
             throw new InvalidOperationException($"The first value was not a string, actual type: {values[0].GetType().Name}, if this method has been automatically called by Mocale please raise an issue on GitHub!");
         }
 
-        var arguments = values.Skip(1).ToArray();
+        var arguments = values.Skip(1)
+            .Select(v => v.ToString())
+            .ToArray() as object[];
 
         return string.Format(translatorManager.CurrentCulture, localizedFormat, arguments);
     }

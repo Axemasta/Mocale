@@ -6,7 +6,7 @@ public class ControlsFixtureBase
 {
     public Application TestApplication { get; }
 
-    protected ControlsFixtureBase()
+    public ControlsFixtureBase()
     {
         var app = new Application();
         SetDispatcher(app);

@@ -1,9 +1,12 @@
 using System.Globalization;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Mocale.Abstractions;
+using Mocale.Enums;
 using Mocale.Extensions;
+using Mocale.Models;
 using Mocale.Testing;
 using Mocale.UnitTests.Collections;
+using Mocale.UnitTests.Fixtures;
 
 namespace Mocale.UnitTests.Extensions;
 
@@ -237,9 +240,114 @@ public partial class LocalizeMultiBindingTests : FixtureBase<LocalizeMultiBindin
     }
 
     [Fact]
+    public void Convert_ShouldToStringBindedValues_ToEnsureCorrectFormatting()
+    {
+        // Each binding will pass a value, plus 1 more for the translator manager
+        // Arrange
+        var viewModel = new GreetingsViewModel()
+        {
+            Name = "Gary",
+            Date = new DateTime(2025, 3, 2, 13, 42, 23),
+            Temperature = 10.3d
+        };
+
+        var nameBinding = new Binding(nameof(GreetingsViewModel.Name), source: viewModel);
+        var dateBinding = new Binding(nameof(GreetingsViewModel.Date), source: viewModel);
+        var temperatureBinding = new Binding(nameof(GreetingsViewModel.Temperature), source: viewModel);
+
+        Sut.TranslationKey = "WelcomeMessage";
+        Sut.Bindings.Add(nameBinding);
+        Sut.Bindings.Add(dateBinding);
+        Sut.Bindings.Add(temperatureBinding);
+
+        var frFrLocalization = new Localization()
+        {
+            CultureInfo = new CultureInfo("fr-FR"),
+            Translations = new Dictionary<string, string>()
+            {
+                { "WelcomeMessage", "Bonjour {0}, La date est le {1} et la température est le {2}\u00b0C" }
+            }
+        };
+
+        translatorManager.UpdateTranslations(frFrLocalization, TranslationSource.Internal);
+
+        // Act
+        var translation = Sut.Convert(["Bonjour {0}, La date est le {1} et la température est le {2}\u00b0C", viewModel.Name, viewModel.Date, viewModel.Temperature], typeof(Label), null!, new CultureInfo("fr-FR"));
+
+        // Assert
+        Assert.Equal("Bonjour Gary, La date est le 02/03/2025 13:42:23 et la température est le 10.3\u00b0C", translation);
+    }
+
+    [Fact]
     public void ConvertBack_ShouldNotBeImplemented()
     {
         Assert.Throws<NotImplementedException>(() => Sut.ConvertBack("Hello Gary, The date is 02/03/2015 and the temperature is 10\u00b0C", [typeof(Label)], null!, CultureInfo.InvariantCulture));
+    }
+
+    [Fact]
+    public void IntegrationTest()
+    {
+        // Arrange
+        _ = new ControlsFixtureBase();
+        var viewModel = new GreetingsViewModel()
+        {
+            Name = "Gary",
+            Date = new DateTime(2025, 3, 2, 13, 42, 23),
+            Temperature = 10.3d
+        };
+
+        var nameBinding = new Binding(nameof(GreetingsViewModel.Name), source: viewModel);
+        var dateBinding = new Binding(nameof(GreetingsViewModel.Date), source: viewModel);
+        var temperatureBinding = new Binding(nameof(GreetingsViewModel.Temperature), source: viewModel);
+
+        Sut.TranslationKey = "WelcomeMessage";
+        Sut.Bindings.Add(nameBinding);
+        Sut.Bindings.Add(dateBinding);
+        Sut.Bindings.Add(temperatureBinding);
+
+        var enGbLocalization = new Localization()
+        {
+            CultureInfo = new CultureInfo("en-GB"),
+            Translations = new Dictionary<string, string>()
+            {
+                { "WelcomeMessage", "Hello {0}, The date is {1} and the temperature is {2}\u00b0C" }
+            }
+        };
+
+        translatorManager.UpdateTranslations(enGbLocalization, TranslationSource.Internal);
+
+        var label = new Label();
+
+        // Act & Assert
+        // Set initial binding => text should get set correctly
+        label.SetBinding(Label.TextProperty, Sut.ProvideValue(Mock.Of<IServiceProvider>()));
+
+        Assert.Equal("Hello Gary, The date is 02/03/2025 13:42:23 and the temperature is 10.3\u00b0C", label.Text);
+
+        // Binded value changes => text should update
+        viewModel.Name = "Helen";
+
+        Assert.Equal("Hello Helen, The date is 02/03/2025 13:42:23 and the temperature is 10.3\u00b0C", label.Text);
+
+        // Language changes => text should update
+        var frFrLocalization = new Localization()
+        {
+            CultureInfo = new CultureInfo("fr-FR"),
+            Translations = new Dictionary<string, string>()
+            {
+                { "WelcomeMessage", "Bonjour {0}, La date est le {1} et la température est le {2}\u00b0C" }
+            }
+        };
+
+        translatorManager.UpdateTranslations(frFrLocalization, TranslationSource.Internal);
+
+        Assert.Equal("Bonjour Helen, La date est le 02/03/2025 13:42:23 et la température est le 10.3\u00b0C", label.Text);
+
+        // Another property changes => text should update
+
+        viewModel.Temperature = 29.7;
+
+        Assert.Equal("Bonjour Helen, La date est le 02/03/2025 13:42:23 et la température est le 29.7\u00b0C", label.Text);
     }
 
     #endregion Tests
