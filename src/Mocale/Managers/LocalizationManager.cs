@@ -55,6 +55,8 @@ internal class LocalizationManager : ILocalizationManager
 
             CurrentCulture = culture;
 
+            UpdateThreadCulture(culture);
+
             currentCultureManager.SetActiveCulture(culture);
 
             logger.LogDebug("Updated localization culture to {CultureName}", culture.Name);
@@ -104,6 +106,8 @@ internal class LocalizationManager : ILocalizationManager
             Task.Run(() => CheckForTranslationUpdates(CurrentCulture))
                 .Forget();
         }
+
+        UpdateThreadCulture(CurrentCulture);
 
         return Task.FromResult(true);
     }
@@ -162,5 +166,15 @@ internal class LocalizationManager : ILocalizationManager
         }
 
         return result.Loaded || localTranslations.Loaded;
+    }
+
+    private static void UpdateThreadCulture(CultureInfo cultureInfo)
+    {
+        Thread.CurrentThread.CurrentCulture = cultureInfo;
+        Thread.CurrentThread.CurrentUICulture = cultureInfo;
+        CultureInfo.CurrentCulture = cultureInfo;
+        CultureInfo.CurrentUICulture = cultureInfo;
+        CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+        CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
     }
 }

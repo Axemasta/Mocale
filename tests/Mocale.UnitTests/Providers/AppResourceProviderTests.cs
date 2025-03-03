@@ -5,9 +5,11 @@ using Mocale.Abstractions;
 using Mocale.Exceptions;
 using Mocale.Models;
 using Mocale.Providers;
+using Mocale.UnitTests.Collections;
 
 namespace Mocale.UnitTests.Providers;
 
+[Collection(CollectionNames.ThreadCultureTests)]
 public class AppResourceProviderTests : FixtureBase<IInternalLocalizationProvider>
 {
     #region Setup
@@ -55,6 +57,11 @@ public class AppResourceProviderTests : FixtureBase<IInternalLocalizationProvide
     public void Constructor_WhenAppResourcesTypeIsNotResx_ShouldReturnNull()
     {
         // Arrange
+        Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+        Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
+        CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
+        CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
+
         appResourcesConfigManager.Setup(m => m.Configuration)
             .Returns(new AppResourcesConfig()
             {
@@ -62,7 +69,10 @@ public class AppResourceProviderTests : FixtureBase<IInternalLocalizationProvide
             });
 
         mocaleConfigurationManager.Setup(m => m.Configuration)
-            .Returns(new MocaleConfiguration());
+            .Returns(new MocaleConfiguration()
+            {
+                DefaultCulture = new CultureInfo("en-GB"),
+            });
 
         // Act
         var values = Sut.GetValuesForCulture(new CultureInfo("en-GB"));

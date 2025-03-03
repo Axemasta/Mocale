@@ -6,9 +6,11 @@ using Mocale.Enums;
 using Mocale.Managers;
 using Mocale.Models;
 using Mocale.Testing;
+using Mocale.UnitTests.Collections;
 
 namespace Mocale.UnitTests.Managers;
 
+[Collection(CollectionNames.ThreadCultureTests)]
 public class LocalizationManagerTests : FixtureBase<ILocalizationManager>
 {
     #region Setup
@@ -22,13 +24,21 @@ public class LocalizationManagerTests : FixtureBase<ILocalizationManager>
 
     public LocalizationManagerTests()
     {
-        mocaleConfiguration = new Mock<IMocaleConfiguration>();
-
         mocaleConfiguration.SetupGet(m => m.UseExternalProvider)
             .Returns(true);
 
         configurationManager.SetupGet(m => m.Configuration)
             .Returns(mocaleConfiguration.Object);
+    }
+
+    ~LocalizationManagerTests()
+    {
+        Thread.CurrentThread.CurrentCulture = null!;
+        Thread.CurrentThread.CurrentUICulture = null!;
+        CultureInfo.CurrentCulture = null!;
+        CultureInfo.CurrentUICulture = null!;
+        CultureInfo.DefaultThreadCurrentCulture = null;
+        CultureInfo.DefaultThreadCurrentUICulture = null;
     }
 
     public override ILocalizationManager CreateSystemUnderTest()
@@ -38,8 +48,7 @@ public class LocalizationManagerTests : FixtureBase<ILocalizationManager>
             configurationManager.Object,
             logger.Object,
             translationResolver.Object,
-            internalTranslatorManager.Object
-            );
+            internalTranslatorManager.Object);
     }
 
     #endregion Setup
@@ -564,6 +573,46 @@ public class LocalizationManagerTests : FixtureBase<ILocalizationManager>
     }
 
     [Fact]
+    public async Task InitializeAsync_WhenInitialized_ShouldSetThreadCulturesToActiveCulture()
+    {
+        // Arrange
+        currentCultureManager.Setup(m => m.GetActiveCulture())
+            .Returns(new CultureInfo("it-IT"));
+
+        translationResolver.Setup(m => m.LoadLocalTranslations(new CultureInfo("it-IT")))
+            .Returns(new TranslationLoadResult()
+            {
+                Loaded = true,
+                Localization = new Localization()
+                {
+                    CultureInfo = new CultureInfo("it-IT"),
+                    Translations = new Dictionary<string, string>()
+                    {
+                        { "Hello", "Ciao!" }
+                    }
+                },
+                Source = TranslationSource.WarmCache,
+            });
+
+        // This doesn't seem to work when tests run in parallel...
+        // Assert.NotEqual(new CultureInfo("it-IT"), Thread.CurrentThread.CurrentCulture);
+        // Assert.NotEqual(new CultureInfo("it-IT"), Thread.CurrentThread.CurrentUICulture);
+        // Assert.NotEqual(new CultureInfo("it-IT"), CultureInfo.CurrentCulture);
+        // Assert.NotEqual(new CultureInfo("it-IT"), CultureInfo.CurrentUICulture);
+
+        // Act
+        var initialized = await Sut.Initialize();
+
+        // Assert
+        Assert.True(initialized);
+
+        Assert.Equivalent(new CultureInfo("it-IT"), Thread.CurrentThread.CurrentCulture);
+        Assert.Equivalent(new CultureInfo("it-IT"), Thread.CurrentThread.CurrentUICulture);
+        Assert.Equivalent(new CultureInfo("it-IT"), CultureInfo.CurrentCulture);
+        Assert.Equivalent(new CultureInfo("it-IT"), CultureInfo.CurrentUICulture);
+    }
+
+    [Fact]
     public async Task SetCultureAsync_WhenSomethingThrows_ShouldLogAndReturnFalse()
     {
         // Arrange
@@ -954,6 +1003,55 @@ public class LocalizationManagerTests : FixtureBase<ILocalizationManager>
             Times.Once);
 
         internalTranslatorManager.Verify(m => m.RaisePropertyChanged(null), Times.Once);
+    }
+
+    [Fact]
+    public async Task SetCultureAsync_WhenLoadSuccessful_ShouldUpdateThreadCultures()
+    {
+        mocaleConfiguration.SetupGet(m => m.UseExternalProvider)
+            .Returns(false);
+
+        var activeCulture = new CultureInfo("it-IT");
+
+        currentCultureManager.Setup(m => m.GetActiveCulture())
+            .Returns(activeCulture);
+
+        var newCulture = new CultureInfo("fr-FR");
+
+        var localLoadResult = new TranslationLoadResult()
+        {
+            Loaded = true,
+            Localization = new Localization()
+            {
+                CultureInfo = newCulture,
+                Translations = new Dictionary<string, string>()
+                {
+                    { "KeyOne", "Bonjour le monde" },
+                },
+            },
+            Source = TranslationSource.Internal,
+        };
+
+        translationResolver.Setup(m => m.LoadLocalTranslations(newCulture))
+            .Returns(localLoadResult);
+
+        // This doesn't seem to work when tests run in parallel...
+        // Assert.NotEqual(new CultureInfo("fr-FR"), Thread.CurrentThread.CurrentCulture);
+        // Assert.NotEqual(new CultureInfo("fr-FR"), Thread.CurrentThread.CurrentUICulture);
+        // Assert.NotEqual(new CultureInfo("fr-FR"), CultureInfo.CurrentCulture);
+        // Assert.NotEqual(new CultureInfo("fr-FR"), CultureInfo.CurrentUICulture);
+
+        // Act
+        var loaded = await Sut.SetCultureAsync(newCulture);
+
+        // Assert
+        Assert.True(loaded);
+        Assert.Equal(newCulture, Sut.CurrentCulture);
+
+        Assert.Equivalent(new CultureInfo("fr-FR"), Thread.CurrentThread.CurrentCulture);
+        Assert.Equivalent(new CultureInfo("fr-FR"), Thread.CurrentThread.CurrentUICulture);
+        Assert.Equivalent(new CultureInfo("fr-FR"), CultureInfo.CurrentCulture);
+        Assert.Equivalent(new CultureInfo("fr-FR"), CultureInfo.CurrentUICulture);
     }
 
     #endregion Tests
