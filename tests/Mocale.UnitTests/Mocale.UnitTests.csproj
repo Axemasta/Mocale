@@ -1,18 +1,21 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <LangVersion>preview</LangVersion>
     <TargetFramework>$(StandardTargetFramework)</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
     <UseMaui>true</UseMaui>
     <IsTestProject>true</IsTestProject>
-    <NoWarn>$(NoWarn);CA2254;IDE0005</NoWarn>
+    <NoWarn>$(NoWarn);CA2254;IDE0005;xUnit1045</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" />
     <PackageReference Include="FluentAssertions" />
     <PackageReference Include="ILogger.Moq" />
+    <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="Moq.Contrib.HttpClient" />
     <PackageReference Include="xunit" />
@@ -41,7 +44,20 @@
 
   <ItemGroup>
     <!-- Some fake files embedded to allow testing embedded resource loading -->
-    <EmbeddedResource Include="Resources/**/*" />
+    <EmbeddedResource Include="Resources/**/*.json" />
+    <EmbeddedResource Include="Resources/**/*.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Resx\TestResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>TestResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <Compile Update="Resources\Resx\TestResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TestResources.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
 
 </Project>

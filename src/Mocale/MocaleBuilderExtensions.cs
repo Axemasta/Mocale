@@ -62,7 +62,7 @@ public static class MocaleBuilderExtensions
     {
         if (!provider.IsAssignableTo(typeof(IInternalLocalizationProvider)))
         {
-            throw new InitializationException($"The provider is not of type {nameof(IInternalLocalizationProvider)}");
+            throw new InitializationException($"The provider is not of type {nameof(IInternalLocalizationProvider)} (actual: {provider.Name})");
         }
 
         if (builder.LocalProviderRegistered)
@@ -79,12 +79,12 @@ public static class MocaleBuilderExtensions
     {
         if (!provider.IsAssignableTo(typeof(IExternalLocalizationProvider)))
         {
-            throw new InitializationException($"The provider is not of type {nameof(IExternalLocalizationProvider)}");
+            throw new InitializationException($"The provider is not of type {nameof(IExternalLocalizationProvider)} (actual: {provider.Name})");
         }
 
         if (builder.ExternalProviderRegistered)
         {
-            throw new InitializationException($"The following local provider was already registered: {builder.ExternalProviderName}");
+            throw new InitializationException($"The following external provider was already registered: {builder.ExternalProviderName}");
         }
 
         builder.AppBuilder.Services.AddSingleton<IConfigurationManager<TConfig>>(new ConfigurationManager<TConfig>(config));
@@ -116,7 +116,7 @@ public static class MocaleBuilderExtensions
 
             default:
             {
-                throw new NotSupportedException($"Invalid value for {nameof(LocaleResourceType)}");
+                throw new InvalidOperationException($"Invalid value for {nameof(LocaleResourceType)}: {externalConfiguration.ResourceFileDetails.ResourceType}");
             }
         }
     }

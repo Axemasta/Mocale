@@ -18,40 +18,44 @@ public static class BindableObjectExtension
     /// <param name="converter">An optional converter</param>
     public static void SetTranslation(this BindableObject bindableObject, BindableProperty property, string translationKey, IValueConverter? converter = null)
     {
-        var binding = new Binding
+        ArgumentNullException.ThrowIfNull(bindableObject, nameof(bindableObject));
+
+        var extension = new LocalizeExtension
         {
-            Mode = BindingMode.OneWay,
-            Path = $"[{translationKey}]",
-            Source = MocaleLocator.TranslatorManager
+            Key = translationKey,
+            Converter = converter
         };
 
-        if (converter is not null)
-        {
-            binding.Converter = converter;
-        }
+        var binding = extension.ProvideValue(EmptyServiceProvider.Instance);
 
         bindableObject.SetBinding(property, binding);
     }
 
     /// <summary>
-    /// Set Translation
+    /// Set Translation With Single Binding
     /// </summary>
     /// <param name="bindableObject">The bindable object to apply a translation</param>
     /// <param name="property">The bindable property to target for translation</param>
     /// <param name="source">The source binding</param>
     /// <param name="translationKey">The translation key</param>
-    public static void SetTranslationBinding(this BindableObject bindableObject, BindableProperty property, Binding source, string translationKey)
+    /// <param name="stringFormat">The string format to pass to the binding</param>
+    public static void SetTranslationBinding(this BindableObject bindableObject, BindableProperty property, Binding source, string translationKey, string stringFormat = "{0}")
     {
-        var binding = new MultiBinding()
+        ArgumentNullException.ThrowIfNull(bindableObject, nameof(bindableObject));
+        ArgumentNullException.ThrowIfNull(source, nameof(source));
+
+        var extension = new LocalizeBindingExtension
         {
-            Converter = new LocalizeBindingExtension(),
-            Mode = BindingMode.OneWay,
-            Bindings =
-            [
-                new Binding($"[{translationKey}]", BindingMode.OneWay, source: MocaleLocator.TranslatorManager),
-                source,
-            ]
+            TranslationKey = translationKey,
+            Path = source.Path,
+            Source = source.Source,
+            Mode = source.Mode,
+            StringFormat = stringFormat,
+            Converter = source.Converter,
+            ConverterParameter = source.ConverterParameter,
         };
+
+        var binding = extension.ProvideValue(EmptyServiceProvider.Instance);
 
         bindableObject.SetBinding(property, binding);
     }
@@ -61,23 +65,53 @@ public static class BindableObjectExtension
     /// </summary>
     /// <param name="bindableObject">The bindable object to apply a translation</param>
     /// <param name="property">The bindable property to target for translation</param>
-    /// <param name="binding">The binding you wish to localize, the type must be an enum</param>
+    /// <param name="source">The binding you wish to localize, the type must be an enum</param>
     /// <param name="stringFormat">The string format to apply to the binding</param>
-    public static void SetEnumTranslation(this BindableObject bindableObject, BindableProperty property, Binding binding, string stringFormat = "{0}")
+    public static void SetEnumTranslation(this BindableObject bindableObject, BindableProperty property, Binding source, string stringFormat = "{0}")
     {
-        var multiBinding = new MultiBinding()
+        ArgumentNullException.ThrowIfNull(bindableObject, nameof(bindableObject));
+        ArgumentNullException.ThrowIfNull(source, nameof(source));
+
+        var extension = new LocalizeEnumExtension()
         {
+            Path = source.Path,
+            Source = source.Source,
+            Mode = source.Mode,
             StringFormat = stringFormat,
-            Converter = new LocalizeEnumExtension(),
-            Mode = BindingMode.OneWay,
-            Bindings =
-            [
-                new Binding(nameof(TranslatorManager.CurrentCulture), BindingMode.OneWay, source: MocaleLocator.TranslatorManager),
-                binding,
-            ]
+            Converter = source.Converter,
+            ConverterParameter = source.ConverterParameter,
         };
 
-        bindableObject.SetBinding(property, multiBinding);
+        bindableObject.SetBinding(property, extension.ProvideValue(EmptyServiceProvider.Instance));
+    }
+
+    /// <summary>
+    /// Set Translation With Multiple Bindings
+    /// </summary>
+    /// <param name="bindableObject">The bindable object to apply a translation</param>
+    /// <param name="property">The bindable property to target for translation</param>
+    /// <param name="translationKey"></param>
+    /// <param name="sources">The bindings you wish to use as parameters to localize</param>
+    /// <param name="stringFormat">The string format to apply to the binding</param>
+    public static void SetTranslationMultiBinding(this BindableObject bindableObject, BindableProperty property, string translationKey, Binding[] sources, string stringFormat = "{0}")
+    {
+        ArgumentNullException.ThrowIfNull(bindableObject, nameof(bindableObject));
+        ArgumentNullException.ThrowIfNull(sources, nameof(sources));
+
+        var extension = new LocalizeMultiBindingExtension()
+        {
+            TranslationKey = translationKey,
+            StringFormat = stringFormat,
+        };
+
+        foreach (var source in sources)
+        {
+            extension.Bindings.Add(source);
+        }
+
+        var binding = extension.ProvideValue(EmptyServiceProvider.Instance);
+
+        bindableObject.SetBinding(property, binding);
     }
 
     #endregion
@@ -92,64 +126,25 @@ public static class BindableObjectExtension
     /// <param name="property">The bindable property to target for translation</param>
     /// <param name="translationKey">The translation key</param>
     /// <param name="converter">An optional converter</param>
-    public static TView SetTranslation<TView>(this TView? view, BindableProperty property, string translationKey, IValueConverter? converter = null)
+    public static TView SetTranslation<TView>(this TView view, BindableProperty property, string translationKey, IValueConverter? converter = null)
         where TView : View
     {
-        ArgumentNullException.ThrowIfNull(view, nameof(view));
-
-        if (view is not BindableObject bindableObject)
-        {
-            throw new NotSupportedException($"View {view.GetType().Name} must be a BindableObject to apply translation...");
-        }
-
-        var binding = new Binding
-        {
-            Mode = BindingMode.OneWay,
-            Path = $"[{translationKey}]",
-            Source = MocaleLocator.TranslatorManager
-        };
-
-        if (converter is not null)
-        {
-            binding.Converter = converter;
-        }
-
-        bindableObject.SetBinding(property, binding);
-
+        SetTranslation(view as BindableObject, property, translationKey, converter);
         return view;
     }
 
     /// <summary>
-    /// Set Translation
+    /// Set Translation With Single Binding
     /// </summary>
     /// <typeparam name="TView">The type of the view having the translation applied</typeparam>
     /// <param name="view">The view to apply a translation</param>
     /// <param name="property">The bindable property to target for translation</param>
     /// <param name="source">The source binding</param>
     /// <param name="translationKey">The translation key</param>
-    public static TView SetTranslationBinding<TView>(this TView? view, BindableProperty property, Binding source, string translationKey)
+    public static TView SetTranslationBinding<TView>(this TView view, BindableProperty property, Binding source, string translationKey)
         where TView : View
     {
-        ArgumentNullException.ThrowIfNull(view, nameof(view));
-
-        if (view is not BindableObject bindableObject)
-        {
-            throw new NotSupportedException($"View {view.GetType().Name} must be a BindableObject to apply translation...");
-        }
-
-        var binding = new MultiBinding()
-        {
-            Converter = new LocalizeBindingExtension(),
-            Mode = BindingMode.OneWay,
-            Bindings =
-            [
-                new Binding($"[{translationKey}]", BindingMode.OneWay, source: MocaleLocator.TranslatorManager),
-                source,
-            ]
-        };
-
-        bindableObject.SetBinding(property, binding);
-
+        SetTranslationBinding(view as BindableObject, property, source, translationKey);
         return view;
     }
 
@@ -159,33 +154,42 @@ public static class BindableObjectExtension
     /// <typeparam name="TView">The type of the view having the translation applied</typeparam>
     /// <param name="view">The view to apply a translation</param>
     /// <param name="property">The bindable property to target for translation</param>
-    /// <param name="binding">The binding you wish to localize, the type must be an enum</param>
+    /// <param name="source">The binding you wish to localize, the type must be an enum</param>
     /// <param name="stringFormat">The string format to apply to the binding</param>
-    public static TView SetEnumTranslation<TView>(this TView? view, BindableProperty property, Binding binding, string stringFormat = "{0}")
+    public static TView SetEnumTranslation<TView>(this TView view, BindableProperty property, Binding source, string stringFormat = "{0}")
+        where TView : View
     {
-        ArgumentNullException.ThrowIfNull(view, nameof(view));
+        SetEnumTranslation(view as BindableObject, property, source, stringFormat);
+        return view;
+    }
 
-        if (view is not BindableObject bindableObject)
-        {
-            throw new NotSupportedException($"View {view.GetType().Name} must be a BindableObject to apply translation...");
-        }
-
-        var multiBinding = new MultiBinding()
-        {
-            StringFormat = stringFormat,
-            Converter = new LocalizeEnumExtension(),
-            Mode = BindingMode.OneWay,
-            Bindings =
-            [
-                new Binding(nameof(TranslatorManager.CurrentCulture), BindingMode.OneWay, source: MocaleLocator.TranslatorManager),
-                new Binding(binding.Path, binding.Mode, binding.Converter, binding.ConverterParameter, source: binding.Source),
-            ]
-        };
-
-        bindableObject.SetBinding(property, multiBinding);
-
+    /// <summary>
+    /// Set Translation With Multiple Bindings
+    /// </summary>
+    /// <typeparam name="TView">The type of the view having the translation applied</typeparam>
+    /// <param name="view">The view to apply a translation</param>
+    /// <param name="property">The bindable property to target for translation</param>
+    /// <param name="translationKey"></param>
+    /// <param name="sources">The bindings you wish to use as parameters to localize</param>
+    /// <param name="stringFormat">The string format to apply to the binding</param>
+    public static TView SetTranslationMultiBinding<TView>(this TView view, BindableProperty property, string translationKey, Binding[] sources, string stringFormat = "{0}")
+        where TView : View
+    {
+        SetTranslationMultiBinding(view as BindableObject, property, translationKey, sources, stringFormat);
         return view;
     }
 
     #endregion
+}
+
+internal class EmptyServiceProvider : IServiceProvider
+{
+    public object? GetService(Type serviceType)
+    {
+        return null;
+    }
+
+    private static Lazy<IServiceProvider> EmptyLazy => new(() => new EmptyServiceProvider(), LazyThreadSafetyMode.ExecutionAndPublication);
+
+    internal static IServiceProvider Instance => EmptyLazy.Value;
 }

@@ -1,4 +1,4 @@
-namespace Mocale.UnitTests.TestHelpers;
+namespace Mocale.UnitTests.TestUtils;
 
 public static class ServiceCollectionAssertions
 {
@@ -36,6 +36,18 @@ public static class ServiceCollectionAssertions
     {
         var service = services.FirstOrDefault(s => s.ImplementationType == typeof(TImplementation));
         Assert.Null(service);
+    }
+
+    public static void ShouldHaveRegisteredService<TService>(this IServiceCollection services, ServiceLifetime lifetime)
+    {
+        var service = services.FirstOrDefault(s => s.ServiceType == typeof(TService) && s.Lifetime == lifetime);
+        Assert.NotNull(service);
+    }
+
+    public static void ShouldHaveRegisteredService<TService, TImplementation>(this IServiceCollection services, ServiceLifetime lifetime)
+    {
+        var service = services.FirstOrDefault(s => s.ServiceType == typeof(TService) && s.ImplementationType == typeof(TImplementation) && s.Lifetime == lifetime);
+        Assert.NotNull(service);
     }
 }
 

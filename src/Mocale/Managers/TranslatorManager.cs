@@ -17,9 +17,9 @@ internal partial class TranslatorManager : IInternalTranslatorManager
 
     public CultureInfo? CurrentCulture { get; private set; }
 
-    private Dictionary<string, string> PreferredLocalizations { get; set; } = [];
+    internal Dictionary<string, string> PreferredLocalizations { get; } = [];
 
-    private Dictionary<string, string> BackupLocalizations { get; set; } = [];
+    internal Dictionary<string, string> BackupLocalizations { get; } = [];
 
     #endregion Properties
 
@@ -119,9 +119,6 @@ internal partial class TranslatorManager : IInternalTranslatorManager
                 BackupLocalizations.AddOrUpdateValues(localization.Translations);
                 break;
             }
-
-            default:
-                break;
         }
 
         if (notify)

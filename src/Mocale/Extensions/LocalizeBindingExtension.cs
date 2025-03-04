@@ -10,19 +10,12 @@ namespace Mocale.Extensions;
 /// <param name="translatorManager">Translator Manager</param>
 [AcceptEmptyServiceProvider]
 [ContentProperty(nameof(Path))]
-public class LocalizeBindingExtension(ITranslatorManager translatorManager) : IMarkupExtension, IMultiValueConverter
+public class LocalizeBindingExtension(ITranslatorManager translatorManager) : LocalizeMultiBindingExtensionBase(translatorManager), IMultiValueConverter
 {
-    private readonly ITranslatorManager translatorManager = Guard.Against.Null(translatorManager, nameof(translatorManager));
-
     /// <summary>
     /// The translation key
     /// </summary>
     public string? TranslationKey { get; set; }
-
-    /// <summary>
-    /// Translation parameters
-    /// </summary>
-    public string? Parameters { get; set; }
 
     /// <inheritdoc/>
     public string Path { get; set; } = ".";
@@ -51,8 +44,10 @@ public class LocalizeBindingExtension(ITranslatorManager translatorManager) : IM
     }
 
     /// <inheritdoc/>
-    public object ProvideValue(IServiceProvider serviceProvider)
+    public override MultiBinding ProvideValue(IServiceProvider serviceProvider)
     {
+        Guard.Against.NullOrEmpty(TranslationKey, nameof(TranslationKey));
+
         return new MultiBinding()
         {
             StringFormat = StringFormat,
@@ -69,6 +64,8 @@ public class LocalizeBindingExtension(ITranslatorManager translatorManager) : IM
     /// <inheritdoc/>
     public object Convert(object[]? values, Type targetType, object parameter, CultureInfo culture)
     {
+        // values[0] will be translated value
+        // values[1] will be the binded value
         if (values is null || values.Length != 2)
         {
             return string.Empty;
@@ -79,12 +76,20 @@ public class LocalizeBindingExtension(ITranslatorManager translatorManager) : IM
             return string.Empty;
         }
 
-        if (values[1] is not string localizeParameter)
+        string? formatParameter;
+
+        if (values[1] is string localizeParameter)
         {
-            return string.Empty;
+            formatParameter = localizeParameter;
+        }
+        else
+        {
+            // We need to ToString() here otherwise the formatting can go a bit wierd on other cultures...
+            // TODO: This might need some future consideration ie hungarian would use decimal commas 1.000.000,01 and comma decimals!
+            formatParameter = values[1]?.ToString();
         }
 
-        return string.Format(translatorManager.CurrentCulture, localizedFormat, localizeParameter);
+        return string.Format(translatorManager.CurrentCulture, localizedFormat, formatParameter);
     }
 
     /// <inheritdoc/>

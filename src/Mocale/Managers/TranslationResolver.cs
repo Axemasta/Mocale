@@ -123,6 +123,22 @@ internal class TranslationResolver(
             };
         }
 
+        if (internalTranslations is null && cachedTranslations is not null)
+        {
+            return new TranslationLoadResult
+            {
+                Loaded = true,
+                Source = cacheUpdateManager.CanUpdateCache(cultureInfo)
+                    ? TranslationSource.ColdCache
+                    : TranslationSource.WarmCache,
+                Localization = new Localization()
+                {
+                    CultureInfo = cultureInfo,
+                    Translations = cachedTranslations,
+                },
+            };
+        }
+
         if (internalTranslations is null || cachedTranslations is null)
         {
             return new TranslationLoadResult
