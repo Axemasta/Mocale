@@ -11,7 +11,7 @@ using Mocale.UnitTests.Collections;
 namespace Mocale.UnitTests.Managers;
 
 [Collection(CollectionNames.ThreadCultureTests)]
-public class LocalizationManagerTests : FixtureBase<ILocalizationManager>
+public class LocalizationManagerTests : FixtureBase<ILocalizationManager>, IDisposable
 {
     #region Setup
 
@@ -33,12 +33,24 @@ public class LocalizationManagerTests : FixtureBase<ILocalizationManager>
 
     ~LocalizationManagerTests()
     {
-        Thread.CurrentThread.CurrentCulture = null!;
-        Thread.CurrentThread.CurrentUICulture = null!;
-        CultureInfo.CurrentCulture = null!;
-        CultureInfo.CurrentUICulture = null!;
+        ReleaseUnmanagedResources();
+    }
+
+    private static void ReleaseUnmanagedResources()
+    {
+        Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+        Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
+        CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
+        CultureInfo.CurrentUICulture = CultureInfo.InvariantCulture;
         CultureInfo.DefaultThreadCurrentCulture = null;
         CultureInfo.DefaultThreadCurrentUICulture = null;
+
+    }
+
+    public void Dispose()
+    {
+        ReleaseUnmanagedResources();
+        GC.SuppressFinalize(this);
     }
 
     public override ILocalizationManager CreateSystemUnderTest()
