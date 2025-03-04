@@ -142,6 +142,13 @@ csharp_style_prefer_null_check_over_type_check = true:warning
 dotnet_style_namespace_match_folder = true:suggestion
 dotnet_diagnostic.IDE0130.severity = suggestion
 
+# Rule IDE0040: Add accessibility modifiers
+# https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0040
+# https://github.com/dotnet/msbuild/issues/11426#issuecomment-2662244499
+dotnet_diagnostic.IDE0040.severity = none
+# options
+dotnet_style_require_accessibility_modifiers = for_non_interface_members:warning
+
 # C# Style Rules
 # https://docs.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/language-rules#c-style-rules
 [*.{cs,csx,cake}]

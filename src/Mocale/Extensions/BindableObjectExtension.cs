@@ -1,5 +1,3 @@
-using Mocale.Managers;
-
 namespace Mocale.Extensions;
 
 /// <summary>

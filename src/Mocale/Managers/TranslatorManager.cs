@@ -106,6 +106,7 @@ internal partial class TranslatorManager : IInternalTranslatorManager
 
         switch (source)
         {
+            default:
             case TranslationSource.External:
             case TranslationSource.WarmCache:
             case TranslationSource.ColdCache:
