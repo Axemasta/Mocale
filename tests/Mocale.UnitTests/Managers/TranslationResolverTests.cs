@@ -119,7 +119,8 @@ public class TranslationResolverTests : FixtureBase<ITranslationResolver>
         externalLocalizationProvider.Setup(m => m.GetValuesForCultureAsync(It.IsAny<CultureInfo>()))
             .ReturnsAsync(new ExternalLocalizationResult
             {
-                Success = true, Localizations = new Dictionary<string, string> { { "Hello", "Hola" } }
+                Success = true,
+                Localizations = new Dictionary<string, string> { { "Hello", "Hola" } }
             });
 
         localisationCacheManager.Setup(m =>
@@ -191,7 +192,8 @@ public class TranslationResolverTests : FixtureBase<ITranslationResolver>
         externalLocalizationProvider.Setup(m => m.GetValuesForCultureAsync(It.IsAny<CultureInfo>()))
             .ReturnsAsync(new ExternalLocalizationResult
             {
-                Success = true, Localizations = new Dictionary<string, string> { { "Hello", "Hola" } }
+                Success = true,
+                Localizations = new Dictionary<string, string> { { "Hello", "Hola" } }
             });
 
         localisationCacheManager.Setup(m =>
@@ -234,7 +236,8 @@ public class TranslationResolverTests : FixtureBase<ITranslationResolver>
         externalLocalizationProvider.Setup(m => m.GetValuesForCultureAsync(It.IsAny<CultureInfo>()))
             .ReturnsAsync(new ExternalLocalizationResult
             {
-                Success = true, Localizations = new Dictionary<string, string> { { "Hello", "Hola" } }
+                Success = true,
+                Localizations = new Dictionary<string, string> { { "Hello", "Hola" } }
             });
 
         localisationCacheManager.Setup(m =>
@@ -519,7 +522,10 @@ public class TranslationResolverTests : FixtureBase<ITranslationResolver>
 
         logger.VerifyLog(log => log.LogInformation(
             "The following keys were present in the local translations but not in the cache: {AddedKeys}",
-            new List<string>() { "City","WelcomeToMyShop" }),
+            new List<string>()
+            {
+                "City","WelcomeToMyShop"
+            }),
             Times.Once);
     }
 
