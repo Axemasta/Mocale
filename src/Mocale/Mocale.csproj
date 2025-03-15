@@ -1,9 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-   <TargetFrameworks>$(MauiPlatformTargetFrameworks);</TargetFrameworks>
+    <TargetFrameworks>$(MauiPlatformTargetFrameworks);</TargetFrameworks>
     <UseMaui>true</UseMaui>
-
     <AssemblyName>Mocale</AssemblyName>
     <RootNamespace>Mocale</RootNamespace>
     <PackageId>Mocale</PackageId>
@@ -11,8 +10,6 @@
     <PackageTags>maui,mocale,localization,localisation,translation</PackageTags>
     <Title>Mocale</Title>
     <Description>Localization framework for .NET Maui with support for over the air localization updates from external data sources.</Description>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

@@ -11,8 +11,6 @@
     <PackageTags>maui,mocale,localization,localisation,translation,cache,sqlite</PackageTags>
     <Title>Mocale.Cache.SQLite</Title>
     <Description>Caching implementation for Mocale. This cache provider utilizes a SQLite database to store translations and other details important for Mocales library functions.</Description>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
