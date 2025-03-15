@@ -18,6 +18,7 @@
     <PackageProjectUrl>https://github.com/Axemasta/Mocale</PackageProjectUrl>
     <PackageIcon>mocale_icon_light_small.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

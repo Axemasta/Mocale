@@ -12,7 +12,6 @@
     <PackageTags>maui,mocale,localization,localisation,translation,azure,blob,storage,provider,mocaleprovider</PackageTags>
     <Title>Mocale.Providers.Azure.Blob</Title>
     <Description>Azure blob storage external provider for Mocale. This package provides the ability to query azure blob storage for localization files to be used in your maui application.</Description>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
