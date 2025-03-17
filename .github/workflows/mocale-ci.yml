@@ -150,17 +150,17 @@ jobs:
         custom_tag: ${{ env.VERSION_NAME }}
         github_token: ${{ secrets.GITHUB_TOKEN }}
 
-    - uses: ncipollo/release-action@main
-      name: Create Release
-      with:
-        artifacts: ${{ env.ARTIFACTS }}
-        artifactErrorsFailBuild: true
-        draft: true
-        generateReleaseNotes: true
-        name: ${{ env.RELEASE_TITLE }}
-        tag: ${{ env.VERSION_NAME }}
-        prerelease: ${{ env.IS_PRERELEASE }}
-        body: 'TODO'
+    # - uses: ncipollo/release-action@main
+    #   name: Create Release
+    #   with:
+    #     artifacts: ${{ env.ARTIFACTS }}
+    #     artifactErrorsFailBuild: true
+    #     draft: true
+    #     generateReleaseNotes: true
+    #     name: ${{ env.RELEASE_TITLE }}
+    #     tag: ${{ env.VERSION_NAME }}
+    #     prerelease: ${{ env.IS_PRERELEASE }}
+    #     body: 'TODO'
 
-    - name: Publish NuGet
-      run: dotnet nuget push ${{ env.ARTIFACTS }} --source 'https://api.nuget.org/v3/index.json' --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
+    # - name: Publish NuGet
+    #   run: dotnet nuget push ${{ env.ARTIFACTS }} --source 'https://api.nuget.org/v3/index.json' --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
