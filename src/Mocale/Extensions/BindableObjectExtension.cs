@@ -90,16 +90,23 @@ public static class BindableObjectExtension
     /// <param name="property">The bindable property to target for translation</param>
     /// <param name="enumValue">The enum value to localize</param>
     /// <param name="stringFormat">The string format to apply to the binding</param>
-    public static void SetEnumValueTranslation(this BindableObject bindableObject, BindableProperty property, Enum enumValue, string stringFormat = "{0}")
+    /// <param name="converter">The converter to use to further transform the value, this will be applied after the enum is localized</param>
+    /// <param name="converterParameter">The converter parameter to pass to the converter if it has been set</param>
+    public static void SetEnumValueTranslation(this BindableObject bindableObject, BindableProperty property, Enum enumValue, string stringFormat = "{0}", IValueConverter? converter = null, object? converterParameter = null)
     {
         ArgumentNullException.ThrowIfNull(bindableObject, nameof(bindableObject));
 
-        var extension = new LocalizeEnumExtension()
+        var extension = new LocalizeEnumValueExtension
         {
             Source = enumValue,
-            Mode = BindingMode.OneWay,
             StringFormat = stringFormat,
         };
+
+        if (converter is not null)
+        {
+            extension.Converter = converter;
+            extension.ConverterParameter = converterParameter;
+        }
 
         bindableObject.SetBinding(property, extension.ProvideValue(EmptyServiceProvider.Instance));
     }
@@ -190,10 +197,12 @@ public static class BindableObjectExtension
     /// <param name="property">The bindable property to target for translation</param>
     /// <param name="enumValue">The enum value to localize</param>
     /// <param name="stringFormat">The string format to apply to the binding</param>
-    public static TView SetEnumValueTranslation<TView>(this TView view, BindableProperty property, Enum enumValue, string stringFormat = "{0}")
+    /// <param name="converter">The converter to use to further transform the value, this will be applied after the enum is localized</param>
+    /// <param name="converterParameter">The converter parameter to pass to the converter if it has been set</param>
+    public static TView SetEnumValueTranslation<TView>(this TView view, BindableProperty property, Enum enumValue, string stringFormat = "{0}", IValueConverter? converter = null, object? converterParameter = null)
         where TView : View
     {
-        SetEnumValueTranslation(view as BindableObject, property, enumValue, stringFormat);
+        SetEnumValueTranslation(view as BindableObject, property, enumValue, stringFormat, converter, converterParameter);
         return view;
     }
 
