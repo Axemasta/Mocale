@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.Globalization;
 using Ardalis.GuardClauses;
+
 namespace Mocale.Managers;
 
 /// <inheritdoc />
@@ -39,7 +40,7 @@ internal partial class TranslatorManager : IInternalTranslatorManager
 
     #region Methods
 
-    public object? this[string resourceKey] => Translate(resourceKey);
+    public object this[string resourceKey] => Translate(resourceKey);
 
     #endregion Methods
 
@@ -47,7 +48,7 @@ internal partial class TranslatorManager : IInternalTranslatorManager
 
     #region - ITranslatorManager
 
-    public string? Translate(string key)
+    public string Translate(string key)
     {
         if (PreferredLocalizations.TryGetValue(key, out var externalTranslation))
         {
@@ -70,7 +71,7 @@ internal partial class TranslatorManager : IInternalTranslatorManager
         return mocaleConfiguration.NotFoundSymbol + key + StringExtension.Reverse(mocaleConfiguration.NotFoundSymbol);
     }
 
-    public string? Translate(string key, object[] parameters)
+    public string Translate(string key, object[] parameters)
     {
         var translation = Translate(key);
 
