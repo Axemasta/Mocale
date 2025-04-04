@@ -54,23 +54,20 @@ public class TranslatorManagerProxyTests : FixtureBase<TranslatorManagerProxy>
 
         // Act
         Sut.UpdateTranslations(
-            new Localization
+            new Localization(new CultureInfo("en-GB"))
             {
-                CultureInfo = new CultureInfo("en-GB"),
                 Translations = new Dictionary<string, string> { { "KeyOne", "Hello" }, { "KeyTwo", "World" } }
             }, TranslationSource.External);
 
         Sut.UpdateTranslations(
-            new Localization
+            new Localization(new CultureInfo("en-GB"))
             {
-                CultureInfo = new CultureInfo("en-GB"),
                 Translations = new Dictionary<string, string> { { "KeyOne", "Hello" }, { "KeyTwo", "World" } }
             }, TranslationSource.WarmCache);
 
         Sut.UpdateTranslations(
-            new Localization
+            new Localization(new CultureInfo("en-GB"))
             {
-                CultureInfo = new CultureInfo("en-GB"),
                 Translations = new Dictionary<string, string> { { "KeyOne", "Hello" }, { "KeyTwo", "World" } }
             }, TranslationSource.ColdCache);
 
@@ -100,9 +97,8 @@ public class TranslatorManagerProxyTests : FixtureBase<TranslatorManagerProxy>
 
         // Act
         Sut.UpdateTranslations(
-            new Localization
+            new Localization(new CultureInfo("en-GB"))
             {
-                CultureInfo = new CultureInfo("en-GB"),
                 Translations = new Dictionary<string, string> { { "KeyOne", "Hello" }, { "KeyTwo", "World" } }
             }, TranslationSource.Internal);
 
@@ -133,23 +129,20 @@ public class TranslatorManagerProxyTests : FixtureBase<TranslatorManagerProxy>
 
         // Act
         Sut.UpdateTranslations(
-            new Localization
+            new Localization(new CultureInfo("en-GB"))
             {
-                CultureInfo = new CultureInfo("en-GB"),
                 Translations = new Dictionary<string, string> { { "KeyOne", "Hello" }, { "KeyTwo", "World" } }
             }, TranslationSource.External, false);
 
         Sut.UpdateTranslations(
-            new Localization
+            new Localization(new CultureInfo("en-GB"))
             {
-                CultureInfo = new CultureInfo("en-GB"),
                 Translations = new Dictionary<string, string> { { "KeyOne", "Hello" }, { "KeyTwo", "World" } }
             }, TranslationSource.WarmCache, false);
 
         Sut.UpdateTranslations(
-            new Localization
+            new Localization(new CultureInfo("en-GB"))
             {
-                CultureInfo = new CultureInfo("en-GB"),
                 Translations = new Dictionary<string, string> { { "KeyOne", "Hello" }, { "KeyTwo", "World" } }
             }, TranslationSource.ColdCache, false);
 
@@ -179,9 +172,8 @@ public class TranslatorManagerProxyTests : FixtureBase<TranslatorManagerProxy>
 
         // Act
         Sut.UpdateTranslations(
-            new Localization
+            new Localization(new CultureInfo("en-GB"))
             {
-                CultureInfo = new CultureInfo("en-GB"),
                 Translations = new Dictionary<string, string> { { "KeyOne", "Hello" }, { "KeyTwo", "World" } }
             }, TranslationSource.Internal, false);
 

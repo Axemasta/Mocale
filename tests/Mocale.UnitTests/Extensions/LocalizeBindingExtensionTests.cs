@@ -235,9 +235,8 @@ public partial class LocalizeMultiBindingExtensionTests : FixtureBase<LocalizeBi
 
         Assert.Equal("$GreetingMessage$", label.Text);
 
-        var enGbLocalization = new Localization()
+        var enGbLocalization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string>()
             {
                 { "GreetingMessage",  "Hello {0}" },
@@ -252,9 +251,8 @@ public partial class LocalizeMultiBindingExtensionTests : FixtureBase<LocalizeBi
 
         Assert.Equal("Hello Sir Dotsworth", label.Text);
 
-        var frFRLocalization = new Localization()
+        var frFRLocalization = new Localization(new CultureInfo("fr-FR"))
         {
-            CultureInfo = new CultureInfo("fr-FR"),
             Translations = new Dictionary<string, string>()
             {
                 { "GreetingMessage",  "Bonjour {0}" },
@@ -283,7 +281,7 @@ public partial class LocalizeMultiBindingExtensionTests : FixtureBase<LocalizeBi
     private sealed partial class GreetingViewModel : ObservableObject
     {
         [ObservableProperty]
-        public partial string Name { get; set; }
+        public partial string Name { get; set; } = string.Empty;
     }
 
     #endregion Test Data

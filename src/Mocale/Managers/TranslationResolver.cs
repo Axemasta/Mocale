@@ -35,9 +35,8 @@ internal class TranslationResolver(
                 {
                     Loaded = true,
                     Source = TranslationSource.WarmCache,
-                    Localization = new Localization()
+                    Localization = new Localization(cultureInfo)
                     {
-                        CultureInfo = cultureInfo,
                         Translations = cacheTranslations,
                     },
                 };
@@ -71,9 +70,8 @@ internal class TranslationResolver(
         {
             Loaded = true,
             Source = TranslationSource.External,
-            Localization = new Localization()
+            Localization = new Localization(cultureInfo)
             {
-                CultureInfo = cultureInfo,
                 Translations = externalResult.Localizations,
             },
         };
@@ -115,9 +113,8 @@ internal class TranslationResolver(
             {
                 Loaded = true,
                 Source = TranslationSource.Internal,
-                Localization = new Localization()
+                Localization = new Localization(cultureInfo)
                 {
-                    CultureInfo = cultureInfo,
                     Translations = internalTranslations,
                 },
             };
@@ -131,9 +128,8 @@ internal class TranslationResolver(
                 Source = cacheUpdateManager.CanUpdateCache(cultureInfo)
                     ? TranslationSource.ColdCache
                     : TranslationSource.WarmCache,
-                Localization = new Localization()
+                Localization = new Localization(cultureInfo)
                 {
-                    CultureInfo = cultureInfo,
                     Translations = cachedTranslations,
                 },
             };
@@ -175,9 +171,8 @@ internal class TranslationResolver(
         {
             Loaded = true,
             Source = cacheTemperature,
-            Localization = new Localization()
+            Localization = new Localization(cultureInfo)
             {
-                CultureInfo = cultureInfo,
                 Translations = cachedTranslations,
             },
         };

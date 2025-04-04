@@ -4,12 +4,12 @@ namespace Mocale.Models;
 /// <summary>
 /// Localization
 /// </summary>
-public class Localization
+public class Localization(CultureInfo cultureInfo)
 {
     /// <summary>
     /// Corresponding culture
     /// </summary>
-    public required CultureInfo CultureInfo { get; set; }
+    public CultureInfo CultureInfo { get; } = cultureInfo;
 
     /// <summary>
     /// Translations
@@ -19,8 +19,5 @@ public class Localization
     /// <summary>
     /// Blank localization
     /// </summary>
-    public static Localization Invariant => new()
-    {
-        CultureInfo = new CultureInfo(""),
-    };
+    public static Localization Invariant => new(CultureInfo.InvariantCulture);
 }

@@ -43,9 +43,8 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
     public void SetTranslationVoid_WhenTranslationKeyDoesNotExist_ShouldSetNotFoundKey()
     {
         // Arrange
-        var localization = new Localization()
+        var localization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string>()
             {
                 { "MapplicationTitle", "Mocale!"}
@@ -67,9 +66,8 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
     public void SetTranslationVoid_WhenTranslationKeyExists_ShouldSetTranslation()
     {
         // Arrange
-        var localization = new Localization()
+        var localization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string>()
             {
                 { "ApplicationTitle", "Mocale!"}
@@ -91,9 +89,8 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
     public void SetTranslationVoid_WhenLocaleChanges_ShouldUpdateTranslation()
     {
         // Arrange
-        var enGbLocalization = new Localization()
+        var enGbLocalization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string>()
             {
                 { "HelloWorld", "Hello World!"}
@@ -107,9 +104,8 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
         Assert.Equal("Hello World!", label.Text);
 
         // Act
-        var frFrLocalization = new Localization()
+        var frFrLocalization = new Localization(new CultureInfo("fr-FR"))
         {
-            CultureInfo = new CultureInfo("fr-FR"),
             Translations = new Dictionary<string, string>()
             {
                 { "HelloWorld", "Bonjour le monde!!"}
@@ -126,9 +122,8 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
     public void SetTranslationVoid_WhenUsingConverter_ShouldTranslateAndUseConverter()
     {
         // Arrange
-        var localization = new Localization()
+        var localization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string>()
             {
                 { "ApplicationTitle", "Mocale!"}
@@ -163,9 +158,8 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
     public void SetTranslationView_WhenTranslationKeyDoesNotExist_ShouldSetNotFoundKey()
     {
         // Arrange
-        var localization = new Localization()
+        var localization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string>()
             {
                 { "MapplicationTitle", "Mocale!"}
@@ -189,9 +183,8 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
     public void SetTranslationView_WhenTranslationKeyExists_ShouldSetTranslation()
     {
         // Arrange
-        var localization = new Localization()
+        var localization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string>()
             {
                 { "ApplicationTitle", "Mocale!"}
@@ -215,9 +208,8 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
     public void SetTranslationView_WhenUsingConverter_ShouldTranslateAndUseConverter()
     {
         // Arrange
-        var localization = new Localization()
+        var localization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string>()
             {
                 { "ApplicationTitle", "Mocale!"}
@@ -270,9 +262,8 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
     public void SetTranslationBindingVoid_WhenTranslationKeyDoesNotExist_ShouldSetNotFoundKey()
     {
         // Arrange
-        var localization = new Localization()
+        var localization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string>()
             {
                 { "MapplicationTitle", "Mocale!"},
@@ -298,9 +289,8 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
     public void SetTranslationBindingVoid_WhenTranslationKeyExists_ShouldFormatTranslation()
     {
         // Arrange
-        var localization = new Localization()
+        var localization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string>()
             {
                 { "MapplicationTitle", "Mocale!" },
@@ -331,9 +321,8 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
     public void SetTranslationBindingVoid_WhenBindedValueChanges_ShouldUpdatedTranslation()
     {
         // Arrange
-        var localization = new Localization()
+        var localization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string>()
             {
                 { "MapplicationTitle", "Mocale!" },
@@ -367,9 +356,8 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
     public void SetTranslationBindingVoid_WhenBindedValueString_ShouldUpdatedTranslation()
     {
         // Arrange
-        var localization = new Localization()
+        var localization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string>()
             {
                 { "MapplicationTitle", "Mocale!" },
@@ -401,9 +389,8 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
     public void SetTranslationBindingVoid_WhenTranslationKeyExistsForCultureOneButNotCultureTwo_ShouldFormatTranslationCorrectly()
     {
         // Arrange
-        var enGbLocalization = new Localization()
+        var enGbLocalization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string>()
             {
                 { "MapplicationTitle", "Mocale!" },
@@ -411,9 +398,8 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
             }
         };
 
-        var frFrLocalization = new Localization()
+        var frFrLocalization = new Localization(new CultureInfo("fr-FR"))
         {
-            CultureInfo = new CultureInfo("fr-FR"),
             Translations = new Dictionary<string, string>()
             {
                 { "MapplicationTitle", "Mocale!" },
@@ -446,9 +432,8 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
     public void SetTranslationBindingVoid_WhenTranslationKeyExistsForAllCultures_ShouldFormatTranslationCorrectly()
     {
         // Arrange
-        var enGbLocalization = new Localization()
+        var enGbLocalization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string>()
             {
                 { "MapplicationTitle", "Mocale!" },
@@ -456,9 +441,8 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
             }
         };
 
-        var frFrLocalization = new Localization()
+        var frFrLocalization = new Localization(new CultureInfo("fr-FR"))
         {
-            CultureInfo = new CultureInfo("fr-FR"),
             Translations = new Dictionary<string, string>()
             {
                 { "MapplicationTitle", "Mocale!" },
@@ -521,9 +505,8 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
     public void SetTranslationBindingView_WhenTranslationKeyDoesNotExist_ShouldSetNotFoundKey()
     {
         // Arrange
-        var localization = new Localization()
+        var localization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string>()
             {
                 { "MapplicationTitle", "Mocale!"},
@@ -550,9 +533,8 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
     public void SetTranslationBindingView_WhenTranslationKeyExists_ShouldFormatTranslation()
     {
         // Arrange
-        var localization = new Localization()
+        var localization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string>()
             {
                 { "MapplicationTitle", "Mocale!" },
@@ -584,9 +566,8 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
     public void SetTranslationBindingView_WhenBindedValueChanges_ShouldUpdatedTranslation()
     {
         // Arrange
-        var localization = new Localization()
+        var localization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string>()
             {
                 { "MapplicationTitle", "Mocale!" },
@@ -622,9 +603,8 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
     public void SetTranslationBindingView_WhenBindedValueString_ShouldUpdatedTranslation()
     {
         // Arrange
-        var localization = new Localization()
+        var localization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string>()
             {
                 { "MapplicationTitle", "Mocale!" },
@@ -657,9 +637,8 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
     public void SetTranslationBindingView_WhenTranslationKeyExistsForCultureOneButNotCultureTwo_ShouldFormatTranslationCorrectly()
     {
         // Arrange
-        var enGbLocalization = new Localization()
+        var enGbLocalization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string>()
             {
                 { "MapplicationTitle", "Mocale!" },
@@ -667,9 +646,8 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
             }
         };
 
-        var frFrLocalization = new Localization()
+        var frFrLocalization = new Localization(new CultureInfo("fr-FR"))
         {
-            CultureInfo = new CultureInfo("fr-FR"),
             Translations = new Dictionary<string, string>()
             {
                 { "MapplicationTitle", "Mocale!" },
@@ -703,9 +681,8 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
     public void SetTranslationBindingView_WhenTranslationKeyExistsForAllCultures_ShouldFormatTranslationCorrectly()
     {
         // Arrange
-        var enGbLocalization = new Localization()
+        var enGbLocalization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string>()
             {
                 { "MapplicationTitle", "Mocale!" },
@@ -713,9 +690,8 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
             }
         };
 
-        var frFrLocalization = new Localization()
+        var frFrLocalization = new Localization(new CultureInfo("fr-FR"))
         {
-            CultureInfo = new CultureInfo("fr-FR"),
             Translations = new Dictionary<string, string>()
             {
                 { "MapplicationTitle", "Mocale!" },
@@ -817,9 +793,8 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
             }
         };
 
-        var enGbLocalization = new Localization()
+        var enGbLocalization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string>()
             {
                 { "MapplicationTitle", "Mocale!" },
@@ -858,9 +833,8 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
             }
         };
 
-        var enGbLocalization = new Localization()
+        var enGbLocalization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string>()
             {
                 { "Fruit_Apple", "Apple" },
@@ -901,9 +875,8 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
             }
         };
 
-        var enGbLocalization = new Localization()
+        var enGbLocalization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string>()
             {
                 { "Fruit_Apple", "Apple" },
@@ -947,9 +920,8 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
             }
         };
 
-        var enGbLocalization = new Localization()
+        var enGbLocalization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string>()
             {
                 { "Fruit_Apple", "Apple" },
@@ -958,9 +930,8 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
             }
         };
 
-        var frFrLocalization = new Localization()
+        var frFrLocalization = new Localization(new CultureInfo("fr-FR"))
         {
-            CultureInfo = new CultureInfo("fr-FR"),
             Translations = new Dictionary<string, string>()
             {
                 { "NotFruit", "Ce n'est pas un fruit" },
@@ -1003,9 +974,8 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
             }
         };
 
-        var enGbLocalization = new Localization()
+        var enGbLocalization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string>()
             {
                 { "Fruit_Apple", "Apple" },
@@ -1014,9 +984,8 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
             }
         };
 
-        var frFrLocalization = new Localization()
+        var frFrLocalization = new Localization(new CultureInfo("fr-FR"))
         {
-            CultureInfo = new CultureInfo("fr-FR"),
             Translations = new Dictionary<string, string>()
             {
                 { "Fruit_Apple", "Pomme" },
@@ -1119,9 +1088,8 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
             }
         };
 
-        var enGbLocalization = new Localization()
+        var enGbLocalization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string>()
             {
                 { "MapplicationTitle", "Mocale!" },
@@ -1161,9 +1129,8 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
             }
         };
 
-        var enGbLocalization = new Localization()
+        var enGbLocalization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string>()
             {
                 { "Fruit_Apple", "Apple" },
@@ -1205,9 +1172,8 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
             }
         };
 
-        var enGbLocalization = new Localization()
+        var enGbLocalization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string>()
             {
                 { "Fruit_Apple", "Apple" },
@@ -1252,9 +1218,8 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
             }
         };
 
-        var enGbLocalization = new Localization()
+        var enGbLocalization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string>()
             {
                 { "Fruit_Apple", "Apple" },
@@ -1263,9 +1228,8 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
             }
         };
 
-        var frFrLocalization = new Localization()
+        var frFrLocalization = new Localization(new CultureInfo("fr-FR"))
         {
-            CultureInfo = new CultureInfo("fr-FR"),
             Translations = new Dictionary<string, string>()
             {
                 { "NotFruit", "Ce n'est pas un fruit" },
@@ -1309,9 +1273,8 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
             }
         };
 
-        var enGbLocalization = new Localization()
+        var enGbLocalization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string>()
             {
                 { "Fruit_Apple", "Apple" },
@@ -1320,9 +1283,8 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
             }
         };
 
-        var frFrLocalization = new Localization()
+        var frFrLocalization = new Localization(new CultureInfo("fr-FR"))
         {
-            CultureInfo = new CultureInfo("fr-FR"),
             Translations = new Dictionary<string, string>()
             {
                 { "Fruit_Apple", "Pomme" },
@@ -1414,9 +1376,8 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
         var nameBinding = new Binding(nameof(SomeViewModel.Name), source: viewModel);
         var fruitBinding = new Binding(nameof(SomeViewModel.SelectedFruit), source: viewModel);
 
-        var enGbLocalization = new Localization()
+        var enGbLocalization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string>()
             {
                 { "NameTemperatureAndFruitLabel", "{0} likes {1}s when its {2} outside" }
@@ -1464,9 +1425,8 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
         var nameBinding = new Binding(nameof(SomeViewModel.Name), source: viewModel);
         var fruitBinding = new Binding(nameof(SomeViewModel.SelectedFruit), source: viewModel);
 
-        var enGbLocalization = new Localization()
+        var enGbLocalization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string>()
             {
                 { "NameTemperatureAndFruitLabel", "{0} likes {1}s when its {2} outside" }
@@ -1481,11 +1441,7 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
         Assert.Equal("Jimmy likes Cherrys when its 19.2 outside", label.Text);
 
         // Act
-        var frFrLocalization = new Localization()
-        {
-            CultureInfo = new CultureInfo("fr-Fr"),
-            Translations = [],
-        };
+        var frFrLocalization = new Localization(new CultureInfo("fr-Fr"));
 
         translatorManager.UpdateTranslations(frFrLocalization, TranslationSource.Internal);
 
@@ -1510,9 +1466,8 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
         var nameBinding = new Binding(nameof(SomeViewModel.Name), source: viewModel);
         var fruitBinding = new Binding(nameof(SomeViewModel.SelectedFruit), source: viewModel);
 
-        var enGbLocalization = new Localization()
+        var enGbLocalization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string>()
             {
                 { "NameTemperatureAndFruitLabel", "{0} likes {1}s when its {2} outside" }
@@ -1527,9 +1482,8 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
         Assert.Equal("Jimmy likes Cherrys when its 19.2 outside", label.Text);
 
         // Act
-        var frFrLocalization = new Localization()
+        var frFrLocalization = new Localization(new CultureInfo("fr-Fr"))
         {
-            CultureInfo = new CultureInfo("fr-Fr"),
             Translations = new Dictionary<string, string>()
             {
                 { "NameTemperatureAndFruitLabel", "{0} aime les {1} quand il est {2} dehors" }
@@ -1572,9 +1526,8 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
         var nameBinding = new Binding(nameof(SomeViewModel.Name), source: viewModel);
         var fruitBinding = new Binding(nameof(SomeViewModel.SelectedFruit), source: viewModel);
 
-        var enGbLocalization = new Localization()
+        var enGbLocalization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string>()
             {
                 { "NameTemperatureAndFruitLabel", "{0} likes {1}s when its {2} outside" }
@@ -1622,9 +1575,8 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
         var nameBinding = new Binding(nameof(SomeViewModel.Name), source: viewModel);
         var fruitBinding = new Binding(nameof(SomeViewModel.SelectedFruit), source: viewModel);
 
-        var enGbLocalization = new Localization()
+        var enGbLocalization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string>()
             {
                 { "NameTemperatureAndFruitLabel", "{0} likes {1}s when its {2} outside" }
@@ -1639,11 +1591,7 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
         Assert.Equal("Jimmy likes Cherrys when its 19.2 outside", view.Text);
 
         // Act
-        var frFrLocalization = new Localization()
-        {
-            CultureInfo = new CultureInfo("fr-Fr"),
-            Translations = [],
-        };
+        var frFrLocalization = new Localization(new CultureInfo("fr-Fr"));
 
         translatorManager.UpdateTranslations(frFrLocalization, TranslationSource.Internal);
 
@@ -1668,9 +1616,8 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
         var nameBinding = new Binding(nameof(SomeViewModel.Name), source: viewModel);
         var fruitBinding = new Binding(nameof(SomeViewModel.SelectedFruit), source: viewModel);
 
-        var enGbLocalization = new Localization()
+        var enGbLocalization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string>()
             {
                 { "NameTemperatureAndFruitLabel", "{0} likes {1}s when its {2} outside" }
@@ -1685,9 +1632,8 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
         Assert.Equal("Jimmy likes Cherrys when its 19.2 outside", view.Text);
 
         // Act
-        var frFrLocalization = new Localization()
+        var frFrLocalization = new Localization(new CultureInfo("fr-Fr"))
         {
-            CultureInfo = new CultureInfo("fr-Fr"),
             Translations = new Dictionary<string, string>()
             {
                 { "NameTemperatureAndFruitLabel", "{0} aime les {1} quand il est {2} dehors" }
