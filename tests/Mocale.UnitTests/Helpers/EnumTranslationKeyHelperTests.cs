@@ -25,11 +25,9 @@ public class EnumTranslationKeyHelperTests
     public void GetTranslationKey_WhenEnumHasNoAttribute_ShouldSetEnumStringValue()
     {
         // Arrange
-        var config = new MocaleConfiguration();
-        var helper = new EnumTranslationKeyHelper(config);
 
         // Act
-        var result = helper.GetTranslationKey(TestEnum.ValueWithoutAttribute);
+        var result = EnumTranslationKeyHelper.GetTranslationKey(TestEnum.ValueWithoutAttribute, new LocalizeEnumBehavior());
 
         // Assert
         Assert.Equal("ValueWithoutAttribute", result);
@@ -39,20 +37,15 @@ public class EnumTranslationKeyHelperTests
     public void GetTranslationKey_WhenEnumHasNoOverrideRules_ShouldGetKeyFromGlobalConfig()
     {
         // Arrange
-        var config = new MocaleConfiguration
+        var behavior = new LocalizeEnumBehavior
         {
-            EnumBehavior = new LocalizeEnumBehavior
-            {
-                UseAttribute = true,
-                LocalizeAttribute = typeof(DescriptionAttribute),
-                AttributePropertyName = nameof(DescriptionAttribute.Description),
-            }
+            UseAttribute = true,
+            LocalizeAttribute = typeof(DescriptionAttribute),
+            AttributePropertyName = nameof(DescriptionAttribute.Description),
         };
 
-        var helper = new EnumTranslationKeyHelper(config);
-
         // Act
-        var result = helper.GetTranslationKey(TestEnum.ValueWithAttribute);
+        var result = EnumTranslationKeyHelper.GetTranslationKey(TestEnum.ValueWithAttribute, behavior);
 
         // Assert
         Assert.Equal("LocalizedName", result);
@@ -62,18 +55,13 @@ public class EnumTranslationKeyHelperTests
     public void GetTranslationKey_WhenConfigShouldNotUseAttribute_ShouldGetKeyFromToString()
     {
         // Arrange
-        var config = new MocaleConfiguration
+        var behavior = new LocalizeEnumBehavior
         {
-            EnumBehavior = new LocalizeEnumBehavior
-            {
-                UseAttribute = false,
-            }
+            UseAttribute = false,
         };
 
-        var helper = new EnumTranslationKeyHelper(config);
-
         // Act
-        var result = helper.GetTranslationKey(TestEnum.ValueWithAttribute);
+        var result = EnumTranslationKeyHelper.GetTranslationKey(TestEnum.ValueWithAttribute, behavior);
 
         // Assert
         Assert.Equal("ValueWithAttribute", result);
@@ -83,27 +71,22 @@ public class EnumTranslationKeyHelperTests
     public void GetTranslationKey_WhenEnumHasOverrideRules_ShouldUseSpecificRulesForEnum()
     {
         // Arrange
-        var config = new MocaleConfiguration
+        var behavior = new LocalizeEnumBehavior
         {
-            EnumBehavior = new LocalizeEnumBehavior
-            {
-                UseAttribute = false,
-                LocalizeAttribute = typeof(Attribute),
-                AttributePropertyName = "???",
-            }
+            UseAttribute = false,
+            LocalizeAttribute = typeof(Attribute),
+            AttributePropertyName = "???",
         };
 
-        config.EnumBehavior.OverrideRules.Add(typeof(TestEnum), new LocalizeEnumRule()
+        behavior.OverrideRules.Add(typeof(TestEnum), new LocalizeEnumRule()
         {
             UseAttribute = true,
             LocalizeAttribute = typeof(CustomTranslationKeyAttribute),
             AttributePropertyName = nameof(CustomTranslationKeyAttribute.TranslationKey),
         });
 
-        var helper = new EnumTranslationKeyHelper(config);
-
         // Act
-        var result = helper.GetTranslationKey(TestEnum.ValueWithAttribute);
+        var result = EnumTranslationKeyHelper.GetTranslationKey(TestEnum.ValueWithAttribute, behavior);
 
         // Assert
         Assert.Equal("BingBongKey", result);

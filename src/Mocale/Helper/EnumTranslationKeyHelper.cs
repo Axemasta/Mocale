@@ -1,32 +1,19 @@
 namespace Mocale.Helper;
 
-internal class EnumTranslationKeyHelper(IMocaleConfiguration mocaleConfiguration)
+internal static class EnumTranslationKeyHelper
 {
-    public string GetTranslationKey(Enum @enum)
+    public static string GetTranslationKey(Enum @enum, LocalizeEnumBehavior behavior)
     {
-        string? translationKey = null;
-
-        var behavior = mocaleConfiguration.EnumBehavior;
-
-        if (behavior.OverrideRules.TryGetValue(@enum.GetType(), out var rule))
-        {
-            translationKey = GetKey(@enum, rule.UseAttribute, rule.LocalizeAttribute, rule.AttributePropertyName);
-        }
-        else
-        {
-            translationKey = GetKey(@enum, behavior.UseAttribute, behavior.LocalizeAttribute, behavior.AttributePropertyName);
-        }
-
-        translationKey ??= @enum.ToString();
-
-        return translationKey;
+        return behavior.OverrideRules.TryGetValue(@enum.GetType(), out var rule)
+            ? GetKey(@enum, rule.UseAttribute, rule.LocalizeAttribute, rule.AttributePropertyName)
+            : GetKey(@enum, behavior.UseAttribute, behavior.LocalizeAttribute, behavior.AttributePropertyName);
     }
 
-    private static string? GetKey(Enum enumValue, bool useAttribute, Type localizeAttribute, string propertyName)
+    private static string GetKey(Enum enumValue, bool useAttribute, Type localizeAttribute, string propertyName)
     {
         if (useAttribute)
         {
-            return enumValue.GetAttributeValue(localizeAttribute, propertyName);
+            return enumValue.GetAttributeValue(localizeAttribute, propertyName) ?? enumValue.ToString();
         }
         else
         {
