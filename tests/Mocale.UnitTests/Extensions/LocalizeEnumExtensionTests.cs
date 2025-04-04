@@ -108,8 +108,9 @@ public partial class LocalizeEnumExtensionTests : FixtureBase<LocalizeEnumExtens
         var bindingTwo = Assert.IsType<Binding>(multiBinding.Bindings[1]);
         Assert.Equal("Name", bindingTwo.Path);
         Assert.Equal(BindingMode.TwoWay, bindingTwo.Mode);
-        Assert.Equal(converter, bindingTwo.Converter);
-        Assert.Equal(1357, bindingTwo.ConverterParameter);
+        // Converters will be executed after the binding to ensure correct order
+        Assert.Null(bindingTwo.Converter);
+        Assert.Null(bindingTwo.ConverterParameter);
         Assert.Equal(source, bindingTwo.Source);
     }
 
@@ -342,6 +343,67 @@ public partial class LocalizeEnumExtensionTests : FixtureBase<LocalizeEnumExtens
         Assert.Equal("", label.Text);
     }
 
+    [Fact]
+    public void Convert_WhenConverterSet_ShouldConvertAfterTranslation()
+    {
+        // Arrange
+        var enGbLocalization = new Localization(new CultureInfo("en-GB"))
+        {
+            Translations = new Dictionary<string, string>()
+            {
+                { "Key_Car",  "Car (English)" },
+                { "Key_Lorry", "Lorry (English)" },
+                { "Key_Van", "Van (English)" },
+                { "Key_Bike", "Bike (English)" },
+                { "Key_Bicycle", "Bicycle (English)" },
+                { "Key_Train", "Train (English)" },
+            }
+        };
+
+        translatorManager.UpdateTranslations(enGbLocalization, TranslationSource.Internal);
+
+        MocaleLocator.MocaleConfiguration = mocaleConfiguration;
+
+        Sut.Converter = new FlagConverter();
+
+        // Act
+        var translationKey = Sut.Convert([new CultureInfo("en-GB"), Vehicle.Train], typeof(Label), null!, CultureInfo.InvariantCulture);
+
+        // Assert
+        Assert.Equal("Train (🏴󠁧󠁢󠁥󠁮󠁧󠁿)", translationKey);
+    }
+
+    [Fact]
+    public void Convert_WhenConverterAndParameterSet_ShouldConvertWithParameterAfterTranslation()
+    {
+        // Arrange
+        var enGbLocalization = new Localization(new CultureInfo("en-GB"))
+        {
+            Translations = new Dictionary<string, string>()
+            {
+                { "Key_Car",  "Car (English)" },
+                { "Key_Lorry", "Lorry (English)" },
+                { "Key_Van", "Van (English)" },
+                { "Key_Bike", "Bike (English)" },
+                { "Key_Bicycle", "Bicycle (English)" },
+                { "Key_Train", "Train (English)" },
+            }
+        };
+
+        translatorManager.UpdateTranslations(enGbLocalization, TranslationSource.Internal);
+
+        MocaleLocator.MocaleConfiguration = mocaleConfiguration;
+
+        Sut.Converter = new MultipleFlagsConverter();
+        Sut.ConverterParameter = 3;
+
+        // Act
+        var translationKey = Sut.Convert([new CultureInfo("en-GB"), Vehicle.Train], typeof(Label), null!, CultureInfo.InvariantCulture);
+
+        // Assert
+        Assert.Equal("Train (🏴󠁧󠁢󠁥󠁮󠁧󠁿🏴󠁧󠁢󠁥󠁮󠁧󠁿🏴󠁧󠁢󠁥󠁮󠁧󠁿)", translationKey);
+    }
+
     #endregion Tests
 
     #region Test Data
@@ -388,6 +450,55 @@ public partial class LocalizeEnumExtensionTests : FixtureBase<LocalizeEnumExtens
     {
         [ObservableProperty]
         public partial Vehicle? SelectedVehicle { get; set; }
+    }
+
+    private class FlagConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is not string str)
+            {
+                throw new InvalidOperationException();
+            }
+
+            return str.Replace("English", "🏴󠁧󠁢󠁥󠁮󠁧󠁿");
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    private class MultipleFlagsConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is not string str)
+            {
+                throw new InvalidOperationException();
+            }
+
+            if (parameter is not int count)
+            {
+                throw new InvalidOperationException();
+            }
+
+            var flag = "🏴󠁧󠁢󠁥󠁮󠁧󠁿";
+            var builder = new System.Text.StringBuilder(flag.Length * count);
+
+            for (int i = 0; i < count; i++)
+            {
+                builder.Append(flag);
+            }
+
+            return str.Replace("English", builder.ToString());
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     #endregion Test Data
