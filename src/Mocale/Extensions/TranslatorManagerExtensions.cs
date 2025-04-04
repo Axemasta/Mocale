@@ -27,7 +27,7 @@ public static class TranslatorManagerExtensions
     /// <param name="enumValue">The enum value to translate</param>
     /// <param name="localizeEnumBehavior">The localization behavior to use for the enum</param>
     /// <returns></returns>
-    public static string TranslateEnum(this ITranslatorManager translatorManager, Enum enumValue, LocalizeEnumBehavior localizeEnumBehavior)
+    internal static string TranslateEnum(this ITranslatorManager translatorManager, Enum enumValue, LocalizeEnumBehavior localizeEnumBehavior)
     {
         if (!localizeEnumBehavior.ShouldLocalizeEnum(enumValue))
         {
