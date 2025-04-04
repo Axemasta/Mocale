@@ -29,6 +29,11 @@ public static class TranslatorManagerExtensions
     /// <returns></returns>
     public static string TranslateEnum(this ITranslatorManager translatorManager, Enum enumValue, LocalizeEnumBehavior localizeEnumBehavior)
     {
+        if (!localizeEnumBehavior.ShouldLocalizeEnum(enumValue))
+        {
+            return enumValue.ToString();
+        }
+
         var translationKey = EnumTranslationKeyHelper.GetTranslationKey(enumValue, localizeEnumBehavior);
 
         return translatorManager.Translate(translationKey);

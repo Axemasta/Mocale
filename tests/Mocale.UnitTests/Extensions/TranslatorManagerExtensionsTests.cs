@@ -78,7 +78,7 @@ public class TranslatorManagerExtensionsTests : FixtureBase<ITranslatorManager>
         var translation = Sut.TranslateEnum(DescriptionAttributeEnum.Value2);
 
         // Assert
-        Assert.Equal("$Value2$", translation);
+        Assert.Equal("Value2", translation);
     }
 
     [Fact]
