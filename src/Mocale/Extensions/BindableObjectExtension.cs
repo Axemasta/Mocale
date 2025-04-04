@@ -96,7 +96,7 @@ public static class BindableObjectExtension
     {
         ArgumentNullException.ThrowIfNull(bindableObject, nameof(bindableObject));
 
-        var extension = new LocalizeEnumValueExtension
+        var extension = new LocalizeEnumExtension()
         {
             Source = enumValue,
             StringFormat = stringFormat,

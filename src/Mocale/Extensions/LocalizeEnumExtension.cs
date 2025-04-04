@@ -59,13 +59,13 @@ public class LocalizeEnumExtension(ITranslatorManager translatorManager)
             Bindings =
             [
                 new Binding(nameof(translatorManager.CurrentCulture), BindingMode.OneWay, source: translatorManager),
-                new Binding(Path, Mode, Converter, ConverterParameter, source: Source)
+                new Binding(Path, Mode, source: Source)
             ]
         };
     }
 
     /// <inheritdoc/>
-    public object Convert(object[]? values, Type targetType, object parameter, CultureInfo culture)
+    public object? Convert(object[]? values, Type targetType, object parameter, CultureInfo culture)
     {
         if (values is null || values.Length != 2)
         {
@@ -83,7 +83,11 @@ public class LocalizeEnumExtension(ITranslatorManager translatorManager)
                 $"Value must be of type {nameof(Enum)}, instead value was of type {values[1].GetType().Name}. Use LocalizeBinding to localize non enum values!");
         }
 
-        return translatorManager.TranslateEnum(enumValue);
+        var translation = translatorManager.TranslateEnum(enumValue);
+
+        return Converter is not null ?
+            Converter.Convert(translation, targetType, ConverterParameter, culture)
+            : translation;
     }
 
     /// <inheritdoc/>
