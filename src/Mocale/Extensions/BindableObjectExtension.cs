@@ -84,6 +84,27 @@ public static class BindableObjectExtension
     }
 
     /// <summary>
+    /// Set Enum Value Translation
+    /// </summary>
+    /// <param name="bindableObject">The bindable object to apply a translation</param>
+    /// <param name="property">The bindable property to target for translation</param>
+    /// <param name="enumValue">The enum value to localize</param>
+    /// <param name="stringFormat">The string format to apply to the binding</param>
+    public static void SetEnumValueTranslation(this BindableObject bindableObject, BindableProperty property, Enum enumValue, string stringFormat = "{0}")
+    {
+        ArgumentNullException.ThrowIfNull(bindableObject, nameof(bindableObject));
+
+        var extension = new LocalizeEnumExtension()
+        {
+            Source = enumValue,
+            Mode = BindingMode.OneWay,
+            StringFormat = stringFormat,
+        };
+
+        bindableObject.SetBinding(property, extension.ProvideValue(EmptyServiceProvider.Instance));
+    }
+
+    /// <summary>
     /// Set Translation With Multiple Bindings
     /// </summary>
     /// <param name="bindableObject">The bindable object to apply a translation</param>
@@ -158,6 +179,21 @@ public static class BindableObjectExtension
         where TView : View
     {
         SetEnumTranslation(view as BindableObject, property, source, stringFormat);
+        return view;
+    }
+
+    /// <summary>
+    /// Set Enum Value Translation
+    /// </summary>
+    /// <typeparam name="TView">The type of the view having the translation applied</typeparam>
+    /// <param name="view">The view to apply a translation</param>
+    /// <param name="property">The bindable property to target for translation</param>
+    /// <param name="enumValue">The enum value to localize</param>
+    /// <param name="stringFormat">The string format to apply to the binding</param>
+    public static TView SetEnumValueTranslation<TView>(this TView view, BindableProperty property, Enum enumValue, string stringFormat = "{0}")
+        where TView : View
+    {
+        SetEnumValueTranslation(view as BindableObject, property, enumValue, stringFormat);
         return view;
     }
 

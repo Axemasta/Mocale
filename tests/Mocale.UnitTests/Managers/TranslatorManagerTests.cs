@@ -33,11 +33,7 @@ public class TranslatorManagerTests : FixtureBase
 
         Assert.Null(sut.CurrentCulture);
 
-        var localization = new Localization()
-        {
-            CultureInfo = new CultureInfo("en-GB"),
-            Translations = []
-        };
+        var localization = new Localization(new CultureInfo("en-GB"));
 
         // Act
         sut.UpdateTranslations(localization, TranslationSource.Internal);
@@ -54,9 +50,8 @@ public class TranslatorManagerTests : FixtureBase
         // Arrange
         var sut = GetSut<TranslatorManager>();
 
-        var localization = new Localization()
+        var localization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string>()
             {
                 { "HelloWorld", "Hello World" },
@@ -81,9 +76,8 @@ public class TranslatorManagerTests : FixtureBase
         // Arrange
         var sut = GetSut<TranslatorManager>();
 
-        var localization = new Localization()
+        var localization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string>()
             {
                 { "HelloWorld", "Hello World" },
@@ -108,9 +102,8 @@ public class TranslatorManagerTests : FixtureBase
         // Arrange
         var sut = GetSut<TranslatorManager>();
 
-        var localization = new Localization()
+        var localization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string>()
             {
                 { "HelloWorld", "Hello World" },
@@ -135,9 +128,8 @@ public class TranslatorManagerTests : FixtureBase
         // Arrange
         var sut = GetSut<TranslatorManager>();
 
-        var localization = new Localization()
+        var localization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string>()
             {
                 { "HelloWorld", "Hello World" },
@@ -162,9 +154,8 @@ public class TranslatorManagerTests : FixtureBase
         // Arrange
         var sut = GetSut<TranslatorManager>();
 
-        var localization = new Localization()
+        var localization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string>()
             {
                 { "HelloWorld", "Hello World" },
@@ -191,9 +182,8 @@ public class TranslatorManagerTests : FixtureBase
         // Arrange
         var sut = GetSut<TranslatorManager>();
 
-        var localization = new Localization()
+        var localization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string>()
             {
                 { "HelloWorld", "Hello World" },
@@ -218,9 +208,8 @@ public class TranslatorManagerTests : FixtureBase
     public void Translate_WhenExternalLocalizationsContainsKey_ShouldReturnLocalization()
     {
         // Arrange
-        var localization = new Localization
+        var localization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string> { { "KeyOne", "I am the first key" } }
         };
 
@@ -241,9 +230,8 @@ public class TranslatorManagerTests : FixtureBase
     public void Translate_WhenInternalLocalizationsContainsKey_ShouldReturnLocalization()
     {
         // Arrange
-        var localization = new Localization
+        var localization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string> { { "KeyOne", "I am the first key" } }
         };
 
@@ -306,15 +294,13 @@ public class TranslatorManagerTests : FixtureBase
     public void Translate_WhenCultureChanges_ShouldReturnNewLocalization()
     {
         // Arrange
-        var englishLocalization = new Localization
+        var englishLocalization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string> { { "KeyOne", "I am the first key" } }
         };
 
-        var frenchLocalization = new Localization
+        var frenchLocalization = new Localization(new CultureInfo("fr-FR"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string> { { "KeyOne", "je suis la première clé" } }
         };
 
@@ -335,15 +321,13 @@ public class TranslatorManagerTests : FixtureBase
     public void Translate_WhenCultureChangesAndNewCultureDoesntContainKey_ShouldReturnMissing()
     {
         // Arrange
-        var englishLocalization = new Localization
+        var englishLocalization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string> { { "KeyOne", "I am the first key" } }
         };
 
-        var frenchLocalization = new Localization
+        var frenchLocalization = new Localization(new CultureInfo("fr-FR"))
         {
-            CultureInfo = new CultureInfo("fr-FR"),
             Translations = new Dictionary<string, string> { { "KeyTwo", "je suis la deuxième clé" } }
         };
 

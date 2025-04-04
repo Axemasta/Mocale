@@ -1,11 +1,9 @@
-using System;
 using System.Globalization;
 using Microsoft.Extensions.Logging;
 using Mocale.Abstractions;
 using Mocale.Enums;
 using Mocale.Managers;
 using Mocale.Models;
-using Mocale.Testing;
 using Mocale.UnitTests.Collections;
 
 namespace Mocale.UnitTests.Managers;
@@ -146,9 +144,8 @@ public class LocalizationManagerTests : FixtureBase<ILocalizationManager>, IDisp
         var loadResult = new TranslationLoadResult()
         {
             Loaded = true,
-            Localization = new Localization()
+            Localization = new Localization(activeCulture)
             {
-                CultureInfo = activeCulture,
                 Translations = new Dictionary<string, string>()
                     {
                         { "KeyOne", "Ciao mondo!" },
@@ -191,9 +188,8 @@ public class LocalizationManagerTests : FixtureBase<ILocalizationManager>, IDisp
         var loadResult = new TranslationLoadResult()
         {
             Loaded = true,
-            Localization = new Localization()
+            Localization = new Localization(activeCulture)
             {
-                CultureInfo = activeCulture,
                 Translations = new Dictionary<string, string>()
                     {
                         { "KeyOne", "Ciao mondo!" },
@@ -236,9 +232,8 @@ public class LocalizationManagerTests : FixtureBase<ILocalizationManager>, IDisp
         var loadResult = new TranslationLoadResult()
         {
             Loaded = true,
-            Localization = new Localization()
+            Localization = new Localization(activeCulture)
             {
-                CultureInfo = activeCulture,
                 Translations = new Dictionary<string, string>()
                     {
                         { "KeyOne", "Ciao mondo!" },
@@ -281,9 +276,8 @@ public class LocalizationManagerTests : FixtureBase<ILocalizationManager>, IDisp
         var localLoadResult = new TranslationLoadResult()
         {
             Loaded = true,
-            Localization = new Localization()
+            Localization = new Localization(activeCulture)
             {
-                CultureInfo = activeCulture,
                 Translations = new Dictionary<string, string>()
                     {
                         { "KeyOne", "Ciao mondo!" },
@@ -348,9 +342,8 @@ public class LocalizationManagerTests : FixtureBase<ILocalizationManager>, IDisp
         var localLoadResult = new TranslationLoadResult()
         {
             Loaded = true,
-            Localization = new Localization()
+            Localization = new Localization(activeCulture)
             {
-                CultureInfo = activeCulture,
                 Translations = new Dictionary<string, string>()
                     {
                         { "KeyOne", "Ciao mondo!" },
@@ -365,9 +358,8 @@ public class LocalizationManagerTests : FixtureBase<ILocalizationManager>, IDisp
         var externalLoadResult = new TranslationLoadResult()
         {
             Loaded = true,
-            Localization = new Localization()
+            Localization = new Localization(activeCulture)
             {
-                CultureInfo = activeCulture,
                 Translations = new Dictionary<string, string>()
                 {
                     { "KeyOne", "External Ciao mondo!" },
@@ -455,9 +447,8 @@ public class LocalizationManagerTests : FixtureBase<ILocalizationManager>, IDisp
         var loadResult = new TranslationLoadResult()
         {
             Loaded = true,
-            Localization = new Localization()
+            Localization = new Localization(activeCulture)
             {
-                CultureInfo = activeCulture,
                 Translations = new Dictionary<string, string>()
                 {
                     { "KeyOne", "Ciao mondo!" },
@@ -503,9 +494,8 @@ public class LocalizationManagerTests : FixtureBase<ILocalizationManager>, IDisp
         var loadResult = new TranslationLoadResult()
         {
             Loaded = true,
-            Localization = new Localization()
+            Localization = new Localization(activeCulture)
             {
-                CultureInfo = activeCulture,
                 Translations = new Dictionary<string, string>()
                 {
                     { "KeyOne", "Ciao mondo!" },
@@ -551,9 +541,8 @@ public class LocalizationManagerTests : FixtureBase<ILocalizationManager>, IDisp
         var loadResult = new TranslationLoadResult()
         {
             Loaded = true,
-            Localization = new Localization()
+            Localization = new Localization(activeCulture)
             {
-                CultureInfo = activeCulture,
                 Translations = new Dictionary<string, string>()
                 {
                     { "KeyOne", "Ciao mondo!" },
@@ -595,9 +584,8 @@ public class LocalizationManagerTests : FixtureBase<ILocalizationManager>, IDisp
             .Returns(new TranslationLoadResult()
             {
                 Loaded = true,
-                Localization = new Localization()
+                Localization = new Localization(new CultureInfo("it-IT"))
                 {
-                    CultureInfo = new CultureInfo("it-IT"),
                     Translations = new Dictionary<string, string>()
                     {
                         { "Hello", "Ciao!" }
@@ -730,9 +718,8 @@ public class LocalizationManagerTests : FixtureBase<ILocalizationManager>, IDisp
             {
                 Loaded = true,
                 Source = TranslationSource.Internal,
-                Localization = new Localization()
+                Localization = new Localization(new CultureInfo("fr-FR"))
                 {
-                    CultureInfo = new CultureInfo("fr-FR"),
                     Translations = new Dictionary<string, string>()
                     {
                         { "KeyOne", "Bonjour madame" },
@@ -778,9 +765,8 @@ public class LocalizationManagerTests : FixtureBase<ILocalizationManager>, IDisp
         var externalLoadResult = new TranslationLoadResult()
         {
             Loaded = true,
-            Localization = new Localization()
+            Localization = new Localization(newCulture)
             {
-                CultureInfo = newCulture,
                 Translations = new Dictionary<string, string>()
                 {
                     { "KeyOne", "External Bonjour le monde" },
@@ -795,9 +781,8 @@ public class LocalizationManagerTests : FixtureBase<ILocalizationManager>, IDisp
         var localLoadResult = new TranslationLoadResult()
         {
             Loaded = true,
-            Localization = new Localization()
+            Localization = new Localization(newCulture)
             {
-                CultureInfo = newCulture,
                 Translations = new Dictionary<string, string>()
                 {
                     { "KeyOne", "Bonjour le monde" },
@@ -853,9 +838,8 @@ public class LocalizationManagerTests : FixtureBase<ILocalizationManager>, IDisp
         var externalLoadResult = new TranslationLoadResult()
         {
             Loaded = true,
-            Localization = new Localization()
+            Localization = new Localization(newCulture)
             {
-                CultureInfo = newCulture,
                 Translations = new Dictionary<string, string>()
                 {
                     { "KeyOne", "External Bonjour le monde" },
@@ -973,9 +957,8 @@ public class LocalizationManagerTests : FixtureBase<ILocalizationManager>, IDisp
         var localLoadResult = new TranslationLoadResult()
         {
             Loaded = true,
-            Localization = new Localization()
+            Localization = new Localization(newCulture)
             {
-                CultureInfo = newCulture,
                 Translations = new Dictionary<string, string>()
                 {
                     { "KeyOne", "Bonjour le monde" },
@@ -1033,9 +1016,8 @@ public class LocalizationManagerTests : FixtureBase<ILocalizationManager>, IDisp
         var localLoadResult = new TranslationLoadResult()
         {
             Loaded = true,
-            Localization = new Localization()
+            Localization = new Localization(newCulture)
             {
-                CultureInfo = newCulture,
                 Translations = new Dictionary<string, string>()
                 {
                     { "KeyOne", "Bonjour le monde" },

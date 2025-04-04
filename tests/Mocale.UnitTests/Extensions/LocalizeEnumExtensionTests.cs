@@ -22,7 +22,7 @@ public partial class LocalizeEnumExtensionTests : FixtureBase<LocalizeEnumExtens
 
     public override LocalizeEnumExtension CreateSystemUnderTest()
     {
-        return new LocalizeEnumExtension(mocaleConfiguration, translatorManager);
+        return new LocalizeEnumExtension(translatorManager);
     }
 
     #endregion Setup
@@ -42,11 +42,9 @@ public partial class LocalizeEnumExtensionTests : FixtureBase<LocalizeEnumExtens
         // Act
         var localizeExtension = new LocalizeEnumExtension();
         var extensionTranslatorManager = localizeExtension.GetTranslatorManager();
-        var extensionMocaleConfiguration = localizeExtension.GetMocaleConfiguration();
 
         // Assert
         Assert.Equal(translatorManagerMock.Object, extensionTranslatorManager);
-        Assert.Equal(configurationMock.Object, extensionMocaleConfiguration);
     }
 
     [Fact]
@@ -147,6 +145,8 @@ public partial class LocalizeEnumExtensionTests : FixtureBase<LocalizeEnumExtens
     public void Convert_WhenConfiguredToNotUseAttributes_ShouldReturnEnumString()
     {
         // Arrange
+        MocaleLocator.MocaleConfiguration = mocaleConfiguration;
+
         mocaleConfiguration.EnumBehavior = new LocalizeEnumBehavior
         {
             UseAttribute = false
@@ -163,9 +163,8 @@ public partial class LocalizeEnumExtensionTests : FixtureBase<LocalizeEnumExtens
     public void Convert_WhenConfiguredToUseAttributes_ShouldExtractFromConfiguredBehavior()
     {
         // Arrange
-        var enGbLocalization = new Localization()
+        var enGbLocalization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string>()
             {
                 { "Key_Car",  "Car (English)" },
@@ -179,6 +178,8 @@ public partial class LocalizeEnumExtensionTests : FixtureBase<LocalizeEnumExtens
 
         translatorManager.UpdateTranslations(enGbLocalization, TranslationSource.Internal);
 
+        MocaleLocator.MocaleConfiguration = mocaleConfiguration;
+
         // Act
         var translationKey = Sut.Convert([new CultureInfo("en-GB"), Vehicle.Train], typeof(Label), null!, CultureInfo.InvariantCulture);
 
@@ -190,9 +191,8 @@ public partial class LocalizeEnumExtensionTests : FixtureBase<LocalizeEnumExtens
     public void Convert_WhenConfiguredToUseAttributesWithSpecificRule_ShouldExtractFromSpecificRule()
     {
         // Arrange
-        var enGbLocalization = new Localization()
+        var enGbLocalization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string>()
             {
                 { "Key_Proteins",  "Proteins" },
@@ -204,6 +204,8 @@ public partial class LocalizeEnumExtensionTests : FixtureBase<LocalizeEnumExtens
         };
 
         translatorManager.UpdateTranslations(enGbLocalization, TranslationSource.Internal);
+
+        MocaleLocator.MocaleConfiguration = mocaleConfiguration;
 
         mocaleConfiguration.EnumBehavior = new LocalizeEnumBehavior
         {
@@ -232,9 +234,8 @@ public partial class LocalizeEnumExtensionTests : FixtureBase<LocalizeEnumExtens
     public void Convert_WhenConfiguredToNotUseAttributesButOverrideRuleExists_ShouldUseOverrideRuleOverGlobal()
     {
         // Arrange
-        var enGbLocalization = new Localization()
+        var enGbLocalization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string>()
             {
                 { "Key_Proteins",  "Proteins" },
@@ -246,6 +247,8 @@ public partial class LocalizeEnumExtensionTests : FixtureBase<LocalizeEnumExtens
         };
 
         translatorManager.UpdateTranslations(enGbLocalization, TranslationSource.Internal);
+
+        MocaleLocator.MocaleConfiguration = mocaleConfiguration;
 
         mocaleConfiguration.EnumBehavior = new LocalizeEnumBehavior
         {
@@ -279,6 +282,7 @@ public partial class LocalizeEnumExtensionTests : FixtureBase<LocalizeEnumExtens
     [Fact]
     public void IntegrationTest()
     {
+        MocaleLocator.MocaleConfiguration = mocaleConfiguration;
         _ = new ControlsFixtureBase();
         var label = new Label();
 
@@ -291,9 +295,8 @@ public partial class LocalizeEnumExtensionTests : FixtureBase<LocalizeEnumExtens
 
         Assert.Equal("", label.Text);
 
-        var enGbLocalization = new Localization()
+        var enGbLocalization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string>()
             {
                 { "Key_Car",  "Car (English)" },
@@ -313,9 +316,8 @@ public partial class LocalizeEnumExtensionTests : FixtureBase<LocalizeEnumExtens
 
         Assert.Equal("Bicycle (English)", label.Text);
 
-        var frFRLocalization = new Localization()
+        var frFRLocalization = new Localization(new CultureInfo("fr-FR"))
         {
-            CultureInfo = new CultureInfo("fr-FR"),
             Translations = new Dictionary<string, string>()
             {
                 { "Key_Car",  "Voiture (Français)" },

@@ -323,9 +323,8 @@ public partial class LocalizeMultiBindingTests : FixtureBase<LocalizeMultiBindin
         Sut.Bindings.Add(dateBinding);
         Sut.Bindings.Add(temperatureBinding);
 
-        var frFrLocalization = new Localization()
+        var frFrLocalization = new Localization(new CultureInfo("fr-FR"))
         {
-            CultureInfo = new CultureInfo("fr-FR"),
             Translations = new Dictionary<string, string>()
             {
                 { "WelcomeMessage", "Bonjour {0}, La date est le {1} et la température est le {2}\u00b0C" }
@@ -368,9 +367,8 @@ public partial class LocalizeMultiBindingTests : FixtureBase<LocalizeMultiBindin
         Sut.Bindings.Add(dateBinding);
         Sut.Bindings.Add(temperatureBinding);
 
-        var enGbLocalization = new Localization()
+        var enGbLocalization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string>()
             {
                 { "WelcomeMessage", "Hello {0}, The date is {1} and the temperature is {2}\u00b0C" }
@@ -393,9 +391,8 @@ public partial class LocalizeMultiBindingTests : FixtureBase<LocalizeMultiBindin
         Assert.Equal("Hello Helen, The date is 02/03/2025 13:42:23 and the temperature is 10.3\u00b0C", label.Text);
 
         // Language changes => text should update
-        var frFrLocalization = new Localization()
+        var frFrLocalization = new Localization(new CultureInfo("fr-FR"))
         {
-            CultureInfo = new CultureInfo("fr-FR"),
             Translations = new Dictionary<string, string>()
             {
                 { "WelcomeMessage", "Bonjour {0}, La date est le {1} et la température est le {2}\u00b0C" }
@@ -420,7 +417,7 @@ public partial class LocalizeMultiBindingTests : FixtureBase<LocalizeMultiBindin
     private sealed partial class GreetingsViewModel : ObservableObject
     {
         [ObservableProperty]
-        public partial string Name { get; set; }
+        public partial string Name { get; set; } = string.Empty;
 
         [ObservableProperty]
         public partial double Temperature { get; set; }

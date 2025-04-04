@@ -120,9 +120,8 @@ public class LocalizeExtensionTests : FixtureBase<LocalizeExtension>
 
         Assert.Equal("$IntegrationTestMessage$", label.Text);
 
-        var enGbLocalization = new Localization()
+        var enGbLocalization = new Localization(new CultureInfo("en-GB"))
         {
-            CultureInfo = new CultureInfo("en-GB"),
             Translations = new Dictionary<string, string>()
             {
                 { "IntegrationTestMessage", "This is my localization running in an integration test" }
@@ -133,9 +132,8 @@ public class LocalizeExtensionTests : FixtureBase<LocalizeExtension>
 
         Assert.Equal("This is my localization running in an integration test", label.Text);
 
-        var frFRLocalization = new Localization()
+        var frFRLocalization = new Localization(new CultureInfo("fr-FR"))
         {
-            CultureInfo = new CultureInfo("fr-FR"),
             Translations = new Dictionary<string, string>()
             {
                 { "IntegrationTestMessage", "Ceci est ma localisation en cours d'exécution dans un test d'intégration" }

@@ -17,7 +17,7 @@ public interface ITranslatorManager : INotifyPropertyChanged
     /// </summary>
     /// <param name="key">Key to translate</param>
     /// <returns>Translation result</returns>
-    string? Translate(string key);
+    string Translate(string key);
 
     /// <summary>
     /// Translate
@@ -25,5 +25,5 @@ public interface ITranslatorManager : INotifyPropertyChanged
     /// <param name="key">Key to translate</param>
     /// <param name="parameters">Parameters to translate</param>
     /// <returns>Translation result</returns>
-    string? Translate(string key, object[] parameters);
+    string Translate(string key, object[] parameters);
 }
