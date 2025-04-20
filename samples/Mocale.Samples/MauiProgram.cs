@@ -80,10 +80,12 @@ public static class MauiProgram
         builder.Services.AddTransient<BindingPage>();
         builder.Services.AddTransient<IntroductionPage>();
         builder.Services.AddTransient<ParameterPage>();
+        builder.Services.AddTransient<ConverterPage>();
 
         builder.Services.AddTransient<IntroductionPageViewModel>();
         builder.Services.AddTransient<BindingViewModel>();
         builder.Services.AddTransient<ParameterViewModel>();
+        builder.Services.AddTransient<ConverterViewModel>();
 
         return builder.Build();
     }

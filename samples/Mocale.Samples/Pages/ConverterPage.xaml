@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<!--  ReSharper disable Xaml.InvalidType  -->
+<pages:BasePage
+    x:Class="Mocale.Samples.Pages.ConverterPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:keys="clr-namespace:Mocale.Translations"
+    xmlns:mocale="http://axemasta.com/schemas/2022/mocale"
+    xmlns:pages="clr-namespace:Mocale.Samples.Pages"
+    xmlns:viewmodels="clr-namespace:Mocale.Samples.ViewModels"
+    Title="{mocale:Localize Key={x:Static keys:TranslationKeys.ConverterPageTitle}}"
+    x:DataType="viewmodels:ConverterViewModel"
+    x:TypeArguments="viewmodels:ConverterViewModel">
+
+    <ContentPage.Resources>
+        <pages:SpongebobCaseConverter x:Key="PostTranslationConverter" />
+        <pages:OrderStatusKeySelector x:Key="KeySelectorConverter" />
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout
+            HorizontalOptions="Fill"
+            Spacing="20"
+            VerticalOptions="Start">
+            <Label Text="Mocale markup extensions support IValueConverters however when binding to a value there is a twist. Normally an IValueConverter is used to convert an object to another value based on the requirements in your view. When localizing this adds a layer of complication, does the converter supply the key or does it deal with the translated value. Since Mocale is doing a conversion of its own (key to localization) there is the concept of KeyConverters and ValueConverters. A key converter allows you to select a translation key based on a binding and the ValueConverter is applied after the translation for any final processing that might be required." />
+
+            <Border>
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Current Status" />
+                    <Picker
+                        ItemDisplayBinding="{Binding Name, x:DataType=viewmodels:OrderStatus}"
+                        ItemsSource="{Binding OrderStatuses}"
+                        SelectedItem="{Binding CurrentStatus}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Border>
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Using a key selector to set translation key based on value" />
+                    <Label Text="{mocale:LocalizeBinding CurrentStatus, KeyConverter={StaticResource KeySelectorConverter}}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Border>
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Using a post translation converter to alter the translation" />
+                    <Label Text="{mocale:LocalizeBinding CurrentStatus, KeyConverter={StaticResource KeySelectorConverter}, Converter={StaticResource PostTranslationConverter}}" />
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+
+    </ScrollView>
+</pages:BasePage>

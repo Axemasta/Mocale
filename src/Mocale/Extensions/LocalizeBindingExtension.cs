@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Globalization;
 using Ardalis.GuardClauses;
 
@@ -32,6 +33,16 @@ public class LocalizeBindingExtension(ITranslatorManager translatorManager) : Lo
     /// <inheritdoc/>
     public object? ConverterParameter { get; set; }
 
+    /// <summary>
+    /// The translation key converter to be applied before localization
+    /// </summary>
+    public IKeyConverter? KeyConverter { get; set; }
+
+    /// <summary>
+    ///  The translation key converter parameter
+    /// </summary>
+    public object? KeyConverterParameter { get; set; }
+
     /// <inheritdoc/>
     public object? Source { get; set; }
 
@@ -46,23 +57,60 @@ public class LocalizeBindingExtension(ITranslatorManager translatorManager) : Lo
     /// <inheritdoc/>
     public override MultiBinding ProvideValue(IServiceProvider serviceProvider)
     {
-        Guard.Against.NullOrEmpty(TranslationKey, nameof(TranslationKey));
-
-        return new MultiBinding()
+        if (!string.IsNullOrEmpty(TranslationKey))
         {
-            StringFormat = StringFormat,
-            Converter = this,
-            Mode = BindingMode.OneWay,
-            Bindings =
-            [
-                new Binding($"[{TranslationKey}]", BindingMode.OneWay, source: translatorManager),
-                new Binding(Path, Mode, Converter, ConverterParameter, source: Source),
-            ]
-        };
+            return new MultiBinding()
+            {
+                StringFormat = StringFormat,
+                Converter = this,
+                Mode = BindingMode.OneWay,
+                Bindings =
+                [
+                    new Binding($"[{TranslationKey}]", BindingMode.OneWay, source: translatorManager),
+                    new Binding(Path, Mode, Converter, ConverterParameter, source: Source),
+                ]
+            };
+        }
+        else if (KeyConverter is not null)
+        {
+            return new MultiBinding()
+            {
+                StringFormat = StringFormat,
+                Converter = this,
+                Mode = BindingMode.OneWay,
+                Bindings =
+                [
+                    new Binding(nameof(ITranslatorManager.CurrentCulture), BindingMode.OneWay, source: translatorManager),
+                    new Binding(Path, Mode, source: Source),
+                ]
+            };
+        }
+        else
+        {
+            throw new ArgumentException($"Either {nameof(TranslationKey)} must be set or there must be a KeyConverter.", nameof(TranslationKey));
+        }
     }
 
     /// <inheritdoc/>
-    public object Convert(object[]? values, Type targetType, object parameter, CultureInfo culture)
+    public object? Convert(object[]? values, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (string.IsNullOrEmpty(TranslationKey) && KeyConverter is not null)
+        {
+            return ConvertKeyConverterBinding(values, targetType, culture);
+        }
+        else
+        {
+            return ConvertTranslationKeyBinding(values);
+        }
+    }
+
+    /// <inheritdoc/>
+    public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+
+    private string ConvertTranslationKeyBinding(object[]? values)
     {
         // values[0] will be translated value
         // values[1] will be the binded value
@@ -92,9 +140,36 @@ public class LocalizeBindingExtension(ITranslatorManager translatorManager) : Lo
         return string.Format(translatorManager.CurrentCulture, localizedFormat, formatParameter);
     }
 
-    /// <inheritdoc/>
-    public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+    private string? ConvertKeyConverterBinding(object[]? values, Type targetType, CultureInfo culture)
     {
-        throw new NotImplementedException();
+        if (KeyConverter is null)
+        {
+            throw new ArgumentException("Key converter was null, unable to convert binding.", nameof(KeyConverter));
+        }
+
+        // values[0] will be the current culture
+        // values[1] will be the binded value
+        if (values is null || values.Length != 2)
+        {
+            return string.Empty;
+        }
+
+        var translationKey = KeyConverter.Convert(values[1], targetType, KeyConverterParameter, culture);
+
+        if (string.IsNullOrEmpty(translationKey))
+        {
+            return null;
+        }
+
+        var translation = translatorManager.Translate(translationKey);
+
+        if (Converter is null)
+        {
+            return translation;
+        }
+        else
+        {
+            return Converter.Convert(translation, targetType, ConverterParameter, culture) as string;
+        }
     }
 }
