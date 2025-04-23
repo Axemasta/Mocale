@@ -3205,7 +3205,7 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
         Cherry
     }
 
-    private class PrimaryColorKeyConverter : IKeyConverter
+    private sealed class PrimaryColorKeyConverter : IKeyConverter
     {
         public string Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
@@ -3224,7 +3224,7 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
         }
     }
 
-    private partial class ColorViewModel : ObservableObject
+    private sealed partial class ColorViewModel : ObservableObject
     {
         [ObservableProperty] public partial Color? CurrentColor { get; set; }
     }

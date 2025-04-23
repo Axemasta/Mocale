@@ -7,7 +7,6 @@ using Mocale.Extensions;
 using Mocale.Models;
 using Mocale.Testing;
 using Mocale.UnitTests.Collections;
-using Mocale.UnitTests.Fixtures;
 
 namespace Mocale.UnitTests.Extensions;
 
@@ -452,9 +451,9 @@ public partial class LocalizeEnumExtensionTests : FixtureBase<LocalizeEnumExtens
         public partial Vehicle? SelectedVehicle { get; set; }
     }
 
-    private class FlagConverter : IValueConverter
+    private sealed class FlagConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             if (value is not string str)
             {
@@ -464,15 +463,15 @@ public partial class LocalizeEnumExtensionTests : FixtureBase<LocalizeEnumExtens
             return str.Replace("English", "🏴󠁧󠁢󠁥󠁮󠁧󠁿");
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }
     }
 
-    private class MultipleFlagsConverter : IValueConverter
+    private sealed class MultipleFlagsConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             if (value is not string str)
             {
@@ -487,7 +486,7 @@ public partial class LocalizeEnumExtensionTests : FixtureBase<LocalizeEnumExtens
             var flag = "🏴󠁧󠁢󠁥󠁮󠁧󠁿";
             var builder = new System.Text.StringBuilder(flag.Length * count);
 
-            for (int i = 0; i < count; i++)
+            for (var i = 0; i < count; i++)
             {
                 builder.Append(flag);
             }
@@ -495,7 +494,7 @@ public partial class LocalizeEnumExtensionTests : FixtureBase<LocalizeEnumExtens
             return str.Replace("English", builder.ToString());
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }

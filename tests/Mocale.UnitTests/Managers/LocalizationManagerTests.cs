@@ -9,7 +9,7 @@ using Mocale.UnitTests.Collections;
 namespace Mocale.UnitTests.Managers;
 
 [Collection(CollectionNames.ThreadCultureTests)]
-public class LocalizationManagerTests : FixtureBase<ILocalizationManager>, IDisposable
+public class LocalizationManagerTests : FixtureBase<ILocalizationManager>
 {
     #region Setup
 
@@ -45,9 +45,10 @@ public class LocalizationManagerTests : FixtureBase<ILocalizationManager>, IDisp
 
     }
 
-    public void Dispose()
+    public override void Dispose()
     {
         ReleaseUnmanagedResources();
+        base.Dispose();
         GC.SuppressFinalize(this);
     }
 

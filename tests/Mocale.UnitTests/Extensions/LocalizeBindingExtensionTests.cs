@@ -639,9 +639,9 @@ public partial class LocalizeBindingExtensionTests : FixtureBase<LocalizeBinding
         public partial string Name { get; set; } = string.Empty;
     }
 
-    private record ScovilleHeatUnits(int LowerBound, int UpperBound);
+    private sealed record ScovilleHeatUnits(int LowerBound, int UpperBound);
 
-    private partial class ChilliInfo : ObservableObject
+    private sealed partial class ChilliInfo : ObservableObject
     {
         [ObservableProperty]
         public partial string Name { get; set; } = string.Empty;
@@ -727,7 +727,7 @@ public partial class LocalizeBindingExtensionTests : FixtureBase<LocalizeBinding
         }
     }
 
-    private class EmptyKeyConverter : IKeyConverter
+    private sealed class EmptyKeyConverter : IKeyConverter
     {
         public string? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
@@ -735,7 +735,7 @@ public partial class LocalizeBindingExtensionTests : FixtureBase<LocalizeBinding
         }
     }
 
-    private class UpperCaseRepeatConverter : IValueConverter
+    private sealed class UpperCaseRepeatConverter : IValueConverter
     {
         public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {

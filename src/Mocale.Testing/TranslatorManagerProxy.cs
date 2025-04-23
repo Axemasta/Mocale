@@ -26,7 +26,7 @@ public class TranslatorManagerProxy : IInternalTranslatorManager, INotifyPropert
     public object? this[string resourceKey] => Translate(resourceKey);
 
     /// <inheritdoc/>
-    public string? Translate(string key)
+    public string Translate(string key)
     {
         if (PreferredLocalizations.TryGetValue(key, out var externalTranslation))
         {
@@ -42,7 +42,7 @@ public class TranslatorManagerProxy : IInternalTranslatorManager, INotifyPropert
     }
 
     /// <inheritdoc/>
-    public string? Translate(string key, object[] parameters)
+    public string Translate(string key, object[] parameters)
     {
         var translation = Translate(key);
 
