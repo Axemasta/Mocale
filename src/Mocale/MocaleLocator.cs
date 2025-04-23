@@ -30,16 +30,6 @@ public static class MocaleLocator
     public static ITranslatorManager TranslatorManager { get; internal set; }
 
     internal static IMocaleConfiguration MocaleConfiguration { get; set; }
-
-    /// <summary>
-    /// Set custom instance of <see cref="ITranslatorManager" /> for test scenarios
-    /// </summary>
-    /// <param name="instance"></param>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public static void SetInstance(ITranslatorManager instance)
-    {
-        TranslatorManager = instance;
-    }
 }
 
 #nullable enable

@@ -5,3 +5,6 @@ public class MocaleLocatorTestsCollectionDefinition;
 
 [CollectionDefinition(CollectionNames.ThreadCultureTests, DisableParallelization = true)]
 public class ThreadCultureTestsCollectionDefinition;
+
+[CollectionDefinition(CollectionNames.TestingTests, DisableParallelization = true)]
+public class TestingTestsCollectionDefinition;

@@ -35,7 +35,7 @@ public partial class LocalizeMultiBindingExtensionTests : FixtureBase<LocalizeBi
     {
         // Arrange
         var translatorManagerMock = new Mock<ITranslatorManager>();
-        MocaleLocator.SetInstance(translatorManagerMock.Object);
+        MocaleLocatorHelper.SetTranslatorManager(translatorManagerMock.Object);
 
         // Act
         var localizeExtension = new LocalizeBindingExtension();

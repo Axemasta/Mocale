@@ -36,8 +36,8 @@ public partial class LocalizeEnumExtensionTests : FixtureBase<LocalizeEnumExtens
         var translatorManagerMock = new Mock<ITranslatorManager>();
         var configurationMock = new Mock<IMocaleConfiguration>();
 
-        MocaleLocator.SetInstance(translatorManagerMock.Object);
-        MocaleLocator.MocaleConfiguration = configurationMock.Object;
+        MocaleLocatorHelper.SetTranslatorManager(translatorManagerMock.Object);
+        MocaleLocatorHelper.SetMocaleConfiguration(configurationMock.Object);
 
         // Act
         var localizeExtension = new LocalizeEnumExtension();

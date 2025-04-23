@@ -19,7 +19,7 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
 
     public BindableObjectExtensionTests()
     {
-        MocaleLocator.SetInstance(translatorManager);
+        MocaleLocatorHelper.SetTranslatorManager(translatorManager);
     }
 
     #endregion Setup

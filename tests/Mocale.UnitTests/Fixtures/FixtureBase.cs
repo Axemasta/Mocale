@@ -1,6 +1,6 @@
-namespace Mocale.UnitTests;
+namespace Mocale.UnitTests.Fixtures;
 
-public abstract class FixtureBase<TSut>
+public abstract class FixtureBase<TSut> : MocaleLocatorFixture
 {
     private Lazy<TSut> SutLazy { get; init; }
 
@@ -14,7 +14,7 @@ public abstract class FixtureBase<TSut>
     public abstract TSut CreateSystemUnderTest();
 }
 
-public abstract class FixtureBase
+public abstract class FixtureBase : MocaleLocatorFixture
 {
     private Lazy<object> SutLazy { get; init; }
 
