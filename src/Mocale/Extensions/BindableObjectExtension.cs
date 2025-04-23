@@ -59,6 +59,39 @@ public static class BindableObjectExtension
     }
 
     /// <summary>
+    ///
+    /// </summary>
+    /// <param name="bindableObject"></param>
+    /// <param name="property"></param>
+    /// <param name="source"></param>
+    /// <param name="keyConverter"></param>
+    /// <param name="keyConverterParameter"></param>
+    /// <param name="converter"></param>
+    /// <param name="converterParameter"></param>
+    /// <param name="stringFormat"></param>
+    public static void SetTranslationBinding(this BindableObject bindableObject, BindableProperty property, Binding source, IKeyConverter keyConverter, object? keyConverterParameter = null, IValueConverter? converter = null, object? converterParameter = null, string stringFormat = "{0}")
+    {
+        ArgumentNullException.ThrowIfNull(bindableObject, nameof(bindableObject));
+        ArgumentNullException.ThrowIfNull(source, nameof(source));
+
+        var extension = new LocalizeBindingExtension
+        {
+            KeyConverter = keyConverter,
+            KeyConverterParameter = keyConverterParameter,
+            Path = source.Path,
+            Source = source.Source,
+            Mode = source.Mode,
+            StringFormat = stringFormat,
+            Converter = converter,
+            ConverterParameter = converterParameter,
+        };
+
+        var binding = extension.ProvideValue(EmptyServiceProvider.Instance);
+
+        bindableObject.SetBinding(property, binding);
+    }
+
+    /// <summary>
     /// Set Enum Translation
     /// </summary>
     /// <param name="bindableObject">The bindable object to apply a translation</param>
@@ -171,6 +204,26 @@ public static class BindableObjectExtension
         where TView : View
     {
         SetTranslationBinding(view as BindableObject, property, source, translationKey);
+        return view;
+    }
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="view"></param>
+    /// <param name="property"></param>
+    /// <param name="source"></param>
+    /// <param name="keyConverter"></param>
+    /// <param name="keyConverterParameter"></param>
+    /// <param name="converter"></param>
+    /// <param name="converterParameter"></param>
+    /// <param name="stringFormat"></param>
+    /// <typeparam name="TView"></typeparam>
+    /// <returns></returns>
+    public static TView SetTranslationBinding<TView>(this TView view, BindableProperty property, Binding source, IKeyConverter keyConverter, object? keyConverterParameter = null, IValueConverter? converter = null, object? converterParameter = null, string stringFormat = "{0}")
+        where TView : View
+    {
+        SetTranslationBinding(view as BindableObject, property, source, keyConverter, keyConverterParameter, converter, converterParameter, stringFormat);
         return view;
     }
 

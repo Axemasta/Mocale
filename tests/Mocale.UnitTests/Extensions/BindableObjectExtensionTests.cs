@@ -1,12 +1,12 @@
 using System.ComponentModel;
 using System.Globalization;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Mocale.Abstractions;
 using Mocale.Enums;
 using Mocale.Extensions;
 using Mocale.Models;
 using Mocale.Testing;
 using Mocale.UnitTests.Collections;
-using Mocale.UnitTests.Fixtures;
 
 namespace Mocale.UnitTests.Extensions;
 
@@ -239,14 +239,666 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
 
     #endregion -- View
 
+    #region -- Void (Key Converter)
+
+    [Fact]
+    public void SetTranslationBindingKeyConverterVoid_WhenBindableObjectIsNull_ShouldThrow()
+    {
+        // Arrange
+        var viewModel = new ColorViewModel();
+
+        BindableObject bindableObject = null!;
+        var binding = new Binding(nameof(ColorViewModel.CurrentColor), source: viewModel);
+
+        // Act
+        var ex = Assert.Throws<ArgumentNullException>(() => bindableObject.SetTranslationBinding(Label.TextProperty, binding, new PrimaryColorKeyConverter()));
+
+        // Assert
+        Assert.Equal("Value cannot be null. (Parameter 'bindableObject')", ex.Message);
+    }
+
+    [Fact]
+    public void SetTranslationBindingKeyConverterVoid_WhenBindingIsNull_ShouldThrow()
+    {
+        // Arrange
+        BindableObject bindableObject = new Label();
+
+        // Act
+        var ex = Assert.Throws<ArgumentNullException>(() => bindableObject.SetTranslationBinding(Label.TextProperty, null!, new PrimaryColorKeyConverter()));
+
+        // Assert
+        Assert.Equal("Value cannot be null. (Parameter 'source')", ex.Message);
+    }
+
+    [Fact]
+    public void SetTranslationBindingKeyConverterVoid_WhenTranslationKeyDoesNotExist_ShouldSetNotFoundKey()
+    {
+        // Arrange
+        var localization = new Localization(new CultureInfo("en-GB"))
+        {
+            Translations = new Dictionary<string, string>()
+            {
+                { "MapplicationTitle", "Mocale!"},
+            }
+        };
+
+        translatorManager.UpdateTranslations(localization, TranslationSource.Internal);
+
+        var viewModel = new ColorViewModel()
+        {
+            CurrentColor = Colors.Yellow,
+        };
+        var binding = new Binding(nameof(ColorViewModel.CurrentColor), source: viewModel);
+
+        BindableObject bindableObject = new Label();
+
+        var keyConverter = new PrimaryColorKeyConverter();
+
+        // Act
+        bindableObject.SetTranslationBinding(Label.TextProperty, binding, keyConverter);
+
+        // Assert
+        var label = Assert.IsType<Label>(bindableObject);
+        Assert.Equal("$YellowKey$", label.Text);
+    }
+
+    [Fact]
+    public void SetTranslationBindingKeyConverterVoid_WhenTranslationKeyExists_ShouldFormatTranslation()
+    {
+        // Arrange
+        var localization = new Localization(new CultureInfo("en-GB"))
+        {
+            Translations = new Dictionary<string, string>()
+            {
+                { "RedKey", "Red"},
+                { "BlueKey", "Blue"},
+                { "YellowKey", "Yellow"},
+            }
+        };
+
+        translatorManager.UpdateTranslations(localization, TranslationSource.Internal);
+
+        var viewModel = new ColorViewModel()
+        {
+            CurrentColor = Colors.Yellow,
+        };
+        var binding = new Binding(nameof(ColorViewModel.CurrentColor), source: viewModel);
+
+        BindableObject bindableObject = new Label();
+
+        var keyConverter = new PrimaryColorKeyConverter();
+
+        // Act
+        bindableObject.SetTranslationBinding(Label.TextProperty, binding, keyConverter);
+
+        // Assert
+        var label = Assert.IsType<Label>(bindableObject);
+        Assert.Equal("Yellow", label.Text);
+    }
+
+    [Fact]
+    public void SetTranslationBindingKeyConverterVoid_WhenBindedValueChanges_ShouldUpdatedTranslation()
+    {
+        // Arrange
+        var localization = new Localization(new CultureInfo("en-GB"))
+        {
+            Translations = new Dictionary<string, string>()
+            {
+                { "RedKey", "Red"},
+                { "BlueKey", "Blue"},
+                { "YellowKey", "Yellow"},
+            }
+        };
+
+        translatorManager.UpdateTranslations(localization, TranslationSource.Internal);
+
+        var viewModel = new ColorViewModel()
+        {
+            CurrentColor = Colors.Yellow,
+        };
+        var binding = new Binding(nameof(ColorViewModel.CurrentColor), source: viewModel);
+
+        BindableObject bindableObject = new Label();
+
+        var keyConverter = new PrimaryColorKeyConverter();
+
+        bindableObject.SetTranslationBinding(Label.TextProperty, binding, keyConverter);
+        var label = Assert.IsType<Label>(bindableObject);
+        Assert.Equal("Yellow", label.Text);
+
+        // Act
+        viewModel.CurrentColor = Colors.Red;
+
+        // Assert
+        Assert.Equal("Red", label.Text);
+    }
+
+    [Fact]
+    public void SetTranslationBindingKeyConverterVoid_WhenTranslationKeyExistsForCultureOneButNotCultureTwo_ShouldFormatTranslationCorrectly()
+    {
+        // Arrange
+        var enGbLocalization = new Localization(new CultureInfo("en-GB"))
+        {
+            Translations = new Dictionary<string, string>()
+            {
+                { "RedKey", "Red"},
+                { "BlueKey", "Blue"},
+                { "YellowKey", "Yellow"},
+            }
+        };
+
+        var frFrLocalization = new Localization(new CultureInfo("fr-FR"))
+        {
+            Translations = new Dictionary<string, string>()
+            {
+                { "MapplicationTitle", "Mocale!" },
+            }
+        };
+
+        translatorManager.UpdateTranslations(enGbLocalization, TranslationSource.Internal);
+
+        var viewModel = new ColorViewModel()
+        {
+            CurrentColor = Colors.Yellow,
+        };
+
+        var binding = new Binding(nameof(ColorViewModel.CurrentColor), source: viewModel);
+
+        BindableObject bindableObject = new Label();
+
+        var keyConverter = new PrimaryColorKeyConverter();
+
+        // Act & Assert
+        bindableObject.SetTranslationBinding(Label.TextProperty, binding, keyConverter);
+
+        var label = Assert.IsType<Label>(bindableObject);
+        Assert.Equal("Yellow", label.Text);
+
+        translatorManager.UpdateTranslations(frFrLocalization, TranslationSource.Internal);
+
+        Assert.Equal("$YellowKey$", label.Text);
+    }
+
+    [Fact]
+    public void SetTranslationBindingKeyConverterVoid_WhenTranslationKeyExistsForAllCultures_ShouldFormatTranslationCorrectly()
+    {
+        // Arrange
+        var enGbLocalization = new Localization(new CultureInfo("en-GB"))
+        {
+            Translations = new Dictionary<string, string>()
+            {
+                { "RedKey", "Red"},
+                { "BlueKey", "Blue"},
+                { "YellowKey", "Yellow"},
+            }
+        };
+
+        var frFrLocalization = new Localization(new CultureInfo("fr-FR"))
+        {
+            Translations = new Dictionary<string, string>()
+            {
+                { "RedKey", "Rouge"},
+                { "BlueKey", "Bleu"},
+                { "YellowKey", "Jaune"},
+            }
+        };
+
+        translatorManager.UpdateTranslations(enGbLocalization, TranslationSource.Internal);
+
+        var viewModel = new ColorViewModel()
+        {
+            CurrentColor = Colors.Yellow,
+        };
+
+        var binding = new Binding(nameof(ColorViewModel.CurrentColor), source: viewModel);
+
+        BindableObject bindableObject = new Label();
+
+        var keyConverter = new PrimaryColorKeyConverter();
+
+        // Act & Assert
+        bindableObject.SetTranslationBinding(Label.TextProperty, binding, keyConverter);
+
+        var label = Assert.IsType<Label>(bindableObject);
+        Assert.Equal("Yellow", label.Text);
+
+        translatorManager.UpdateTranslations(frFrLocalization, TranslationSource.Internal);
+
+        Assert.Equal("Jaune", label.Text);
+    }
+
+    [Fact]
+    public void SetTranslationBindingKeyConverterVoid_WhenTranslationKeyExistsForAllCulturesWithConverter_ShouldFormatTranslationCorrectlyAndApplyConverter()
+    {
+        // Arrange
+        var enGbLocalization = new Localization(new CultureInfo("en-GB"))
+        {
+            Translations = new Dictionary<string, string>()
+            {
+                { "RedKey", "Red"},
+                { "BlueKey", "Blue"},
+                { "YellowKey", "Yellow"},
+            }
+        };
+
+        var frFrLocalization = new Localization(new CultureInfo("fr-FR"))
+        {
+            Translations = new Dictionary<string, string>()
+            {
+                { "RedKey", "Rouge"},
+                { "BlueKey", "Bleu"},
+                { "YellowKey", "Jaune"},
+            }
+        };
+
+        translatorManager.UpdateTranslations(enGbLocalization, TranslationSource.Internal);
+
+        var viewModel = new ColorViewModel()
+        {
+            CurrentColor = Colors.Yellow,
+        };
+
+        var binding = new Binding(nameof(ColorViewModel.CurrentColor), source: viewModel);
+
+        BindableObject bindableObject = new Label();
+
+        var keyConverter = new PrimaryColorKeyConverter();
+
+        // Act & Assert
+        bindableObject.SetTranslationBinding(Label.TextProperty, binding, keyConverter, null, new UpperCaseConverter());
+
+        var label = Assert.IsType<Label>(bindableObject);
+        Assert.Equal("YELLOW", label.Text);
+
+        translatorManager.UpdateTranslations(frFrLocalization, TranslationSource.Internal);
+
+        Assert.Equal("JAUNE", label.Text);
+    }
+
+    [Fact]
+    public void SetTranslationBindingKeyConverterVoid_WhenTranslationKeyExistsForAllCulturesWithStringFormat_ShouldFormatTranslationCorrectlyAndApplyFormat()
+    {
+        // Arrange
+        var enGbLocalization = new Localization(new CultureInfo("en-GB"))
+        {
+            Translations = new Dictionary<string, string>()
+            {
+                { "RedKey", "Red"},
+                { "BlueKey", "Blue"},
+                { "YellowKey", "Yellow"},
+            }
+        };
+
+        var frFrLocalization = new Localization(new CultureInfo("fr-FR"))
+        {
+            Translations = new Dictionary<string, string>()
+            {
+                { "RedKey", "Rouge"},
+                { "BlueKey", "Bleu"},
+                { "YellowKey", "Jaune"},
+            }
+        };
+
+        translatorManager.UpdateTranslations(enGbLocalization, TranslationSource.Internal);
+
+        var viewModel = new ColorViewModel()
+        {
+            CurrentColor = Colors.Yellow,
+        };
+
+        var binding = new Binding(nameof(ColorViewModel.CurrentColor), source: viewModel);
+
+        BindableObject bindableObject = new Label();
+
+        var keyConverter = new PrimaryColorKeyConverter();
+
+        // Act & Assert
+        bindableObject.SetTranslationBinding(Label.TextProperty, binding, keyConverter, null, null, null, "Color: {0}");
+
+        var label = Assert.IsType<Label>(bindableObject);
+        Assert.Equal("Color: Yellow", label.Text);
+
+        translatorManager.UpdateTranslations(frFrLocalization, TranslationSource.Internal);
+
+        Assert.Equal("Color: Jaune", label.Text);
+    }
+
+    #endregion -- Void (Key Converter)
+
+    #region -- View (Key Converter)
+
+    [Fact]
+    public void SetTranslationBindingKeyConverterView_WhenBindableObjectIsNull_ShouldThrow()
+    {
+        // Arrange
+        var viewModel = new ColorViewModel();
+
+        View view = null!;
+        var binding = new Binding(nameof(ColorViewModel.CurrentColor), source: viewModel);
+
+        // Act
+        var ex = Assert.Throws<ArgumentNullException>(() => view.SetTranslationBinding(Label.TextProperty, binding, new PrimaryColorKeyConverter()));
+
+        // Assert
+        Assert.Equal("Value cannot be null. (Parameter 'bindableObject')", ex.Message);
+    }
+
+    [Fact]
+    public void SetTranslationBindingKeyConverterView_WhenBindingIsNull_ShouldThrow()
+    {
+        // Arrange
+        var view = new Label();
+
+        // Act
+        var ex = Assert.Throws<ArgumentNullException>(() => view.SetTranslationBinding(Label.TextProperty, null!, new PrimaryColorKeyConverter()));
+
+        // Assert
+        Assert.Equal("Value cannot be null. (Parameter 'source')", ex.Message);
+    }
+
+    [Fact]
+    public void SetTranslationBindingKeyConverterView_WhenTranslationKeyDoesNotExist_ShouldSetNotFoundKey()
+    {
+        // Arrange
+        var localization = new Localization(new CultureInfo("en-GB"))
+        {
+            Translations = new Dictionary<string, string>()
+            {
+                { "MapplicationTitle", "Mocale!"},
+            }
+        };
+
+        translatorManager.UpdateTranslations(localization, TranslationSource.Internal);
+
+        var viewModel = new ColorViewModel()
+        {
+            CurrentColor = Colors.Yellow,
+        };
+        var binding = new Binding(nameof(ColorViewModel.CurrentColor), source: viewModel);
+
+        var label = new Label();
+
+        var keyConverter = new PrimaryColorKeyConverter();
+
+        // Act
+        var view = label.SetTranslationBinding(Label.TextProperty, binding, keyConverter);
+
+        // Assert
+        Assert.IsType<Label>(view);
+        Assert.Equal("$YellowKey$", label.Text);
+    }
+
+    [Fact]
+    public void SetTranslationBindingKeyConverterView_WhenTranslationKeyExists_ShouldFormatTranslation()
+    {
+        // Arrange
+        var localization = new Localization(new CultureInfo("en-GB"))
+        {
+            Translations = new Dictionary<string, string>()
+            {
+                { "RedKey", "Red"},
+                { "BlueKey", "Blue"},
+                { "YellowKey", "Yellow"},
+            }
+        };
+
+        translatorManager.UpdateTranslations(localization, TranslationSource.Internal);
+
+        var viewModel = new ColorViewModel()
+        {
+            CurrentColor = Colors.Yellow,
+        };
+        var binding = new Binding(nameof(ColorViewModel.CurrentColor), source: viewModel);
+
+        var label = new Label();
+
+        var keyConverter = new PrimaryColorKeyConverter();
+
+        // Act
+        var view = label.SetTranslationBinding(Label.TextProperty, binding, keyConverter);
+
+        // Assert
+        Assert.IsType<Label>(view);
+        Assert.Equal("Yellow", label.Text);
+    }
+
+    [Fact]
+    public void SetTranslationBindingKeyConverterView_WhenBindedValueChanges_ShouldUpdatedTranslation()
+    {
+        // Arrange
+        var localization = new Localization(new CultureInfo("en-GB"))
+        {
+            Translations = new Dictionary<string, string>()
+            {
+                { "RedKey", "Red"},
+                { "BlueKey", "Blue"},
+                { "YellowKey", "Yellow"},
+            }
+        };
+
+        translatorManager.UpdateTranslations(localization, TranslationSource.Internal);
+
+        var viewModel = new ColorViewModel()
+        {
+            CurrentColor = Colors.Yellow,
+        };
+        var binding = new Binding(nameof(ColorViewModel.CurrentColor), source: viewModel);
+
+        var label = new Label();
+
+        var keyConverter = new PrimaryColorKeyConverter();
+
+        var view = label.SetTranslationBinding(Label.TextProperty, binding, keyConverter);
+        Assert.IsType<Label>(view);
+        Assert.Equal("Yellow", label.Text);
+
+        // Act
+        viewModel.CurrentColor = Colors.Red;
+
+        // Assert
+        Assert.Equal("Red", label.Text);
+    }
+
+    [Fact]
+    public void SetTranslationBindingKeyConverterView_WhenTranslationKeyExistsForCultureOneButNotCultureTwo_ShouldFormatTranslationCorrectly()
+    {
+        // Arrange
+        var enGbLocalization = new Localization(new CultureInfo("en-GB"))
+        {
+            Translations = new Dictionary<string, string>()
+            {
+                { "RedKey", "Red"},
+                { "BlueKey", "Blue"},
+                { "YellowKey", "Yellow"},
+            }
+        };
+
+        var frFrLocalization = new Localization(new CultureInfo("fr-FR"))
+        {
+            Translations = new Dictionary<string, string>()
+            {
+                { "MapplicationTitle", "Mocale!" },
+            }
+        };
+
+        translatorManager.UpdateTranslations(enGbLocalization, TranslationSource.Internal);
+
+        var viewModel = new ColorViewModel()
+        {
+            CurrentColor = Colors.Yellow,
+        };
+
+        var binding = new Binding(nameof(ColorViewModel.CurrentColor), source: viewModel);
+
+        var label = new Label();
+
+        var keyConverter = new PrimaryColorKeyConverter();
+
+        // Act & Assert
+        var view = label.SetTranslationBinding(Label.TextProperty, binding, keyConverter);
+
+        Assert.IsType<Label>(view);
+        Assert.Equal("Yellow", label.Text);
+
+        translatorManager.UpdateTranslations(frFrLocalization, TranslationSource.Internal);
+
+        Assert.Equal("$YellowKey$", label.Text);
+    }
+
+    [Fact]
+    public void SetTranslationBindingKeyConverterView_WhenTranslationKeyExistsForAllCultures_ShouldFormatTranslationCorrectly()
+    {
+        // Arrange
+        var enGbLocalization = new Localization(new CultureInfo("en-GB"))
+        {
+            Translations = new Dictionary<string, string>()
+            {
+                { "RedKey", "Red"},
+                { "BlueKey", "Blue"},
+                { "YellowKey", "Yellow"},
+            }
+        };
+
+        var frFrLocalization = new Localization(new CultureInfo("fr-FR"))
+        {
+            Translations = new Dictionary<string, string>()
+            {
+                { "RedKey", "Rouge"},
+                { "BlueKey", "Bleu"},
+                { "YellowKey", "Jaune"},
+            }
+        };
+
+        translatorManager.UpdateTranslations(enGbLocalization, TranslationSource.Internal);
+
+        var viewModel = new ColorViewModel()
+        {
+            CurrentColor = Colors.Yellow,
+        };
+
+        var binding = new Binding(nameof(ColorViewModel.CurrentColor), source: viewModel);
+
+        var label = new Label();
+
+        var keyConverter = new PrimaryColorKeyConverter();
+
+        // Act & Assert
+        var view = label.SetTranslationBinding(Label.TextProperty, binding, keyConverter);
+
+        Assert.IsType<Label>(view);
+        Assert.Equal("Yellow", label.Text);
+
+        translatorManager.UpdateTranslations(frFrLocalization, TranslationSource.Internal);
+
+        Assert.Equal("Jaune", label.Text);
+    }
+
+    [Fact]
+    public void SetTranslationBindingKeyConverterView_WhenTranslationKeyExistsForAllCulturesWithConverter_ShouldFormatTranslationCorrectlyAndApplyConverter()
+    {
+        // Arrange
+        var enGbLocalization = new Localization(new CultureInfo("en-GB"))
+        {
+            Translations = new Dictionary<string, string>()
+            {
+                { "RedKey", "Red"},
+                { "BlueKey", "Blue"},
+                { "YellowKey", "Yellow"},
+            }
+        };
+
+        var frFrLocalization = new Localization(new CultureInfo("fr-FR"))
+        {
+            Translations = new Dictionary<string, string>()
+            {
+                { "RedKey", "Rouge"},
+                { "BlueKey", "Bleu"},
+                { "YellowKey", "Jaune"},
+            }
+        };
+
+        translatorManager.UpdateTranslations(enGbLocalization, TranslationSource.Internal);
+
+        var viewModel = new ColorViewModel()
+        {
+            CurrentColor = Colors.Yellow,
+        };
+
+        var binding = new Binding(nameof(ColorViewModel.CurrentColor), source: viewModel);
+
+        var label = new Label();
+
+        var keyConverter = new PrimaryColorKeyConverter();
+
+        // Act & Assert
+        var view = label.SetTranslationBinding(Label.TextProperty, binding, keyConverter, null, new UpperCaseConverter());
+
+        Assert.IsType<Label>(view);
+        Assert.Equal("YELLOW", label.Text);
+
+        translatorManager.UpdateTranslations(frFrLocalization, TranslationSource.Internal);
+
+        Assert.Equal("JAUNE", label.Text);
+    }
+
+    [Fact]
+    public void SetTranslationBindingKeyConverterView_WhenTranslationKeyExistsForAllCulturesWithStringFormat_ShouldFormatTranslationCorrectlyAndApplyFormat()
+    {
+        // Arrange
+        var enGbLocalization = new Localization(new CultureInfo("en-GB"))
+        {
+            Translations = new Dictionary<string, string>()
+            {
+                { "RedKey", "Red"},
+                { "BlueKey", "Blue"},
+                { "YellowKey", "Yellow"},
+            }
+        };
+
+        var frFrLocalization = new Localization(new CultureInfo("fr-FR"))
+        {
+            Translations = new Dictionary<string, string>()
+            {
+                { "RedKey", "Rouge"},
+                { "BlueKey", "Bleu"},
+                { "YellowKey", "Jaune"},
+            }
+        };
+
+        translatorManager.UpdateTranslations(enGbLocalization, TranslationSource.Internal);
+
+        var viewModel = new ColorViewModel()
+        {
+            CurrentColor = Colors.Yellow,
+        };
+
+        var binding = new Binding(nameof(ColorViewModel.CurrentColor), source: viewModel);
+
+        var label = new Label();
+
+        var keyConverter = new PrimaryColorKeyConverter();
+
+        // Act & Assert
+        var view = label.SetTranslationBinding(Label.TextProperty, binding, keyConverter, null, null, null, "Color: {0}");
+
+        Assert.IsType<Label>(view);
+        Assert.Equal("Color: Yellow", label.Text);
+
+        translatorManager.UpdateTranslations(frFrLocalization, TranslationSource.Internal);
+
+        Assert.Equal("Color: Jaune", label.Text);
+    }
+
+    #endregion -- View (Key Converter)
+
     #endregion - SetTranslation
 
     #region - SetTranslationBinding
 
-    #region -- Void
+    #region -- Void (Translation Key)
 
     [Fact]
-    public void SetTranslationBindingVoid_WhenBindableObjectIsNull_ShouldThrow()
+    public void SetTranslationBindingTranslationKeyVoid_WhenBindableObjectIsNull_ShouldThrow()
     {
         // Arrange
         var viewModel = new SomeViewModel();
@@ -262,7 +914,7 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
     }
 
     [Fact]
-    public void SetTranslationBindingVoid_WhenBindingIsNull_ShouldThrow()
+    public void SetTranslationBindingTranslationKeyVoid_WhenBindingIsNull_ShouldThrow()
     {
         // Arrange
         BindableObject bindableObject = new Label();
@@ -275,7 +927,7 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
     }
 
     [Fact]
-    public void SetTranslationBindingVoid_WhenTranslationKeyDoesNotExist_ShouldSetNotFoundKey()
+    public void SetTranslationBindingTranslationKeyVoid_WhenTranslationKeyDoesNotExist_ShouldSetNotFoundKey()
     {
         // Arrange
         var localization = new Localization(new CultureInfo("en-GB"))
@@ -302,7 +954,7 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
     }
 
     [Fact]
-    public void SetTranslationBindingVoid_WhenTranslationKeyExists_ShouldFormatTranslation()
+    public void SetTranslationBindingTranslationKeyVoid_WhenTranslationKeyExists_ShouldFormatTranslation()
     {
         // Arrange
         var localization = new Localization(new CultureInfo("en-GB"))
@@ -334,7 +986,7 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
     }
 
     [Fact]
-    public void SetTranslationBindingVoid_WhenBindedValueChanges_ShouldUpdatedTranslation()
+    public void SetTranslationBindingTranslationKeyVoid_WhenBindedValueChanges_ShouldUpdatedTranslation()
     {
         // Arrange
         var localization = new Localization(new CultureInfo("en-GB"))
@@ -369,7 +1021,7 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
     }
 
     [Fact]
-    public void SetTranslationBindingVoid_WhenBindedValueString_ShouldUpdatedTranslation()
+    public void SetTranslationBindingTranslationKeyVoid_WhenBindedValueString_ShouldUpdatedTranslation()
     {
         // Arrange
         var localization = new Localization(new CultureInfo("en-GB"))
@@ -402,7 +1054,7 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
     }
 
     [Fact]
-    public void SetTranslationBindingVoid_WhenTranslationKeyExistsForCultureOneButNotCultureTwo_ShouldFormatTranslationCorrectly()
+    public void SetTranslationBindingTranslationKeyVoid_WhenTranslationKeyExistsForCultureOneButNotCultureTwo_ShouldFormatTranslationCorrectly()
     {
         // Arrange
         var enGbLocalization = new Localization(new CultureInfo("en-GB"))
@@ -445,7 +1097,7 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
     }
 
     [Fact]
-    public void SetTranslationBindingVoid_WhenTranslationKeyExistsForAllCultures_ShouldFormatTranslationCorrectly()
+    public void SetTranslationBindingTranslationKeyVoid_WhenTranslationKeyExistsForAllCultures_ShouldFormatTranslationCorrectly()
     {
         // Arrange
         var enGbLocalization = new Localization(new CultureInfo("en-GB"))
@@ -488,12 +1140,12 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
         Assert.Equal("La température est 21.3 \u00b0C", label.Text);
     }
 
-    #endregion -- Void
+    #endregion -- Void (Translation Key)
 
-    #region -- View
+    #region -- View (Translation Key)
 
     [Fact]
-    public void SetTranslationBindingView_WhenBindableObjectIsNull_ShouldThrow()
+    public void SetTranslationBindingTranslationKeyView_WhenBindableObjectIsNull_ShouldThrow()
     {
         // Arrange
         var viewModel = new SomeViewModel();
@@ -509,7 +1161,7 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
     }
 
     [Fact]
-    public void SetTranslationBindingView_WhenBindingIsNull_ShouldThrow()
+    public void SetTranslationBindingTranslationKeyView_WhenBindingIsNull_ShouldThrow()
     {
         // Arrange
         var view = new Label();
@@ -522,7 +1174,7 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
     }
 
     [Fact]
-    public void SetTranslationBindingView_WhenTranslationKeyDoesNotExist_ShouldSetNotFoundKey()
+    public void SetTranslationBindingTranslationKeyView_WhenTranslationKeyDoesNotExist_ShouldSetNotFoundKey()
     {
         // Arrange
         var localization = new Localization(new CultureInfo("en-GB"))
@@ -550,7 +1202,7 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
     }
 
     [Fact]
-    public void SetTranslationBindingView_WhenTranslationKeyExists_ShouldFormatTranslation()
+    public void SetTranslationBindingTranslationKeyView_WhenTranslationKeyExists_ShouldFormatTranslation()
     {
         // Arrange
         var localization = new Localization(new CultureInfo("en-GB"))
@@ -583,7 +1235,7 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
     }
 
     [Fact]
-    public void SetTranslationBindingView_WhenBindedValueChanges_ShouldUpdatedTranslation()
+    public void SetTranslationBindingTranslationKeyView_WhenBindedValueChanges_ShouldUpdatedTranslation()
     {
         // Arrange
         var localization = new Localization(new CultureInfo("en-GB"))
@@ -620,7 +1272,7 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
     }
 
     [Fact]
-    public void SetTranslationBindingView_WhenBindedValueString_ShouldUpdatedTranslation()
+    public void SetTranslationBindingTranslationKeyView_WhenBindedValueString_ShouldUpdatedTranslation()
     {
         // Arrange
         var localization = new Localization(new CultureInfo("en-GB"))
@@ -654,7 +1306,7 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
     }
 
     [Fact]
-    public void SetTranslationBindingView_WhenTranslationKeyExistsForCultureOneButNotCultureTwo_ShouldFormatTranslationCorrectly()
+    public void SetTranslationBindingTranslationKeyView_WhenTranslationKeyExistsForCultureOneButNotCultureTwo_ShouldFormatTranslationCorrectly()
     {
         // Arrange
         var enGbLocalization = new Localization(new CultureInfo("en-GB"))
@@ -698,7 +1350,7 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
     }
 
     [Fact]
-    public void SetTranslationBindingView_WhenTranslationKeyExistsForAllCultures_ShouldFormatTranslationCorrectly()
+    public void SetTranslationBindingTranslationKeyView_WhenTranslationKeyExistsForAllCultures_ShouldFormatTranslationCorrectly()
     {
         // Arrange
         var enGbLocalization = new Localization(new CultureInfo("en-GB"))
@@ -742,7 +1394,7 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
         Assert.Equal("La température est 21.3 \u00b0C", label.Text);
     }
 
-    #endregion -- View
+    #endregion -- View (Translation Key)
 
     #endregion - SetTranslationBinding
 
@@ -2551,6 +3203,30 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
 
         [Description("Fruit_Cherry")]
         Cherry
+    }
+
+    private class PrimaryColorKeyConverter : IKeyConverter
+    {
+        public string Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+        {
+            if (value is Color color)
+            {
+                return color switch
+                {
+                    _ when Equals(color, Colors.Red) => "RedKey",
+                    _ when Equals(color, Colors.Blue) => "BlueKey",
+                    _ when Equals(color, Colors.Yellow) => "YellowKey",
+                    _ => "Unknown"
+                };
+            }
+
+            return "Unknown";
+        }
+    }
+
+    private partial class ColorViewModel : ObservableObject
+    {
+        [ObservableProperty] public partial Color? CurrentColor { get; set; }
     }
 
     #endregion Test Data

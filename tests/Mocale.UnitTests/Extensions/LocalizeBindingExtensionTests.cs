@@ -8,13 +8,11 @@ using Mocale.Extensions;
 using Mocale.Models;
 using Mocale.Testing;
 using Mocale.UnitTests.Collections;
-using Mocale.UnitTests.Fixtures;
-using Xunit.Sdk;
 
 namespace Mocale.UnitTests.Extensions;
 
 [Collection(CollectionNames.MocaleLocatorTests)]
-public partial class LocalizeMultiBindingExtensionTests : FixtureBase<LocalizeBindingExtension>
+public partial class LocalizeBindingExtensionTests : FixtureBase<LocalizeBindingExtension>
 {
     #region Setup
 
