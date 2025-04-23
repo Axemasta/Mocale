@@ -29,5 +29,10 @@
   "ParameterPage_MultipleFormatsSameValue_Label": "A string format with the same value multiple times",
   "ParameterPage_MultipleFormatsSameValue": "Hello {0}, Hello {0}, Hello {0}",
   "CodePage_Title": "Code",
-  "CodePage_Heading": "This page is built entirely through code behind, you can see examples of everything Mocale has to offer when not using xaml!"
+  "CodePage_Heading": "This page is built entirely through code behind, you can see examples of everything Mocale has to offer when not using xaml!",
+  "ConverterPage_Title": "Converters",
+  "OrderStatus_Pending": "Order Pending",
+  "OrderStatus_Shipped": "Your Order Has Been Shipped!",
+  "OrderStatus_Delivered": "Your Order Has Been Delivered",
+  "OrderStatus_Cancelled": "Your Order Was Cancelled"
 }

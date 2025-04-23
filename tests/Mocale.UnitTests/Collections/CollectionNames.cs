@@ -5,4 +5,6 @@ public static class CollectionNames
     public const string MocaleLocatorTests = "MocaleLocatorCollection";
 
     public const string ThreadCultureTests = "ThreadCultureCollection";
+
+    public const string TestingTests = "TestingCollection";
 }

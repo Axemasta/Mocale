@@ -17,5 +17,7 @@
         <ShellContent Title="{mocale:Localize Key={x:Static keys:TranslationKeys.ParameterPageTitle}}" ContentTemplate="{DataTemplate pages:ParameterPage}" />
 
         <ShellContent Title="{mocale:Localize Key={x:Static keys:TranslationKeys.CodePageTitle}}" ContentTemplate="{DataTemplate pages:CodePage}" />
+
+        <ShellContent Title="{mocale:Localize Key={x:Static keys:TranslationKeys.ConverterPageTitle}}" ContentTemplate="{DataTemplate pages:ConverterPage}" />
     </FlyoutItem>
 </Shell>

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <LangVersion>preview</LangVersion>
@@ -12,6 +12,7 @@
     <GenerateSatelliteAssembliesForCore>true</GenerateSatelliteAssembliesForCore>
     <MauiEnableXamlCBindingWithSourceCompilation>true</MauiEnableXamlCBindingWithSourceCompilation>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Nullable>enable</Nullable>
 
     <!-- Display name -->
     <ApplicationTitle>Mocale.Samples</ApplicationTitle>
@@ -97,5 +98,7 @@
 
   <Import Project="..\..\src\Mocale.SourceGenerators\build\Package.props" />
   <Import Project="..\..\src\Mocale.SourceGenerators\build\Package.targets" />
+  <Import Project="..\..\src\Mocale\build\Package.props" />
+  <Import Project="..\..\src\Mocale\build\Package.targets" />
 
 </Project>

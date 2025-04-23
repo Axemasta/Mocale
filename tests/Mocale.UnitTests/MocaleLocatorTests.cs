@@ -1,4 +1,5 @@
 using Mocale.Abstractions;
+using Mocale.Testing;
 
 namespace Mocale.UnitTests;
 
@@ -11,7 +12,7 @@ public class MocaleLocatorTests
         var translatorManager = new Mock<ITranslatorManager>();
 
         // Act
-        MocaleLocator.SetInstance(translatorManager.Object);
+        MocaleLocatorHelper.SetTranslatorManager(translatorManager.Object);
 
         // Assert
         Assert.Equal(translatorManager.Object, MocaleLocator.TranslatorManager);
