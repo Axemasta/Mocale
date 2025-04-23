@@ -29,5 +29,11 @@
   "ParameterPage_MultipleFormatsSameValue_Label": "Un format de chaîne avec la même valeur plusieurs fois",
   "ParameterPage_MultipleFormatsSameValue": "Bonjour {0}, Bonjour {0}, Bonjour {0}",
   "CodePage_Title": "Code",
-  "CodePage_Heading": "Cette page est entièrement construite grâce au code derrière, vous pouvez voir des exemples de tout ce que Mocale a à offrir lorsque vous n'utilisez pas xaml!"
+  "CodePage_Heading": "Cette page est entièrement construite grâce au code derrière, vous pouvez voir des exemples de tout ce que Mocale a à offrir lorsque vous n'utilisez pas xaml!",
+  "ConverterPage_Title": "Convertisseurs",
+  "OrderStatus_Pending": "Commande en attente",
+  "OrderStatus_Shipped": "Votre commande a été expédiée !",
+  "OrderStatus_Delivered": "Votre commande a été livrée",
+  "OrderStatus_Cancelled": "Votre commande a été annulée"
+
 }

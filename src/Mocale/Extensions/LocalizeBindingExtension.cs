@@ -1,6 +1,4 @@
-using System.Diagnostics;
 using System.Globalization;
-using Ardalis.GuardClauses;
 
 namespace Mocale.Extensions;
 
@@ -11,41 +9,9 @@ namespace Mocale.Extensions;
 /// <param name="translatorManager">Translator Manager</param>
 [AcceptEmptyServiceProvider]
 [ContentProperty(nameof(Path))]
-public class LocalizeBindingExtension(ITranslatorManager translatorManager) : LocalizeMultiBindingExtensionBase(translatorManager), IMultiValueConverter
+public class LocalizeBindingExtension(ITranslatorManager translatorManager)
+    : LocalizeMultiBindingExtensionBase(translatorManager), IMultiValueConverter
 {
-    /// <summary>
-    /// The translation key
-    /// </summary>
-    public string? TranslationKey { get; set; }
-
-    /// <inheritdoc/>
-    public string Path { get; set; } = ".";
-
-    /// <inheritdoc/>
-    public BindingMode Mode { get; set; } = BindingMode.OneWay;
-
-    /// <inheritdoc/>
-    public string StringFormat { get; set; } = "{0}";
-
-    /// <inheritdoc/>
-    public IValueConverter? Converter { get; set; }
-
-    /// <inheritdoc/>
-    public object? ConverterParameter { get; set; }
-
-    /// <summary>
-    /// The translation key converter to be applied before localization
-    /// </summary>
-    public IKeyConverter? KeyConverter { get; set; }
-
-    /// <summary>
-    ///  The translation key converter parameter
-    /// </summary>
-    public object? KeyConverterParameter { get; set; }
-
-    /// <inheritdoc/>
-    public object? Source { get; set; }
-
     /// <summary>
     /// Localize Extension
     /// </summary>
@@ -54,12 +20,74 @@ public class LocalizeBindingExtension(ITranslatorManager translatorManager) : Lo
     {
     }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// The translation key
+    /// </summary>
+    public string? TranslationKey { get; set; }
+
+    /// <summary>
+    /// Binding Path
+    /// </summary>
+    public string Path { get; set; } = ".";
+
+    /// <summary>
+    /// Binding Mode
+    /// </summary>
+    public BindingMode Mode { get; set; } = BindingMode.OneWay;
+
+    /// <summary>
+    /// String Format
+    /// </summary>
+    public string StringFormat { get; set; } = "{0}";
+
+    /// <summary>
+    /// Converter
+    /// </summary>
+    public IValueConverter? Converter { get; set; }
+
+    /// <summary>
+    /// Converter Parameter
+    /// </summary>
+    public object? ConverterParameter { get; set; }
+
+    /// <summary>
+    /// The translation key converter to be applied before localization
+    /// </summary>
+    public IKeyConverter? KeyConverter { get; set; }
+
+    /// <summary>
+    /// The translation key converter parameter
+    /// </summary>
+    public object? KeyConverterParameter { get; set; }
+
+    /// <summary>
+    /// Source object for the binding
+    /// </summary>
+    public object? Source { get; set; }
+
+    /// <inheritdoc />
+    public object? Convert(object[]? values, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (string.IsNullOrEmpty(TranslationKey) && KeyConverter is not null)
+        {
+            return ConvertKeyConverterBinding(values, targetType, culture);
+        }
+
+        return ConvertTranslationKeyBinding(values);
+    }
+
+    /// <inheritdoc />
+    public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc />
     public override MultiBinding ProvideValue(IServiceProvider serviceProvider)
     {
         if (!string.IsNullOrEmpty(TranslationKey))
         {
-            return new MultiBinding()
+            return new MultiBinding
             {
                 StringFormat = StringFormat,
                 Converter = this,
@@ -67,13 +95,14 @@ public class LocalizeBindingExtension(ITranslatorManager translatorManager) : Lo
                 Bindings =
                 [
                     new Binding($"[{TranslationKey}]", BindingMode.OneWay, source: translatorManager),
-                    new Binding(Path, Mode, Converter, ConverterParameter, source: Source),
+                    new Binding(Path, Mode, Converter, ConverterParameter, source: Source)
                 ]
             };
         }
-        else if (KeyConverter is not null)
+
+        if (KeyConverter is not null)
         {
-            return new MultiBinding()
+            return new MultiBinding
             {
                 StringFormat = StringFormat,
                 Converter = this,
@@ -81,33 +110,13 @@ public class LocalizeBindingExtension(ITranslatorManager translatorManager) : Lo
                 Bindings =
                 [
                     new Binding(nameof(ITranslatorManager.CurrentCulture), BindingMode.OneWay, source: translatorManager),
-                    new Binding(Path, Mode, source: Source),
+                    new Binding(Path, Mode, source: Source)
                 ]
             };
         }
-        else
-        {
-            throw new ArgumentException($"Either {nameof(TranslationKey)} must be set or there must be a KeyConverter.", nameof(TranslationKey));
-        }
-    }
 
-    /// <inheritdoc/>
-    public object? Convert(object[]? values, Type targetType, object parameter, CultureInfo culture)
-    {
-        if (string.IsNullOrEmpty(TranslationKey) && KeyConverter is not null)
-        {
-            return ConvertKeyConverterBinding(values, targetType, culture);
-        }
-        else
-        {
-            return ConvertTranslationKeyBinding(values);
-        }
-    }
-
-    /// <inheritdoc/>
-    public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
-    {
-        throw new NotImplementedException();
+        throw new InvalidOperationException(
+            $"Neither {nameof(TranslationKey)} or {nameof(KeyConverter)} were set. Use must set one of these, please see the documentation for details");
     }
 
     private string ConvertTranslationKeyBinding(object[]? values)
@@ -140,11 +149,11 @@ public class LocalizeBindingExtension(ITranslatorManager translatorManager) : Lo
         return string.Format(translatorManager.CurrentCulture, localizedFormat, formatParameter);
     }
 
-    private string? ConvertKeyConverterBinding(object[]? values, Type targetType, CultureInfo culture)
+    internal string? ConvertKeyConverterBinding(object[]? values, Type targetType, CultureInfo culture)
     {
         if (KeyConverter is null)
         {
-            throw new ArgumentException("Key converter was null, unable to convert binding.", nameof(KeyConverter));
+            throw new InvalidOperationException("Key converter was null, unable to convert binding.");
         }
 
         // values[0] will be the current culture
@@ -158,7 +167,7 @@ public class LocalizeBindingExtension(ITranslatorManager translatorManager) : Lo
 
         if (string.IsNullOrEmpty(translationKey))
         {
-            return null;
+            return string.Empty;
         }
 
         var translation = translatorManager.Translate(translationKey);
@@ -167,9 +176,7 @@ public class LocalizeBindingExtension(ITranslatorManager translatorManager) : Lo
         {
             return translation;
         }
-        else
-        {
-            return Converter.Convert(translation, targetType, ConverterParameter, culture) as string;
-        }
+
+        return Converter.Convert(translation, targetType, ConverterParameter, culture) as string;
     }
 }
