@@ -19,7 +19,6 @@
     <PackageTags>maui,mocale,localization,localisation,translation,source,generator,generators,sourcegenerator,sourcegenerators</PackageTags>
     <Title>Mocale.SourceGenerators</Title>
     <Description>Source generators to assist and enhance Mocale library functions.</Description>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 
     <NoWarn>RS2007</NoWarn>
   </PropertyGroup>
