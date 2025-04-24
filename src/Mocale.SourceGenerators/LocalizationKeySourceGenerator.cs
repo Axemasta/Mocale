@@ -112,16 +112,25 @@ public class LocalizationKeySourceGenerator : IIncrementalGenerator
     private static string GenerateSource(string generatedNamespace, Dictionary<string, string> keysToGenerate)
     {
         var namespaceDeclaration = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.ParseName(generatedNamespace))
-            .AddUsings(SyntaxFactory.UsingDirective(SyntaxFactory.ParseName("System")))
             .AddMembers(
                 SyntaxFactory.ClassDeclaration("TranslationKeys")
                     .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword), SyntaxFactory.Token(SyntaxKind.StaticKeyword))
-                    .AddMembers(keysToGenerate.Select(CreateConstantField).ToArray())
+                    .AddMembers([.. keysToGenerate.Select(CreateConstantField)])
             );
 
         var compilationUnit = SyntaxFactory.CompilationUnit()
             .AddMembers(namespaceDeclaration)
             .NormalizeWhitespace("\t");
+
+        // https://stackoverflow.com/a/79589669/8828057
+        // Thanks to silkfire - we add newlines between members after normalization
+        compilationUnit = compilationUnit.ReplaceNodes(
+            compilationUnit.DescendantNodes().OfType<FieldDeclarationSyntax>()
+                .ToArray()
+                .Take(compilationUnit.DescendantNodes().OfType<FieldDeclarationSyntax>().Count() - 1),
+            (_, node) => node.WithTrailingTrivia(
+                SyntaxFactory.ElasticCarriageReturnLineFeed,
+                SyntaxFactory.ElasticCarriageReturnLineFeed));
 
         return compilationUnit.ToFullString();
     }
@@ -135,11 +144,9 @@ public class LocalizationKeySourceGenerator : IIncrementalGenerator
                             SyntaxKind.StringLiteralExpression, SyntaxFactory.Literal(keyValuePair.Value))))))
             .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword), SyntaxFactory.Token(SyntaxKind.ConstKeyword))
             .WithLeadingTrivia(SyntaxFactory.TriviaList(
-                SyntaxFactory.CarriageReturnLineFeed,
                  SyntaxFactory.Comment("/// <summary>"),
                  SyntaxFactory.Comment($"/// Looks up a localized string using key {keyValuePair.Value}."),
                  SyntaxFactory.Comment("/// </summary>")
-            ))
-            .WithTrailingTrivia(SyntaxFactory.ElasticCarriageReturnLineFeed);
+            ));
     }
 }
