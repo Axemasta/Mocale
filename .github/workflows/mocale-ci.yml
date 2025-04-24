@@ -103,7 +103,9 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: drop
-        path: src/**/*.{nupkg,snupkg}
+        path: |
+          src/**/*.nupkg
+          src/**/*.snupkg
 
   # release:
   #   needs: build
