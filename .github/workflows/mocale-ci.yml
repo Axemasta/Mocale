@@ -23,7 +23,7 @@ env:
   PathToMocaleCacheSqliteCsproj: 'src/Mocale.Cache.SQLite/Mocale.Cache.SQLite.csproj'
   PathToMocaleAzureBlobProviderCsproj: 'src/Mocale.Providers.Azure.Blob/Mocale.Providers.Azure.Blob.csproj'
   PathToMocaleAWSS3ProviderCsproj: 'src/Mocale.AWS.S3/Mocale.AWS.S3.csproj'
-  PathToMocaleGithubRawProviderCsproj: 'src/Mocale.GitHub.Raw/Mocale.GitHub.Raw.csproj'
+  PathToMocaleGithubRawProviderCsproj: 'src/Mocale.Providers.GitHub.Raw/Mocale.Providers.GitHub.Raw.csproj'
 
 jobs:
   test:
