@@ -62,12 +62,9 @@ public class LocalizationKeySourceGenerator : IIncrementalGenerator
                 {
                     var sanitizedKey = SanitizeKey(translation.Key);
 
-                    if (uniqueKeys.ContainsKey(sanitizedKey))
+                    if (!uniqueKeys.ContainsKey(sanitizedKey))
                     {
-                        context.Report(Diagnostics.Warnings.DuplicateKey, sanitizedKey, translation.Key);
-                    }
-                    else
-                    {
+                        // Don't report dupes since we potentially will process multiple files with the same keys
                         uniqueKeys.Add(sanitizedKey, translation.Key);
                     }
                 }
@@ -100,7 +97,7 @@ public class LocalizationKeySourceGenerator : IIncrementalGenerator
 
     private static void GenerateCode(SourceProductionContext context, ImmutableArray<string> translations)
     {
-        var translationKeys = GetTranslationUniqueKeys(translations.ToList(), context);
+        var translationKeys = GetTranslationUniqueKeys([.. translations], context);
 
         const string translationNamespace = "Mocale.Translations";
 

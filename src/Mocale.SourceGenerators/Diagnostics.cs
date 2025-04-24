@@ -29,8 +29,6 @@ internal static class Diagnostics
         public static readonly DiagnosticDescriptor NoLocalizationFilesDetected = Create("MOCW001", "No localizations files were found to process");
 
         public static readonly DiagnosticDescriptor FileNotJsonLocalization = Create("MOCW002", "The following file was not recognized as a valid localization json file: {0}");
-
-        public static readonly DiagnosticDescriptor DuplicateKey = Create("MOCW003", "Duplicate key detected: Sanitized Key '{0}' conflicts with Original Key '{1}'");
     }
 
     public static class Information
