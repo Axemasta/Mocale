@@ -1,0 +1,17 @@
+﻿{
+  Diagnostics: [
+    {
+      Message: No localizations files were found to process,
+      Severity: Warning,
+      WarningLevel: 1,
+      Descriptor: {
+        Id: MOCW001,
+        Title: No localizations files were found to process,
+        MessageFormat: No localizations files were found to process,
+        Category: Mocale.SourceGenerators,
+        DefaultSeverity: Warning,
+        IsEnabledByDefault: true
+      }
+    }
+  ]
+}

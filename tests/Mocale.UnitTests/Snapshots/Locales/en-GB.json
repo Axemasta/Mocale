@@ -1,0 +1,6 @@
+﻿{
+  "KeyOne": "Value One",
+  "Key_Two": "Value Two",
+  "Key@!_/Three": "Value Three",
+  "Key.Four": "Value Four"
+}

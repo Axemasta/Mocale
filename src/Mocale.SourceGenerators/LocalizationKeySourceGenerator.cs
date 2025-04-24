@@ -81,7 +81,7 @@ public class LocalizationKeySourceGenerator : IIncrementalGenerator
     private static string SanitizeKey(string dirtyKey)
     {
         // https://stackoverflow.com/a/11396038
-        var removeChars = new HashSet<char>(" ?&^$#@!()+-,:;<>’\'-*.");
+        var removeChars = new HashSet<char>(" ?&^$#@!()+-,:;<>’\'-*./");
         var result = new StringBuilder(dirtyKey.Length);
 
         foreach (var c in dirtyKey)
