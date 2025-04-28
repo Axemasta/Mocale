@@ -8,16 +8,23 @@
     <IsPackable>false</IsPackable>
     <UseMaui>true</UseMaui>
     <IsTestProject>true</IsTestProject>
-    <NoWarn>$(NoWarn);CA2254;IDE0005;xUnit1045</NoWarn>
+    <NoWarn>$(NoWarn);CA2254;IDE0005;xUnit1045;CA1416;</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" />
     <PackageReference Include="FluentAssertions" />
     <PackageReference Include="ILogger.Moq" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
     <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="Moq.Contrib.HttpClient" />
+    <PackageReference Include="Verify.SourceGenerators" />
+    <PackageReference Include="Verify.Xunit" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -38,6 +45,7 @@
     <ProjectReference Include="..\..\src\Mocale.Providers.Aws.S3\Mocale.Providers.AWS.S3.csproj" />
     <ProjectReference Include="..\..\src\Mocale.Providers.Azure.Blob\Mocale.Providers.Azure.Blob.csproj" />
     <ProjectReference Include="..\..\src\Mocale.Providers.Github.Raw\Mocale.Providers.Github.Raw.csproj" />
+    <ProjectReference Include="..\..\src\Mocale.SourceGenerators\Mocale.SourceGenerators.csproj" />
     <ProjectReference Include="..\..\src\Mocale.Testing\Mocale.Testing.csproj" />
     <ProjectReference Include="..\..\src\Mocale\Mocale.csproj" />
   </ItemGroup>
@@ -58,6 +66,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>TestResources.resx</DependentUpon>
     </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Snapshots\Locales\en-GB.json" />
+    <AdditionalFiles Include="Snapshots\Locales\en-GB.json" />
   </ItemGroup>
 
 </Project>

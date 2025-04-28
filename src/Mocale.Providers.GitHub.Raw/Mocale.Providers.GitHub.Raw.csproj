@@ -12,7 +12,6 @@
         <PackageTags>maui,mocale,localization,localisation,translation,github,raw,githubraw,provider,mocaleprovider</PackageTags>
         <Title>Mocale.Providers.GitHub.Raw</Title>
         <Description>GitHub raw external provider for Mocale. This package will attempt to use the configured GitHub repository to download localizations to be used in your maui application.</Description>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
       <GenerateDocumentationFile>true</GenerateDocumentationFile>
     </PropertyGroup>
 

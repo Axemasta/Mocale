@@ -16,6 +16,15 @@ on:
       - '!assets/**'
       - '!samples/**'
 
+env:
+  PathToMocaleCsproj: 'src/Mocale/Mocale.csproj'
+  PathToMocaleSourceGeneratorsCsproj: 'src/Mocale.SourceGenerators/Mocale.SourceGenerators.csproj'
+  PathToMocaleTestingCsproj: 'src/Mocale.Testing/Mocale.Testing.csproj'
+  PathToMocaleCacheSqliteCsproj: 'src/Mocale.Cache.SQLite/Mocale.Cache.SQLite.csproj'
+  PathToMocaleAzureBlobProviderCsproj: 'src/Mocale.Providers.Azure.Blob/Mocale.Providers.Azure.Blob.csproj'
+  PathToMocaleAWSS3ProviderCsproj: 'src/Mocale.AWS.S3/Mocale.AWS.S3.csproj'
+  PathToMocaleGithubRawProviderCsproj: 'src/Mocale.Providers.GitHub.Raw/Mocale.Providers.GitHub.Raw.csproj'
+
 jobs:
   test:
     runs-on: windows-latest
@@ -75,11 +84,28 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore --configuration Release
+    - name: Pack Mocale
+      run: dotnet pack -c Release ${{ env.PathToMocaleCsproj }}
+    - name: Pack Mocale Source Generators
+      run: dotnet pack -c Release ${{ env.PathToMocaleSourceGeneratorsCsproj }}
+    - name: Pack Mocale Testing
+      run: dotnet pack -c Release ${{ env.PathToMocaleTestingCsproj }}
+    - name: Pack Mocale SQLite Cache
+      run: dotnet pack -c Release ${{ env.PathToMocaleCacheSqliteCsproj }}
+    - name: Pack Mocale Azure Blob Provider
+      run: dotnet pack -c Release ${{ env.PathToMocaleAzureBlobProviderCsproj }}
+    - name: Pack Mocale Github Raw Provider
+      run: dotnet pack -c Release ${{ env.PathToMocaleGithubRawProviderCsproj }}
+    # S3 provider is not implemented, do not pack until it is!!!
+    # - name: Pack Mocale AWS S3 Provider
+    #   run: dotnet pack -c Release ${{ env.PathToMocaleAWSS3ProviderCsproj }}
     - name: Upload Artifacts
       uses: actions/upload-artifact@v4
       with:
         name: drop
-        path: src/**/*.nupkg
+        path: |
+          src/**/*.nupkg
+          src/**/*.snupkg
 
   release:
     needs: build
@@ -90,7 +116,9 @@ jobs:
       RELEASE_TITLE: v0.0.1
       VERSION_NAME: 0.0.1
       ARTIFACT_NAME: 'drop'
-      ARTIFACTS: 'Artifacts/**/*.nupkg'
+      ARTIFACTS: |
+        'Artifacts/**/*.nupkg'
+        'Artifacts/**/*.snupkg'
     steps:
     - uses: actions/checkout@v3
 

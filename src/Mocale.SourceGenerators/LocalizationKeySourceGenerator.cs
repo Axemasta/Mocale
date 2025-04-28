@@ -3,16 +3,21 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Humanizer;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using Newtonsoft.Json;
 namespace Mocale.SourceGenerators;
 
+/// <summary>
+/// Localization Key Source Generator
+/// </summary>
 [Generator]
 public class LocalizationKeySourceGenerator : IIncrementalGenerator
 {
+    /// <inheritdoc />
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        // TODO: Provide easy way to bundle as ER & Additional File
         var constants = context.AdditionalTextsProvider
             .Where(FileMatches)
             .Select((text, token) => text.GetText(token)?.ToString())
@@ -27,6 +32,7 @@ public class LocalizationKeySourceGenerator : IIncrementalGenerator
         var fileName = Path.GetFileNameWithoutExtension(text.Path);
         var extension = Path.GetExtension(text.Path);
 
+        // TODO: Match all known cultures
         var match = Regex.IsMatch(fileName, "^[A-Za-z]{2,4}([_-][A-Za-z]{4})?([_-]([A-Za-z]{2}|[0-9]{3}))?$");
 
         return match && extension.Equals(".json", StringComparison.OrdinalIgnoreCase);
@@ -34,17 +40,11 @@ public class LocalizationKeySourceGenerator : IIncrementalGenerator
 
     private static Dictionary<string, string> GetTranslationUniqueKeys(List<string> translationsJson, SourceProductionContext context)
     {
-        // TODO: we need sanitized keys to to preserve the json key value...
         var uniqueKeys = new Dictionary<string, string>();
 
-        if (translationsJson.Count < 1)
-        {
-            context.Report(Diagnostics.Warnings.NoLocalizationFilesDetected);
-        }
-        else
-        {
-            context.Report(Diagnostics.Information.ProcessingFiles);
-        }
+        context.Report(translationsJson.Count < 1
+            ? Diagnostics.Warnings.NoLocalizationFilesDetected
+            : Diagnostics.Information.ProcessingFiles);
 
         foreach (var translationJson in translationsJson)
         {
@@ -64,6 +64,7 @@ public class LocalizationKeySourceGenerator : IIncrementalGenerator
 
                     if (!uniqueKeys.ContainsKey(sanitizedKey))
                     {
+                        // Don't report dupes since we potentially will process multiple files with the same keys
                         uniqueKeys.Add(sanitizedKey, translation.Key);
                     }
                 }
@@ -80,7 +81,7 @@ public class LocalizationKeySourceGenerator : IIncrementalGenerator
     private static string SanitizeKey(string dirtyKey)
     {
         // https://stackoverflow.com/a/11396038
-        var removeChars = new HashSet<char>(" ?&^$#@!()+-,:;<>’\'-*.");
+        var removeChars = new HashSet<char>(" ?&^$#@!()+-,:;<>’\'-*./");
         var result = new StringBuilder(dirtyKey.Length);
 
         foreach (var c in dirtyKey)
@@ -96,7 +97,7 @@ public class LocalizationKeySourceGenerator : IIncrementalGenerator
 
     private static void GenerateCode(SourceProductionContext context, ImmutableArray<string> translations)
     {
-        var translationKeys = GetTranslationUniqueKeys(translations.ToList(), context);
+        var translationKeys = GetTranslationUniqueKeys([.. translations], context);
 
         const string translationNamespace = "Mocale.Translations";
 
@@ -107,67 +108,42 @@ public class LocalizationKeySourceGenerator : IIncrementalGenerator
 
     private static string GenerateSource(string generatedNamespace, Dictionary<string, string> keysToGenerate)
     {
-        // Build up the source code
-        var constantTemplate = "public const string {0} = \"{1}\";";
-        var commentTemplate = "/// Looks up a localized string using key {0}.";
+        var namespaceDeclaration = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.ParseName(generatedNamespace))
+            .AddMembers(
+                SyntaxFactory.ClassDeclaration("TranslationKeys")
+                    .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword), SyntaxFactory.Token(SyntaxKind.StaticKeyword))
+                    .AddMembers([.. keysToGenerate.Select(CreateConstantField)])
+            );
 
-        var formattedProperties = new Dictionary<string, string>();
+        var compilationUnit = SyntaxFactory.CompilationUnit()
+            .AddMembers(namespaceDeclaration)
+            .NormalizeWhitespace("\t");
 
-        foreach (var key in keysToGenerate)
-        {
-            // TODO: Handle auto accessibility translations
-            // if (camelKey.EndsWith("Accessibility", StringComparison.Ordinal))
-            // {
-            //     // Accessibility keys are automatically paired to the original keys
-            //     // Aka the key: KeyOne
-            //     // will be used for "{mocale:Translate {x:Static keys:KeyOne}}"
-            //     // and
-            //     // "{mocale:TranslateAccessibility {x:Static keys:KeyOne}}"
-            //     continue;
-            // }
+        // https://stackoverflow.com/a/79589669/8828057
+        // Thanks to silkfire - we add newlines between members after normalization
+        compilationUnit = compilationUnit.ReplaceNodes(
+            compilationUnit.DescendantNodes().OfType<FieldDeclarationSyntax>()
+                .ToArray()
+                .Take(compilationUnit.DescendantNodes().OfType<FieldDeclarationSyntax>().Count() - 1),
+            (_, node) => node.WithTrailingTrivia(
+                SyntaxFactory.ElasticCarriageReturnLineFeed,
+                SyntaxFactory.ElasticCarriageReturnLineFeed));
 
-            var template = string.Format(constantTemplate, key.Key, key.Value);
+        return compilationUnit.ToFullString();
+    }
 
-            var comment = string.Format(commentTemplate, key.Value);
-
-            formattedProperties.Add(template, comment);
-        }
-
-        var source = $@"// <auto-generated/>
-namespace {generatedNamespace};
-
-public static class TranslationKeys
-{{
-";
-
-        var sb = new StringBuilder();
-
-        sb.Append(source);
-
-        var i = 0;
-
-        foreach (var property in formattedProperties)
-        {
-            if (i > 0)
-            {
-                sb.AppendLine();
-                sb.AppendLine();
-            }
-
-            sb.Append(new string('\t', 1));
-            sb.AppendLine("/// <summary>");
-            sb.Append(new string('\t', 1));
-            sb.AppendLine(property.Value);
-            sb.Append(new string('\t', 1));
-            sb.AppendLine("/// </summary>");
-            sb.Append(new string('\t', 1));
-            sb.AppendLine(property.Key);
-
-            i++;
-        }
-
-        sb.AppendLine("}");
-
-        return sb.ToString();
+    private static MemberDeclarationSyntax CreateConstantField(KeyValuePair<string, string> keyValuePair)
+    {
+        return SyntaxFactory.FieldDeclaration(
+                SyntaxFactory.VariableDeclaration(SyntaxFactory.ParseTypeName("string"))
+                    .AddVariables(SyntaxFactory.VariableDeclarator(keyValuePair.Key)
+                        .WithInitializer(SyntaxFactory.EqualsValueClause(SyntaxFactory.LiteralExpression(
+                            SyntaxKind.StringLiteralExpression, SyntaxFactory.Literal(keyValuePair.Value))))))
+            .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword), SyntaxFactory.Token(SyntaxKind.ConstKeyword))
+            .WithLeadingTrivia(SyntaxFactory.TriviaList(
+                 SyntaxFactory.Comment("/// <summary>"),
+                 SyntaxFactory.Comment($"/// Looks up a localized string using key {keyValuePair.Value}."),
+                 SyntaxFactory.Comment("/// </summary>")
+            ));
     }
 }

@@ -213,7 +213,7 @@ public class TranslatorManagerExtensionsTests : FixtureBase<ITranslatorManager>
     }
 
     [AttributeUsage(AttributeTargets.Field)]
-    private class LocalizationKeyAttribute(string key) : Attribute
+    private sealed class LocalizationKeyAttribute(string key) : Attribute
     {
         public string Key { get; } = key;
     }

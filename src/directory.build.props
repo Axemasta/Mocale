@@ -12,12 +12,17 @@
     <Authors>Axemasta</Authors>
     <Owners>Axemasta</Owners>
     <NeutralLanguage>en</NeutralLanguage>
+    <Copyright>Copyright © 2025 Axemasta</Copyright>
     <RepositoryUrl>https://github.com/Axemasta/Mocale</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageProjectUrl>https://github.com/Axemasta/Mocale</PackageProjectUrl>
     <PackageIcon>mocale_icon_light_small.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <IncludeSymbols>True</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,14 +31,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\..\assets\mocale_icon_light_small.png">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-    <None Include="..\..\README.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
+    <None Include="..\..\assets\mocale_icon_light_small.png" PackagePath="\" Pack="true"/>
+    <None Include="..\..\README.md" PackagePath="\" Pack="true"/>
   </ItemGroup>
 
   <ItemGroup>

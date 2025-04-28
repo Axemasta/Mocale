@@ -10,8 +10,6 @@
     <PackageTags>maui,mocale,localization,localisation,translation,testing,mocale.testing</PackageTags>
     <Title>Mocale.Testing</Title>
     <Description>Testing compatibility package for Mocale to enable seemless unit testing of Maui components that use mocale.</Description>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

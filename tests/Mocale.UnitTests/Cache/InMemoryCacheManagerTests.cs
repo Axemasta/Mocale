@@ -4,7 +4,7 @@ using Mocale.Cache;
 
 namespace Mocale.UnitTests.Cache;
 
-public class InMemoryCacheManagerTests : FixtureBase, IDisposable
+public class InMemoryCacheManagerTests : FixtureBase
 {
     #region Setup
 
@@ -15,9 +15,10 @@ public class InMemoryCacheManagerTests : FixtureBase, IDisposable
         return new InMemoryCacheManager(memoryCache);
     }
 
-    public void Dispose()
+    public override void Dispose()
     {
         memoryCache?.Dispose();
+        base.Dispose();
         GC.SuppressFinalize(this);
     }
 

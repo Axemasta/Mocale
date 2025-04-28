@@ -278,7 +278,7 @@ public static class BindableObjectExtension
     #endregion
 }
 
-internal class EmptyServiceProvider : IServiceProvider
+internal partial class EmptyServiceProvider : IServiceProvider
 {
     public object? GetService(Type serviceType)
     {
