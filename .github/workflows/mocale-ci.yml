@@ -116,9 +116,7 @@ jobs:
       RELEASE_TITLE: v0.0.1
       VERSION_NAME: 0.0.1
       ARTIFACT_NAME: 'drop'
-      ARTIFACTS: |
-        'Artifacts/**/*.nupkg'
-        'Artifacts/**/*.snupkg'
+      ARTIFACTS: 'Artifacts/**/*.nupkg,Artifacts/**/*.snupkg'
     steps:
     - uses: actions/checkout@v3
 
