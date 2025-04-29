@@ -116,8 +116,7 @@ jobs:
       RELEASE_TITLE: v0.0.1
       VERSION_NAME: 0.0.1
       ARTIFACT_NAME: 'drop'
-      ARTIFACTS_CSV: 'Artifacts/**/*.nupkg,Artifacts/**/*.snupkg'
-      ARTIFACTS: 'Artifacts/**/*.{nupkg,snupkg}'
+      ARTIFACTS: 'Artifacts/**/*.nupkg'
     steps:
     - uses: actions/checkout@v3
 
@@ -180,12 +179,12 @@ jobs:
     - uses: ncipollo/release-action@main
       name: Create Release
       with:
-        artifacts: ${{ env.ARTIFACTS_CSV }}
+        artifacts: 'Artifacts/**/*.nupkg,Artifacts/**/*.snupkg'
         artifactErrorsFailBuild: true
         draft: true
         generateReleaseNotes: true
         name: ${{ env.RELEASE_TITLE }}
-        tag: ${{ env.VERSION_NAME }}
+        tag: ${{ steps.tag_version.outputs.new_tag }}
         prerelease: ${{ env.IS_PRERELEASE }}
         body: 'TODO'
 
