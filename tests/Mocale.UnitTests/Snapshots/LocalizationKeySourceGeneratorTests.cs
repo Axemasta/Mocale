@@ -1,8 +1,6 @@
-﻿using Humanizer;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Mocale.SourceGenerators;
-using Newtonsoft.Json;
 
 namespace Mocale.UnitTests.Snapshots;
 
@@ -126,7 +124,7 @@ public class TranslationKeySourceGeneratorSnapshotTests
         return Verify([enGbAdditionalText]);
     }
 
-    public static Task Verify(List<AdditionalText> additionalTexts)
+    private static Task Verify(List<AdditionalText> additionalTexts)
     {
         // Create a Roslyn compilation for the syntax tree.
         var compilation = CSharpCompilation.Create(
@@ -141,7 +139,7 @@ public class TranslationKeySourceGeneratorSnapshotTests
         if (additionalTexts.Count != 0)
         {
             driver = CSharpGeneratorDriver.Create(generator)
-                .AddAdditionalTexts([..additionalTexts]);
+                .AddAdditionalTexts([.. additionalTexts]);
         }
         else
         {

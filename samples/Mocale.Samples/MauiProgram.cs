@@ -1,13 +1,13 @@
 using System.Globalization;
+using CommunityToolkit.Maui;
+using CommunityToolkit.Maui.Markup;
 using Microsoft.Extensions.Logging;
 using Mocale.Cache.SQLite;
 using Mocale.Models;
 using Mocale.Providers.GitHub.Raw;
-using Mocale.Samples.ViewModels;
-using Mocale.Samples.Pages;
-using CommunityToolkit.Maui;
 using Mocale.Samples.Enums;
-using CommunityToolkit.Maui.Markup;
+using Mocale.Samples.Pages;
+using Mocale.Samples.ViewModels;
 namespace Mocale.Samples;
 
 public static class MauiProgram

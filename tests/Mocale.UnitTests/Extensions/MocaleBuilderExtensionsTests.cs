@@ -29,7 +29,7 @@ public class MocaleBuilderExtensionsTests : FixtureBase<MocaleBuilder>
         return new MocaleBuilder()
         {
             AppBuilder = appBuilder,
-            ConfigurationManager = new Mocale.Managers.ConfigurationManager<Abstractions.IMocaleConfiguration>(new MocaleConfiguration())
+            ConfigurationManager = new Mocale.Managers.ConfigurationManager<IMocaleConfiguration>(new MocaleConfiguration())
         };
     }
 
