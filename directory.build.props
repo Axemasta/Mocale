@@ -5,7 +5,7 @@
 	</PropertyGroup>
 
   <PropertyGroup>
-    <MauiVersion>9.0.40</MauiVersion>
+    <MauiVersion>9.0.110</MauiVersion>
 
     <StandardTargetFramework>net9.0</StandardTargetFramework>
     <IosTargetFramework>net9.0-ios</IosTargetFramework>
