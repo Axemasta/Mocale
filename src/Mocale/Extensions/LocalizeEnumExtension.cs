@@ -58,7 +58,11 @@ public partial class LocalizeEnumExtension(ITranslatorManager translatorManager)
             Mode = BindingMode.OneWay,
             Bindings =
             [
-                new Binding(nameof(translatorManager.CurrentCulture), BindingMode.OneWay, source: translatorManager),
+                BindingBase.Create<ITranslatorManager, CultureInfo?>(
+                    static source => source.CurrentCulture,
+                    mode: BindingMode.OneWay,
+                    source: translatorManager),
+                // TODO: Support strong typed enum bindings, perhaps just add binding to here?
                 new Binding(Path, Mode, source: Source)
             ]
         };

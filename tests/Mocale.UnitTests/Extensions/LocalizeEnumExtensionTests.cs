@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.Globalization;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.Maui.Controls.Internals;
 using Mocale.Abstractions;
 using Mocale.Enums;
 using Mocale.Extensions;
@@ -63,8 +64,7 @@ public partial class LocalizeEnumExtensionTests : FixtureBase<LocalizeEnumExtens
         Assert.Equal(BindingMode.OneWay, multiBinding.Mode);
         Assert.Equal(2, multiBinding.Bindings.Count);
 
-        var bindingOne = Assert.IsType<Binding>(multiBinding.Bindings[0]);
-        Assert.Equal(nameof(translatorManager.CurrentCulture), bindingOne.Path);
+        var bindingOne = Assert.IsType<TypedBinding<ITranslatorManager, CultureInfo?>>(multiBinding.Bindings[0]);
         Assert.Equal(BindingMode.OneWay, bindingOne.Mode);
         Assert.Equal(translatorManager, bindingOne.Source);
 
@@ -99,8 +99,7 @@ public partial class LocalizeEnumExtensionTests : FixtureBase<LocalizeEnumExtens
         Assert.Equal(BindingMode.OneWay, multiBinding.Mode);
         Assert.Equal(2, multiBinding.Bindings.Count);
 
-        var bindingOne = Assert.IsType<Binding>(multiBinding.Bindings[0]);
-        Assert.Equal(nameof(translatorManager.CurrentCulture), bindingOne.Path);
+        var bindingOne = Assert.IsType<TypedBinding<ITranslatorManager, CultureInfo?>>(multiBinding.Bindings[0]);
         Assert.Equal(BindingMode.OneWay, bindingOne.Mode);
         Assert.Equal(translatorManager, bindingOne.Source);
 
