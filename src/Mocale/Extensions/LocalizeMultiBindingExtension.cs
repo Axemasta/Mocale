@@ -10,7 +10,7 @@ namespace Mocale.Extensions;
 /// <param name="translatorManager">Translator manager</param>
 [AcceptEmptyServiceProvider]
 [ContentProperty(nameof(Bindings))]
-public class LocalizeMultiBindingExtension(ITranslatorManager translatorManager)
+public partial class LocalizeMultiBindingExtension(ITranslatorManager translatorManager)
     : LocalizeMultiBindingExtensionBase(translatorManager), IMultiValueConverter
 {
     /// <summary>

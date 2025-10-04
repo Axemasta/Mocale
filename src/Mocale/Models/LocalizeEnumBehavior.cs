@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Mocale.Models;
 
@@ -15,6 +16,7 @@ public record LocalizeEnumBehavior
     /// <summary>
     /// The attribute to get the translation key from the enum.
     /// </summary>
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)]
     public Type LocalizeAttribute { get; init; } = typeof(DescriptionAttribute);
 
     /// <summary>
@@ -41,6 +43,7 @@ public record LocalizeEnumRule
     /// <summary>
     /// The attribute to get the translation key from the enum.
     /// </summary>
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)]
     public Type LocalizeAttribute { get; init; } = typeof(DescriptionAttribute);
 
     /// <summary>

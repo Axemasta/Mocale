@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Ardalis.GuardClauses;
+using Mocale.Serialization;
 
 namespace Mocale.Parsers;
 
@@ -11,7 +12,7 @@ internal class JsonLocalizationParser(ILogger<JsonLocalizationParser> logger) : 
     {
         try
         {
-            return JsonSerializer.Deserialize<Dictionary<string, string>>(resourceStream);
+            return JsonSerializer.Deserialize(resourceStream, LocalizationJsonContext.Default.DictionaryStringString);
         }
         catch (Exception ex)
         {

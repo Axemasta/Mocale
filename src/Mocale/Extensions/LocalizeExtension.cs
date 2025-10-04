@@ -9,7 +9,7 @@ namespace Mocale.Extensions;
 /// </summary>
 [AcceptEmptyServiceProvider]
 [ContentProperty(nameof(Key))]
-public class LocalizeExtension(ITranslatorManager translatorManager) : LocalizeBindingExtensionBase(translatorManager)
+public partial class LocalizeExtension(ITranslatorManager translatorManager) : LocalizeBindingExtensionBase(translatorManager)
 {
     /// <summary>
     ///     Localize Extension

@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Reflection;
 using System.Text.Json;
+using Mocale.Serialization;
 namespace Mocale.Providers;
 
 internal class EmbeddedResourceProvider(
@@ -75,7 +76,7 @@ internal class EmbeddedResourceProvider(
 
         try
         {
-            return JsonSerializer.Deserialize<Dictionary<string, string>>(fileStream) ?? [];
+            return JsonSerializer.Deserialize(fileStream, LocalizationJsonContext.Default.DictionaryStringString) ?? [];
         }
         catch (Exception ex)
         {
