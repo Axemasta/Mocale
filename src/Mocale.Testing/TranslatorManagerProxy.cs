@@ -23,7 +23,9 @@ public class TranslatorManagerProxy : IInternalTranslatorManager, INotifyPropert
     /// Used internally to provide translations
     /// </summary>
     /// <param name="resourceKey"></param>
-    public object? this[string resourceKey] => Translate(resourceKey);
+    public string this[string? resourceKey] => !string.IsNullOrEmpty(resourceKey)
+        ? Translate(resourceKey)
+        : string.Empty;
 
     /// <inheritdoc/>
     public string Translate(string key)

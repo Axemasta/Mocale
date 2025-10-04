@@ -12,6 +12,10 @@
     <Description>Localization framework for .NET Maui with support for over the air localization updates from external data sources.</Description>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <IsTrimmable>true</IsTrimmable>
+  </PropertyGroup>
+
   <ItemGroup>
     <InternalsVisibleTo Include="$(AssemblyName).Providers.AWS.S3" />
     <InternalsVisibleTo Include="$(AssemblyName).Providers.Azure.Blob" />

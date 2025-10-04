@@ -40,7 +40,7 @@ internal partial class TranslatorManager : IInternalTranslatorManager
 
     #region Methods
 
-    public object this[string resourceKey] => Translate(resourceKey);
+    public string this[string resourceKey] => Translate(resourceKey);
 
     #endregion Methods
 

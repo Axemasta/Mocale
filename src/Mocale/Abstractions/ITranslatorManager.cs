@@ -26,4 +26,10 @@ public interface ITranslatorManager : INotifyPropertyChanged
     /// <param name="parameters">Parameters to translate</param>
     /// <returns>Translation result</returns>
     string Translate(string key, object[] parameters);
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="resourceKey"></param>
+    string this[string resourceKey] { get; }
 }

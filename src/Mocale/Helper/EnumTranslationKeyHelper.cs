@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace Mocale.Helper;
 
 internal static class EnumTranslationKeyHelper
@@ -9,15 +11,14 @@ internal static class EnumTranslationKeyHelper
             : GetKey(@enum, behavior.UseAttribute, behavior.LocalizeAttribute, behavior.AttributePropertyName);
     }
 
-    private static string GetKey(Enum enumValue, bool useAttribute, Type localizeAttribute, string propertyName)
+    private static string GetKey(
+        Enum enumValue,
+        bool useAttribute,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] Type localizeAttribute,
+        string propertyName)
     {
-        if (useAttribute)
-        {
-            return enumValue.GetAttributeValue(localizeAttribute, propertyName) ?? enumValue.ToString();
-        }
-        else
-        {
-            return enumValue.ToString();
-        }
+        return useAttribute
+            ? enumValue.GetAttributeValue(localizeAttribute, propertyName) ?? enumValue.ToString()
+            : enumValue.ToString();
     }
 }

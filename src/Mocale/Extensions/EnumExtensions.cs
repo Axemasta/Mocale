@@ -1,10 +1,11 @@
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Mocale.Extensions;
 
 internal static class EnumExtensions
 {
-    public static string? GetAttributeValue(this Enum enumValue, Type attributeType, string propertyName)
+    public static string? GetAttributeValue(this Enum enumValue, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] Type attributeType, string propertyName)
     {
         if (!typeof(Attribute).IsAssignableFrom(attributeType))
         {

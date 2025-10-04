@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using Ardalis.GuardClauses;
 
 namespace Mocale.Extensions;
@@ -6,7 +7,6 @@ namespace Mocale.Extensions;
 ///     Localize Markup Extension.
 ///     Used to localize a given translation key.
 /// </summary>
-/// <param name="translatorManager">Translator Manager</param>
 [AcceptEmptyServiceProvider]
 [ContentProperty(nameof(Key))]
 public class LocalizeExtension(ITranslatorManager translatorManager) : LocalizeBindingExtensionBase(translatorManager)
@@ -29,17 +29,23 @@ public class LocalizeExtension(ITranslatorManager translatorManager) : LocalizeB
     /// </summary>
     public IValueConverter? Converter { get; set; }
 
+    private string TranslatedValue => translatorManager[Key!];
+
     /// <inheritdoc />
-    public override Binding ProvideValue(IServiceProvider serviceProvider)
+    public override BindingBase ProvideValue(IServiceProvider serviceProvider)
     {
         Guard.Against.NullOrEmpty(Key, nameof(Key));
 
-        return new Binding
-        {
-            Mode = BindingMode.OneWay,
-            Path = $"[{Key}]",
-            Source = translatorManager,
-            Converter = Converter
-        };
+        return BindingBase.Create<LocalizeExtension, string>(
+            static source => source.TranslatedValue,
+            mode: BindingMode.OneWay,
+            converter: Converter,
+            source: this);
+    }
+
+    /// <inheritdoc />
+    protected override void OnTranslatorManagerPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        OnPropertyChanged(nameof(TranslatedValue));
     }
 }

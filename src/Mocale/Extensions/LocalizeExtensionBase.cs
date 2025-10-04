@@ -6,18 +6,45 @@ namespace Mocale.Extensions;
 /// <summary>
 /// Localize Extension Base
 /// </summary>
-/// <param name="translatorManager">The translator manager instance to bind to</param>
-public abstract class LocalizeExtensionBase(ITranslatorManager translatorManager)
+public abstract class LocalizeExtensionBase : BindableObject, IDisposable
 {
     // ReSharper disable once InconsistentNaming
 #pragma warning disable IDE1006 // Naming Styles
-    internal readonly ITranslatorManager translatorManager = Guard.Against.Null(translatorManager, nameof(translatorManager));
+    internal readonly ITranslatorManager translatorManager;
 #pragma warning restore IDE1006 // Naming Styles
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     internal ITranslatorManager GetTranslatorManager()
     {
         return translatorManager;
+    }
+
+    /// <summary>
+    /// Localize Extension Base Constructor
+    /// </summary>
+    /// <param name="translatorManager">The translator manager instance to bind to</param>
+    protected LocalizeExtensionBase(ITranslatorManager translatorManager)
+    {
+        this.translatorManager = Guard.Against.Null(translatorManager, nameof(translatorManager));
+
+        this.translatorManager.PropertyChanged += OnTranslatorManagerPropertyChanged;
+    }
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    protected virtual void OnTranslatorManagerPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+
+    }
+
+    /// <inheritdoc />
+    public void Dispose()
+    {
+        this.translatorManager.PropertyChanged -= OnTranslatorManagerPropertyChanged;
+        GC.SuppressFinalize(this);
     }
 }
 
@@ -26,10 +53,10 @@ public abstract class LocalizeExtensionBase(ITranslatorManager translatorManager
 /// </summary>
 /// <param name="translatorManager"></param>
 public abstract class LocalizeBindingExtensionBase(ITranslatorManager translatorManager)
-    : LocalizeExtensionBase(translatorManager), IMarkupExtension<Binding>
+    : LocalizeExtensionBase(translatorManager), IMarkupExtension<BindingBase>
 {
     /// <inheritdoc />
-    public abstract Binding ProvideValue(IServiceProvider serviceProvider);
+    public abstract BindingBase ProvideValue(IServiceProvider serviceProvider);
 
     /// <inheritdoc />
     object IMarkupExtension.ProvideValue(IServiceProvider serviceProvider)

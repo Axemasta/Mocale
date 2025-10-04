@@ -1,4 +1,5 @@
 using System.Globalization;
+using Microsoft.Maui.Controls.Internals;
 using Mocale.Abstractions;
 using Mocale.Enums;
 using Mocale.Extensions;
@@ -63,10 +64,10 @@ public class LocalizeExtensionTests : FixtureBase<LocalizeExtension>
         var binding = Sut.ProvideValue(serviceProvider);
 
         // Assert
-        Assert.Equal("[KeyOne]", binding.Path);
+        var typedBinding = Assert.IsType<TypedBinding<LocalizeExtension, string>>(binding);
         Assert.Equal(BindingMode.OneWay, binding.Mode);
-        Assert.Equal(translatorManager, binding.Source);
-        Assert.Null(binding.Converter);
+        Assert.Equal(Sut, typedBinding.Source);
+        Assert.Null(typedBinding.Converter);
     }
 
     [Fact]
@@ -82,10 +83,10 @@ public class LocalizeExtensionTests : FixtureBase<LocalizeExtension>
         var binding = Sut.ProvideValue(serviceProvider);
 
         // Assert
-        Assert.Equal("[KeyOne]", binding.Path);
-        Assert.Equal(BindingMode.OneWay, binding.Mode);
-        Assert.Equal(translatorManager, binding.Source);
-        Assert.Equal(converter, binding.Converter);
+        var typedBinding = Assert.IsType<TypedBinding<LocalizeExtension, string>>(binding);
+        Assert.Equal(BindingMode.OneWay, typedBinding.Mode);
+        Assert.Equal(Sut, typedBinding.Source);
+        Assert.Equal(converter, typedBinding.Converter);
     }
 
     [Fact]
@@ -101,10 +102,9 @@ public class LocalizeExtensionTests : FixtureBase<LocalizeExtension>
         var bindingBase = ((IMarkupExtension)Sut).ProvideValue(serviceProvider);
 
         // Assert
-        var binding = Assert.IsType<Binding>(bindingBase);
-        Assert.Equal("[KeyOne]", binding.Path);
+        var binding = Assert.IsType<TypedBinding<LocalizeExtension, string>>(bindingBase);
         Assert.Equal(BindingMode.OneWay, binding.Mode);
-        Assert.Equal(translatorManager, binding.Source);
+        Assert.Equal(Sut, binding.Source);
         Assert.Equal(converter, binding.Converter);
     }
 
