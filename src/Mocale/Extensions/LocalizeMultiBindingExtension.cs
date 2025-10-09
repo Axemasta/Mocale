@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Globalization;
 using Ardalis.GuardClauses;
 
@@ -36,6 +37,8 @@ public partial class LocalizeMultiBindingExtension(ITranslatorManager translator
     {
     }
 
+    private string TranslatedValue => translatorManager[TranslationKey!];
+
     /// <inheritdoc/>
     public override MultiBinding ProvideValue(IServiceProvider serviceProvider)
     {
@@ -44,7 +47,10 @@ public partial class LocalizeMultiBindingExtension(ITranslatorManager translator
 
         var bindings = new List<BindingBase>()
         {
-            new Binding($"[{TranslationKey}]", BindingMode.OneWay, source: translatorManager),
+            BindingBase.Create<LocalizeMultiBindingExtension, string>(
+                static source => source.TranslatedValue,
+                mode: BindingMode.OneWay,
+                source: this)
         };
 
         bindings.AddRange(Bindings);
@@ -56,6 +62,12 @@ public partial class LocalizeMultiBindingExtension(ITranslatorManager translator
             Mode = BindingMode.OneWay,
             Bindings = bindings
         };
+    }
+
+    /// <inheritdoc />
+    protected override void OnTranslatorManagerPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        OnPropertyChanged(nameof(TranslatedValue));
     }
 
     /// <inheritdoc/>
