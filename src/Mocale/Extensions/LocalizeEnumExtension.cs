@@ -1,4 +1,6 @@
 using System.Globalization;
+using Ardalis.GuardClauses;
+
 namespace Mocale.Extensions;
 
 /// <summary>
@@ -6,24 +8,14 @@ namespace Mocale.Extensions;
 /// </summary>
 /// <param name="translatorManager"></param>
 [AcceptEmptyServiceProvider]
-[ContentProperty(nameof(Path))]
+[ContentProperty(nameof(EnumBinding))]
 public partial class LocalizeEnumExtension(ITranslatorManager translatorManager)
     : LocalizeMultiBindingExtensionBase(translatorManager), IMultiValueConverter
 {
     /// <summary>
-    /// Path for the binding
+    /// The binding
     /// </summary>
-    public string Path { get; set; } = ".";
-
-    /// <summary>
-    /// Binding mode for the binding
-    /// </summary>
-    public BindingMode Mode { get; set; } = BindingMode.OneWay;
-
-    /// <summary>
-    /// String format for the binding
-    /// </summary>
-    public string StringFormat { get; set; } = "{0}";
+    public BindingBase? EnumBinding { get; set; }
 
     /// <summary>
     /// Converter for the binding
@@ -36,9 +28,9 @@ public partial class LocalizeEnumExtension(ITranslatorManager translatorManager)
     public object? ConverterParameter { get; set; }
 
     /// <summary>
-    /// Source of the binding
+    /// String format for the binding
     /// </summary>
-    public object? Source { get; set; }
+    public string StringFormat { get; set; } = "{0}";
 
     /// <summary>
     /// Localize Extension
@@ -51,6 +43,8 @@ public partial class LocalizeEnumExtension(ITranslatorManager translatorManager)
     /// <inheritdoc/>
     public override MultiBinding ProvideValue(IServiceProvider serviceProvider)
     {
+        Guard.Against.Null(EnumBinding, nameof(EnumBinding));
+
         return new MultiBinding()
         {
             StringFormat = StringFormat,
@@ -62,8 +56,7 @@ public partial class LocalizeEnumExtension(ITranslatorManager translatorManager)
                     static source => source.CurrentCulture,
                     mode: BindingMode.OneWay,
                     source: translatorManager),
-                // TODO: Support strong typed enum bindings, perhaps just add binding to here?
-                new Binding(Path, Mode, source: Source)
+                EnumBinding
             ]
         };
     }

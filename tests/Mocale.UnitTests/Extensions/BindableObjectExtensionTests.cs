@@ -1574,10 +1574,13 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
         };
 
         BindableObject bindableObject = new Label();
-        var binding = new Binding(nameof(SomeViewModel.SelectedFruit), BindingMode.Default, new UpperCaseWithNumberConverter(), 1337, null, viewModel);
+        var binding = BindingBase.Create<SomeViewModel, Fruit?>(
+            static vm => vm.SelectedFruit,
+            mode: BindingMode.Default,
+            source: viewModel);
 
         // Act
-        bindableObject.SetEnumTranslation(Label.TextProperty, binding);
+        bindableObject.SetEnumTranslation(Label.TextProperty, binding, converter: new UpperCaseWithNumberConverter(), converterParameter: 1337);
 
         // Assert
         var label = Assert.IsType<Label>(bindableObject);
@@ -1771,9 +1774,12 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
         };
 
         var bindableObject = new Label();
-        var binding = new Binding(nameof(SomeViewModel.SelectedFruit), BindingMode.Default, new UpperCaseWithNumberConverter(), 73, null, viewModel);
+        var binding = BindingBase.Create<SomeViewModel, Fruit?>(
+            static vm => vm.SelectedFruit,
+            mode: BindingMode.Default,
+            source: viewModel);
 
-        bindableObject.SetEnumTranslation(Label.TextProperty, binding);
+        bindableObject.SetEnumTranslation(Label.TextProperty, binding, converter: new UpperCaseWithNumberConverter(), converterParameter: 73);
 
         var label = Assert.IsType<Label>(bindableObject);
         Assert.Equal("APPLE_73", label.Text);
@@ -1973,10 +1979,14 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
         };
 
         var label = new Label();
-        var binding = new Binding(nameof(SomeViewModel.SelectedFruit), BindingMode.Default, new UpperCaseWithNumberConverter(), 182, null, viewModel);
+
+        var binding = BindingBase.Create<SomeViewModel, Fruit?>(
+            static vm => vm.SelectedFruit,
+            mode: BindingMode.Default,
+            source: viewModel);
 
         // Act
-        var view = label.SetEnumTranslation(Label.TextProperty, binding);
+        var view = label.SetEnumTranslation(Label.TextProperty, binding, converter: new UpperCaseWithNumberConverter(), converterParameter: 182);
 
         // Assert
         Assert.IsType<Label>(view);
@@ -2173,9 +2183,13 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
         };
 
         var label = new Label();
-        var binding = new Binding(nameof(SomeViewModel.SelectedFruit), BindingMode.Default, new UpperCaseWithNumberConverter(), 73, null, viewModel);
 
-        var view = label.SetEnumTranslation(Label.TextProperty, binding);
+        var binding = BindingBase.Create<SomeViewModel, Fruit?>(
+            static vm => vm.SelectedFruit,
+            mode: BindingMode.Default,
+            source: viewModel);
+
+        var view = label.SetEnumTranslation(Label.TextProperty, binding, converter: new UpperCaseWithNumberConverter(), converterParameter: 73);
 
         Assert.IsType<Label>(view);
         Assert.Equal("APPLE_73", label.Text);
@@ -3181,7 +3195,7 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
         }
     }
 
-    private sealed partial class SomeViewModel : ObservableObject
+    internal sealed partial class SomeViewModel : ObservableObject
     {
         [ObservableProperty]
         public partial double Temperature { get; set; }
@@ -3193,7 +3207,7 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
         public partial Fruit? SelectedFruit { get; set; }
     }
 
-    private enum Fruit
+    internal enum Fruit
     {
         [Description("Fruit_Banana")]
         Banana,

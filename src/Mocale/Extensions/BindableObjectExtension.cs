@@ -98,19 +98,19 @@ public static class BindableObjectExtension
     /// <param name="property">The bindable property to target for translation</param>
     /// <param name="source">The binding you wish to localize, the type must be an enum</param>
     /// <param name="stringFormat">The string format to apply to the binding</param>
-    public static void SetEnumTranslation(this BindableObject bindableObject, BindableProperty property, Binding source, string stringFormat = "{0}")
+    /// <param name="converter">The converter to use to further transform the value, this will be applied after the enum is localized</param>
+    /// <param name="converterParameter">The converter parameter to pass to the converter if it has been set</param>
+    public static void SetEnumTranslation(this BindableObject bindableObject, BindableProperty property, BindingBase source, string stringFormat = "{0}", IValueConverter? converter = null, object? converterParameter = null)
     {
         ArgumentNullException.ThrowIfNull(bindableObject, nameof(bindableObject));
         ArgumentNullException.ThrowIfNull(source, nameof(source));
 
         var extension = new LocalizeEnumExtension()
         {
-            Path = source.Path,
-            Source = source.Source,
-            Mode = source.Mode,
+            EnumBinding = source,
             StringFormat = stringFormat,
-            Converter = source.Converter,
-            ConverterParameter = source.ConverterParameter,
+            Converter = converter,
+            ConverterParameter = converterParameter,
         };
 
         bindableObject.SetBinding(property, extension.ProvideValue(EmptyServiceProvider.Instance));
@@ -129,9 +129,13 @@ public static class BindableObjectExtension
     {
         ArgumentNullException.ThrowIfNull(bindableObject, nameof(bindableObject));
 
+        var binding = BindingBase.Create<Enum, Enum>(
+            static num => num,
+            source: enumValue);
+
         var extension = new LocalizeEnumExtension()
         {
-            Source = enumValue,
+            EnumBinding = binding,
             StringFormat = stringFormat,
         };
 
@@ -235,10 +239,12 @@ public static class BindableObjectExtension
     /// <param name="property">The bindable property to target for translation</param>
     /// <param name="source">The binding you wish to localize, the type must be an enum</param>
     /// <param name="stringFormat">The string format to apply to the binding</param>
-    public static TView SetEnumTranslation<TView>(this TView view, BindableProperty property, Binding source, string stringFormat = "{0}")
+    /// <param name="converter">The converter to use to further transform the value, this will be applied after the enum is localized</param>
+    /// <param name="converterParameter">The converter parameter to pass to the converter if it has been set</param>
+    public static TView SetEnumTranslation<TView>(this TView view, BindableProperty property, BindingBase source, string stringFormat = "{0}", IValueConverter? converter = null, object? converterParameter = null)
         where TView : View
     {
-        SetEnumTranslation(view as BindableObject, property, source, stringFormat);
+        SetEnumTranslation(view as BindableObject, property, source, stringFormat, converter, converterParameter);
         return view;
     }
 

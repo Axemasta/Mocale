@@ -52,8 +52,7 @@ public partial class LocalizeEnumExtensionTests : FixtureBase<LocalizeEnumExtens
     {
         // Arrange
         var source = new Picker();
-        Sut.Path = "Name";
-        Sut.Source = source;
+        Sut.EnumBinding = new Binding("Name", BindingMode.OneWay, source: source);
 
         // Act
         var multiBinding = Sut.ProvideValue(serviceProvider);
@@ -83,12 +82,10 @@ public partial class LocalizeEnumExtensionTests : FixtureBase<LocalizeEnumExtens
         var converter = Mock.Of<IValueConverter>();
         var source = new Picker();
 
-        Sut.Path = "Name";
-        Sut.Mode = BindingMode.TwoWay;
+        Sut.EnumBinding = new Binding("Name", BindingMode.TwoWay, source: source);
         Sut.StringFormat = "!!{0}__";
         Sut.Converter = converter;
         Sut.ConverterParameter = 1357;
-        Sut.Source = source;
 
         // Act
         var multiBinding = Sut.ProvideValue(serviceProvider);
@@ -287,8 +284,10 @@ public partial class LocalizeEnumExtensionTests : FixtureBase<LocalizeEnumExtens
 
         var viewModel = new VehicleViewModel();
 
-        Sut.Path = nameof(viewModel.SelectedVehicle);
-        Sut.Source = viewModel;
+        Sut.EnumBinding = BindingBase.Create<VehicleViewModel, Vehicle?>(
+            static vm => vm.SelectedVehicle,
+            mode: BindingMode.OneWay,
+            source: viewModel);
 
         label.SetBinding(Label.TextProperty, Sut.ProvideValue(Mock.Of<IServiceProvider>()));
 
@@ -406,7 +405,7 @@ public partial class LocalizeEnumExtensionTests : FixtureBase<LocalizeEnumExtens
 
     #region Test Data
 
-    private enum Vehicle
+    internal enum Vehicle
     {
         [Description("Key_Car")] Car,
 
@@ -444,7 +443,7 @@ public partial class LocalizeEnumExtensionTests : FixtureBase<LocalizeEnumExtens
         public string CustomTranslationKey { get; } = value;
     }
 
-    private sealed partial class VehicleViewModel : ObservableObject
+    internal sealed partial class VehicleViewModel : ObservableObject
     {
         [ObservableProperty]
         public partial Vehicle? SelectedVehicle { get; set; }
