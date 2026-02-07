@@ -92,6 +92,7 @@ public static class MocaleBuilderExtensions
 
         builder.ExternalProviderRegistered = true;
         builder.ExternalProviderName = provider.Name;
+        builder.ExternalProviderConfiguration = config;
 
         builder.RegisterExternalResourceFileTypeResources(config);
     }

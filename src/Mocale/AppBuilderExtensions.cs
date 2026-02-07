@@ -19,7 +19,7 @@ public static class AppBuilderExtensions
     /// <exception cref="InitializationException">If configuration is invalid, see details for troubleshooting</exception>
     public static MauiAppBuilder UseMocale(
         this MauiAppBuilder mauiAppBuilder,
-        Action<MocaleBuilder>? builder = default)
+        Action<MocaleBuilder>? builder = null)
     {
         var mocaleBuilder = new MocaleBuilder
         {
@@ -65,6 +65,11 @@ public static class AppBuilderExtensions
         if (!config.UseExternalProvider)
         {
             mauiAppBuilder.Services.AddTransient<IExternalLocalizationProvider, InactiveExternalLocalizationProvider>();
+        }
+
+        if (mocaleBuilder.ExternalProviderConfiguration is IEtagCompatibleProviderConfiguration etagCompatibleProviderConfiguration)
+        {
+            etagCompatibleProviderConfiguration.RegisterEtagCacheManagerIfNeeded(mocaleBuilder);
         }
 
         if (!mocaleBuilder.CacheProviderRegistered)

@@ -24,7 +24,15 @@ public class MocaleBuilder
 
     internal bool ExternalProviderRegistered { get; set; }
 
+    internal IExternalProviderConfiguration? ExternalProviderConfiguration { get; set; }
+
     internal bool CacheProviderRegistered { get; set; }
+
+    /// <summary>
+    /// Action to register the ETag cache manager for the current cache provider.
+    /// Set by the cache provider during registration.
+    /// </summary>
+    internal Action<IServiceCollection>? RegisterETagCacheManager { get; set; }
 
     /// <summary>
     /// Use Mocale With Given Configuration

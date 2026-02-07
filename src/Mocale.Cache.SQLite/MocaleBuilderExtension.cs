@@ -43,6 +43,11 @@ public static class MocaleBuilderExtension
 
         builder.CacheProviderRegistered = true;
 
+        builder.RegisterETagCacheManager = services =>
+        {
+            services.AddSingleton<IETagCacheManager, EtagCacheManager>();
+        };
+
         return builder;
     }
 }

@@ -22,7 +22,7 @@ public static class MocaleBuilderExtension
 
         builder.RegisterExternalProvider<IBlobStorageConfig>(typeof(BlobLocalizationProvider), config);
 
-        if (config.BlobContainerUri.OriginalString.Equals("app://mocale", StringComparison.Ordinal))
+        if (config.BlobContainerUri.OriginalString.Equals(BlobStorageConfig.DefaultBlobContainerUri, StringComparison.Ordinal))
         {
             throw new InitializationException("You must set a blob container uri to use this provider");
         }
