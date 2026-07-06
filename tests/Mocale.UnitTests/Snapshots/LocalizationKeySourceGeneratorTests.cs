@@ -1,8 +1,7 @@
-﻿using Humanizer;
+﻿using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Mocale.SourceGenerators;
-using Newtonsoft.Json;
 
 namespace Mocale.UnitTests.Snapshots;
 
@@ -23,7 +22,7 @@ public class TranslationKeySourceGeneratorSnapshotTests
 
         var enGbAdditionalText = new TestAdditionalText("en-GB.json", enGbJson);
 
-        return Verify([enGbAdditionalText]);
+        return VerifyAdditionalTexts([enGbAdditionalText]);
     }
 
     [Fact]
@@ -52,7 +51,7 @@ public class TranslationKeySourceGeneratorSnapshotTests
         var enGbAdditionalText = new TestAdditionalText("en-GB.json", enGbJson);
         var frFrAdditionalText = new TestAdditionalText("fr-FR.json", frFrJson);
 
-        return Verify([enGbAdditionalText, frFrAdditionalText]);
+        return VerifyAdditionalTexts([enGbAdditionalText, frFrAdditionalText]);
     }
 
     [Fact]
@@ -81,13 +80,13 @@ public class TranslationKeySourceGeneratorSnapshotTests
         var enGbAdditionalText = new TestAdditionalText("en-GB.json", enGbJson);
         var frFrAdditionalText = new TestAdditionalText("fr-FR.json", frFrJson);
 
-        return Verify([enGbAdditionalText, frFrAdditionalText]);
+        return VerifyAdditionalTexts([enGbAdditionalText, frFrAdditionalText]);
     }
 
     [Fact]
     public Task GeneratesTranslationKeys_WhenNoAdditionalFiles_ShouldGenerateNoKeys()
     {
-        return Verify([]);
+        return VerifyAdditionalTexts([]);
     }
 
     [Fact]
@@ -123,14 +122,14 @@ public class TranslationKeySourceGeneratorSnapshotTests
 
         var enGbAdditionalText = new TestAdditionalText("en-GB.json", enGbJson);
 
-        return Verify([enGbAdditionalText]);
+        return VerifyAdditionalTexts([enGbAdditionalText]);
     }
 
-    public static Task Verify(List<AdditionalText> additionalTexts)
+    private static Task VerifyAdditionalTexts(List<AdditionalText> additionalTexts)
     {
         // Create a Roslyn compilation for the syntax tree.
         var compilation = CSharpCompilation.Create(
-            assemblyName: "Tests");
+            "Tests");
 
         // Create an instance of our LocalizationKeySourceGenerator incremental source generator
         var generator = new LocalizationKeySourceGenerator();
@@ -152,6 +151,6 @@ public class TranslationKeySourceGeneratorSnapshotTests
         driver = driver.RunGenerators(compilation);
 
         // Use verify to snapshot test the source generator output!
-        return Verifier.Verify(driver);
+        return Verify(driver);
     }
 }
