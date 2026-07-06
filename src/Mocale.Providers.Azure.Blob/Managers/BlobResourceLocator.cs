@@ -1,6 +1,6 @@
 namespace Mocale.Providers.Azure.Blob.Managers;
 
-internal class BlobResourceLocator : IBlobResourceLocator
+internal partial class BlobResourceLocator : IBlobResourceLocator
 {
     #region Fields
 
@@ -76,7 +76,7 @@ internal class BlobResourceLocator : IBlobResourceLocator
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "An exception occurred location resource for culture: {CultureName}", cultureInfo.Name);
+            LogAnExceptionOccurredLocationResourceForCultureCultureName(ex, cultureInfo.Name);
         }
 
         return new BlobResourceInfo
@@ -86,4 +86,11 @@ internal class BlobResourceLocator : IBlobResourceLocator
     }
 
     #endregion Interface Implementations
+
+    #region Logging
+
+    [LoggerMessage(LogLevel.Error, "An exception occurred location resource for culture: {CultureName}")]
+    partial void LogAnExceptionOccurredLocationResourceForCultureCultureName(Exception exception, string cultureName);
+
+    #endregion Logging
 }

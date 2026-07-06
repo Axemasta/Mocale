@@ -1,8 +1,9 @@
 using System.Globalization;
 using Microsoft.Extensions.Logging;
+
 namespace Mocale.Cache.SQLite.Repositories;
 
-internal class TranslationsRepository : RepositoryBase, ITranslationsRepository
+internal partial class TranslationsRepository : RepositoryBase, ITranslationsRepository
 {
     #region Constructors
 
@@ -26,12 +27,7 @@ internal class TranslationsRepository : RepositoryBase, ITranslationsRepository
 
         foreach (var translation in translations)
         {
-            entities.Add(new TranslationItem
-            {
-                CultureName = cultureInfo.Name,
-                Key = translation.Key,
-                Value = translation.Value,
-            });
+            entities.Add(new TranslationItem { CultureName = cultureInfo.Name, Key = translation.Key, Value = translation.Value });
         }
 
         return entities;
@@ -52,7 +48,7 @@ internal class TranslationsRepository : RepositoryBase, ITranslationsRepository
 
             if (entities is null || entities.Count < 1)
             {
-                logger.LogTrace("No cached translations found for culture: {CultureName}", cultureInfo.Name);
+                LogNoCachedTranslationsFoundForCultureCultureName(logger, cultureInfo.Name);
                 return null;
             }
 
@@ -60,7 +56,7 @@ internal class TranslationsRepository : RepositoryBase, ITranslationsRepository
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "An exception occurred retrieving translations for culture: {CultureName}", cultureInfo);
+            LogAnExceptionOccurredRetrievingTranslationsForCultureCultureName(logger, ex, cultureInfo);
             return null;
         }
     }
@@ -128,7 +124,7 @@ internal class TranslationsRepository : RepositoryBase, ITranslationsRepository
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "An exception occurred adding translations to the database for culture: {CultureName}", cultureInfo.Name);
+            LogAnExceptionOccurredAddingTranslationsToTheDatabaseForCultureCultureName(logger, ex, cultureInfo.Name);
             return false;
         }
     }
@@ -145,7 +141,7 @@ internal class TranslationsRepository : RepositoryBase, ITranslationsRepository
 
             if (entities is null || entities.Count < 1)
             {
-                logger.LogWarning("No translations to delete for culture: {CultureName}", cultureInfo.Name);
+                LogNoTranslationsToDeleteForCultureCultureName(logger, cultureInfo.Name);
                 return false;
             }
 
@@ -157,10 +153,29 @@ internal class TranslationsRepository : RepositoryBase, ITranslationsRepository
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "An exception occurred deleting translations for culture: {CultureName}", cultureInfo);
+            LogAnExceptionOccurredDeletingTranslationsForCultureCultureName(logger, ex, cultureInfo);
             return false;
         }
     }
 
     #endregion Interface Implementations
+
+    #region Logging
+
+    [LoggerMessage(LogLevel.Trace, "No cached translations found for culture: {CultureName}")]
+    static partial void LogNoCachedTranslationsFoundForCultureCultureName(ILogger logger, string cultureName);
+
+    [LoggerMessage(LogLevel.Warning, "No translations to delete for culture: {CultureName}")]
+    static partial void LogNoTranslationsToDeleteForCultureCultureName(ILogger logger, string cultureName);
+
+    [LoggerMessage(LogLevel.Error, "An exception occurred retrieving translations for culture: {CultureName}")]
+    static partial void LogAnExceptionOccurredRetrievingTranslationsForCultureCultureName(ILogger logger, Exception exception, CultureInfo cultureName);
+
+    [LoggerMessage(LogLevel.Error, "An exception occurred adding translations to the database for culture: {CultureName}")]
+    static partial void LogAnExceptionOccurredAddingTranslationsToTheDatabaseForCultureCultureName(ILogger logger, Exception exception, string cultureName);
+
+    [LoggerMessage(LogLevel.Error, "An exception occurred deleting translations for culture: {CultureName}")]
+    static partial void LogAnExceptionOccurredDeletingTranslationsForCultureCultureName(ILogger logger, Exception exception, CultureInfo cultureName);
+
+    #endregion Logging
 }

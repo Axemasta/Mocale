@@ -3,7 +3,7 @@ using Ardalis.GuardClauses;
 
 namespace Mocale.Managers;
 
-internal class CurrentCultureManager : ICurrentCultureManager
+internal partial class CurrentCultureManager : ICurrentCultureManager
 {
     #region Fields
 
@@ -20,11 +20,11 @@ internal class CurrentCultureManager : ICurrentCultureManager
         ILogger<CurrentCultureManager> logger,
         IPreferences preferences)
     {
-        mocaleConfigurationManager = Guard.Against.Null(mocaleConfigurationManager, nameof(mocaleConfigurationManager));
+        mocaleConfigurationManager = Guard.Against.Null(mocaleConfigurationManager);
 
         mocaleConfiguration = mocaleConfigurationManager.Configuration;
-        this.logger = Guard.Against.Null(logger, nameof(logger));
-        this.preferences = Guard.Against.Null(preferences, nameof(preferences));
+        this.logger = Guard.Against.Null(logger);
+        this.preferences = Guard.Against.Null(preferences);
     }
 
     #endregion Constructors
@@ -45,7 +45,7 @@ internal class CurrentCultureManager : ICurrentCultureManager
 
         if (string.IsNullOrEmpty(lastUsedCulture))
         {
-            logger.LogTrace("Setting Last Used Culture as: {DefaultCulture}", defaultCulture);
+            LogSettingLastUsedCultureAsDefaultCulture(defaultCulture);
             SetActiveCulture(defaultCulture);
             return defaultCulture;
         }
@@ -57,7 +57,7 @@ internal class CurrentCultureManager : ICurrentCultureManager
 
         // TODO: Wipe preferences if this happens?
 
-        logger.LogWarning("Unable to parse culture from preferences: {LastUsedCulture}", lastUsedCulture);
+        LogUnableToParseCultureFromPreferencesLastUsedCulture(lastUsedCulture);
         return defaultCulture;
     }
 
@@ -74,5 +74,14 @@ internal class CurrentCultureManager : ICurrentCultureManager
     }
 
     #endregion Interface Implementations
-}
 
+    #region Logging
+
+    [LoggerMessage(LogLevel.Trace, "Setting Last Used Culture as: {DefaultCulture}")]
+    partial void LogSettingLastUsedCultureAsDefaultCulture(CultureInfo defaultCulture);
+
+    [LoggerMessage(LogLevel.Warning, "Unable to parse culture from preferences: {LastUsedCulture}")]
+    partial void LogUnableToParseCultureFromPreferencesLastUsedCulture(string lastUsedCulture);
+
+    #endregion Logging
+}

@@ -2,7 +2,7 @@ using Mocale.Extensions;
 
 namespace Mocale.Providers.Azure.Blob;
 
-internal sealed class BlobLocalizationProvider : IExternalLocalizationProvider
+internal sealed partial class BlobLocalizationProvider : IExternalLocalizationProvider
 {
     #region Fields
 
@@ -78,7 +78,7 @@ internal sealed class BlobLocalizationProvider : IExternalLocalizationProvider
 
             if (blobStream is null)
             {
-                logger.LogWarning("Blob stream was null for url: {BlobUrl}", blobUrl);
+                LogBlobStreamWasNullForUrlBlobUrl(blobUrl);
                 return null;
             }
 
@@ -86,7 +86,7 @@ internal sealed class BlobLocalizationProvider : IExternalLocalizationProvider
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "An exception occurred retrieving & parsing file from blob storage: {BlobUrl}", blobUrl);
+            LogAnExceptionOccurredRetrievingParsingFileFromBlobStorageBlobUrl(ex, blobUrl);
             return null;
         }
     }
@@ -101,7 +101,7 @@ internal sealed class BlobLocalizationProvider : IExternalLocalizationProvider
 
         if (resourceUrl is null)
         {
-            logger.LogWarning("Unable to file file that matches culture name: {CultureName}", cultureInfo.Name);
+            LogUnableToFileFileThatMatchesCultureNameCultureName(cultureInfo.Name);
 
             // File could not be found
             return new ExternalLocalizationResult()
@@ -114,7 +114,7 @@ internal sealed class BlobLocalizationProvider : IExternalLocalizationProvider
 
         if (fileContents is null)
         {
-            logger.LogWarning("Unable to read file contents as localizations: {ResourceUrl}", resourceUrl);
+            LogUnableToReadFileContentsAsLocalizationsResourceUrl(resourceUrl);
 
             return new ExternalLocalizationResult()
             {
@@ -130,4 +130,20 @@ internal sealed class BlobLocalizationProvider : IExternalLocalizationProvider
     }
 
     #endregion Interface Implementations
+
+    #region Logging
+
+    [LoggerMessage(LogLevel.Warning, "Blob stream was null for url: {BlobUrl}")]
+    partial void LogBlobStreamWasNullForUrlBlobUrl(Uri blobUrl);
+
+    [LoggerMessage(LogLevel.Error, "An exception occurred retrieving & parsing file from blob storage: {BlobUrl}")]
+    partial void LogAnExceptionOccurredRetrievingParsingFileFromBlobStorageBlobUrl(Exception exception, Uri blobUrl);
+
+    [LoggerMessage(LogLevel.Warning, "Unable to file file that matches culture name: {CultureName}")]
+    partial void LogUnableToFileFileThatMatchesCultureNameCultureName(string cultureName);
+
+    [LoggerMessage(LogLevel.Warning, "Unable to read file contents as localizations: {ResourceUrl}")]
+    partial void LogUnableToReadFileContentsAsLocalizationsResourceUrl(Uri resourceUrl);
+
+    #endregion Logging
 }

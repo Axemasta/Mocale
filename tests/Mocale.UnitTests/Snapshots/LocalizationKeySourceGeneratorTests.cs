@@ -139,8 +139,10 @@ public class TranslationKeySourceGeneratorSnapshotTests
 
         if (additionalTexts.Count != 0)
         {
+#pragma warning disable IDE0055 // Fix formatting - It doesn't like the collection expression way of creating an immutable array!
             driver = CSharpGeneratorDriver.Create(generator)
                 .AddAdditionalTexts([..additionalTexts]);
+#pragma warning restore IDE0055
         }
         else
         {

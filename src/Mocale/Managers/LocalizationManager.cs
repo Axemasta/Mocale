@@ -1,8 +1,9 @@
 using System.Globalization;
 using Ardalis.GuardClauses;
+
 namespace Mocale.Managers;
 
-internal class LocalizationManager : ILocalizationManager
+internal partial class LocalizationManager : ILocalizationManager
 {
     private readonly ICurrentCultureManager currentCultureManager;
     private readonly ILogger logger;
@@ -19,13 +20,13 @@ internal class LocalizationManager : ILocalizationManager
         ITranslationResolver translationResolver,
         IInternalTranslatorManager translatorManager)
     {
-        this.currentCultureManager = Guard.Against.Null(currentCultureManager, nameof(currentCultureManager));
-        this.logger = Guard.Against.Null(logger, nameof(logger));
-        this.translationResolver = Guard.Against.Null(translationResolver, nameof(translationResolver));
-        this.translatorManager = Guard.Against.Null(translatorManager, nameof(this.translatorManager));
+        this.currentCultureManager = Guard.Against.Null(currentCultureManager);
+        this.logger = Guard.Against.Null(logger);
+        this.translationResolver = Guard.Against.Null(translationResolver);
+        this.translatorManager = Guard.Against.Null(translatorManager);
 
-        configurationManager = Guard.Against.Null(configurationManager, nameof(configurationManager));
-        this.mocaleConfiguration = configurationManager.Configuration;
+        configurationManager = Guard.Against.Null(configurationManager);
+        mocaleConfiguration = configurationManager.Configuration;
 
         CurrentCulture = currentCultureManager.GetActiveCulture();
     }
@@ -47,7 +48,7 @@ internal class LocalizationManager : ILocalizationManager
 
             if (!loaded)
             {
-                logger.LogWarning("Unable to load culture {CultureName}, no localizations found", culture.Name);
+                LogUnableToLoadCultureCultureNameNoLocalizationsFound(culture.Name);
                 return false;
             }
 
@@ -59,13 +60,13 @@ internal class LocalizationManager : ILocalizationManager
 
             currentCultureManager.SetActiveCulture(culture);
 
-            logger.LogDebug("Updated localization culture to {CultureName}", culture.Name);
+            LogUpdatedLocalizationCultureToCultureName(culture.Name);
 
             return true;
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "An exception occurred loading culture: {CultureName}", culture.Name);
+            LogAnExceptionOccurredLoadingCultureCultureName(ex, culture.Name);
 
             return false;
         }
@@ -79,7 +80,7 @@ internal class LocalizationManager : ILocalizationManager
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "An exception occurred initializing LocalizationManager");
+            LogAnExceptionOccurredInitializingLocalizationManager(ex);
             return false;
         }
     }
@@ -90,17 +91,17 @@ internal class LocalizationManager : ILocalizationManager
 
         if (!localTranslations.Loaded)
         {
-            logger.LogWarning("Unable to load translations for culture: {CultureName}", CurrentCulture.Name);
+            LogUnableToLoadTranslationsForCultureCultureName(CurrentCulture.Name);
             return Task.FromResult(false);
         }
 
         translatorManager.UpdateTranslations(localTranslations.Localization, localTranslations.Source);
 
-        logger.LogTrace("Loaded local translations from source: {TranslationSource}", localTranslations.Source);
+        LogLoadedLocalTranslationsFromSourceTranslationSource(localTranslations.Source);
 
         if (localTranslations.Source is TranslationSource.Internal or TranslationSource.ColdCache && mocaleConfiguration.UseExternalProvider)
         {
-            logger.LogInformation("External translations can be updated, checking for newer copy...");
+            LogExternalTranslationsCanBeUpdatedCheckingForNewerCopy();
 
             // Check cache and go get up to date translations
             Task.Run(() => CheckForTranslationUpdates(CurrentCulture))
@@ -118,7 +119,7 @@ internal class LocalizationManager : ILocalizationManager
 
         if (!external.Loaded)
         {
-            logger.LogWarning("Unable to load external translations for culture: {CultureInfo}", cultureInfo);
+            LogUnableToLoadExternalTranslationsForCultureCultureInfo(cultureInfo);
             return;
         }
 
@@ -136,7 +137,7 @@ internal class LocalizationManager : ILocalizationManager
         }
         else
         {
-            logger.LogInformation("No internal translations found for culture: {CultureName}, consider adding them as a backup", culture.Name);
+            LogNoInternalTranslationsFoundForCultureCultureNameConsiderAddingThemAsABackup(culture.Name);
             return false;
         }
     }
@@ -151,7 +152,7 @@ internal class LocalizationManager : ILocalizationManager
         }
         else
         {
-            logger.LogWarning("Unable to load culture {CultureName} from external provider", culture.Name);
+            LogUnableToLoadCultureCultureNameFromExternalProvider(culture.Name);
         }
 
         var localTranslations = translationResolver.LoadLocalTranslations(culture);
@@ -162,7 +163,7 @@ internal class LocalizationManager : ILocalizationManager
         }
         else
         {
-            logger.LogInformation("No internal translations found for culture: {CultureName}, consider adding them as a backup", culture.Name);
+            LogNoInternalTranslationsFoundForCultureCultureNameConsiderAddingThemAsABackup(culture.Name);
         }
 
         return result.Loaded || localTranslations.Loaded;
@@ -177,4 +178,38 @@ internal class LocalizationManager : ILocalizationManager
         CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
         CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
     }
+
+    #region Logging
+
+    [LoggerMessage(LogLevel.Debug, "Updated localization culture to {CultureName}")]
+    partial void LogUpdatedLocalizationCultureToCultureName(string cultureName);
+
+    [LoggerMessage(LogLevel.Trace, "Loaded local translations from source: {TranslationSource}")]
+    partial void LogLoadedLocalTranslationsFromSourceTranslationSource(TranslationSource translationSource);
+
+    [LoggerMessage(LogLevel.Information, "No internal translations found for culture: {CultureName}, consider adding them as a backup")]
+    partial void LogNoInternalTranslationsFoundForCultureCultureNameConsiderAddingThemAsABackup(string cultureName);
+
+    [LoggerMessage(LogLevel.Warning, "Unable to load culture {CultureName}, no localizations found")]
+    partial void LogUnableToLoadCultureCultureNameNoLocalizationsFound(string cultureName);
+
+    [LoggerMessage(LogLevel.Error, "An exception occurred loading culture: {CultureName}")]
+    partial void LogAnExceptionOccurredLoadingCultureCultureName(Exception exception, string cultureName);
+
+    [LoggerMessage(LogLevel.Error, "An exception occurred initializing LocalizationManager")]
+    partial void LogAnExceptionOccurredInitializingLocalizationManager(Exception exception);
+
+    [LoggerMessage(LogLevel.Warning, "Unable to load translations for culture: {CultureName}")]
+    partial void LogUnableToLoadTranslationsForCultureCultureName(string cultureName);
+
+    [LoggerMessage(LogLevel.Information, "External translations can be updated, checking for newer copy...")]
+    partial void LogExternalTranslationsCanBeUpdatedCheckingForNewerCopy();
+
+    [LoggerMessage(LogLevel.Warning, "Unable to load external translations for culture: {CultureInfo}")]
+    partial void LogUnableToLoadExternalTranslationsForCultureCultureInfo(CultureInfo cultureInfo);
+
+    [LoggerMessage(LogLevel.Warning, "Unable to load culture {CultureName} from external provider")]
+    partial void LogUnableToLoadCultureCultureNameFromExternalProvider(string cultureName);
+
+    #endregion Logging
 }

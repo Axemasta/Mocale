@@ -1,7 +1,8 @@
 using Microsoft.Extensions.Logging;
+
 namespace Mocale.Cache.SQLite.Providers;
 
-internal class DatabaseConnectionProvider : IDatabaseConnectionProvider
+internal partial class DatabaseConnectionProvider : IDatabaseConnectionProvider
 {
     #region Fields
 
@@ -9,7 +10,7 @@ internal class DatabaseConnectionProvider : IDatabaseConnectionProvider
     private readonly IDatabasePathProvider databasePathProvider;
     private readonly ILogger logger;
 
-    #endregion
+    #endregion Fields
 
     #region Constructors
 
@@ -17,11 +18,11 @@ internal class DatabaseConnectionProvider : IDatabaseConnectionProvider
         IDatabasePathProvider databasePathProvider,
         ILogger<DatabaseConnectionProvider> logger)
     {
-        this.databasePathProvider = Guard.Against.Null(databasePathProvider, nameof(databasePathProvider));
-        this.logger = Guard.Against.Null(logger, nameof(logger));
+        this.databasePathProvider = Guard.Against.Null(databasePathProvider);
+        this.logger = Guard.Against.Null(logger);
 
         // This could cause issues if we need to rebuild the connection...
-        this.connectionLazy = new Lazy<SQLiteConnection>(BuildConnection, LazyThreadSafetyMode.ExecutionAndPublication);
+        connectionLazy = new Lazy<SQLiteConnection>(BuildConnection, LazyThreadSafetyMode.ExecutionAndPublication);
     }
 
     #endregion Constructors
@@ -32,7 +33,7 @@ internal class DatabaseConnectionProvider : IDatabaseConnectionProvider
     {
         var databasePath = databasePathProvider.GetDatabasePath();
 
-        logger.LogTrace("Opening connecting to database: {DatabasePath}", databasePath);
+        LogOpeningConnectingToDatabaseDatabasePath(databasePath);
 
         return new SQLiteConnection(
             databasePath,
@@ -50,4 +51,11 @@ internal class DatabaseConnectionProvider : IDatabaseConnectionProvider
     }
 
     #endregion Interface Implementations
+
+    #region Logging
+
+    [LoggerMessage(LogLevel.Trace, "Opening connecting to database: {DatabasePath}")]
+    partial void LogOpeningConnectingToDatabaseDatabasePath(string databasePath);
+
+    #endregion Logging
 }

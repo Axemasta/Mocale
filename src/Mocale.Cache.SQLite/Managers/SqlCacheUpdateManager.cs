@@ -4,7 +4,7 @@ using Mocale.Abstractions;
 
 namespace Mocale.Cache.SQLite.Managers;
 
-internal class SqlCacheUpdateManager : ICacheUpdateManager
+internal partial class SqlCacheUpdateManager : ICacheUpdateManager
 {
     private readonly ICacheRepository cacheRepository;
     private readonly ILogger logger;
@@ -18,12 +18,12 @@ internal class SqlCacheUpdateManager : ICacheUpdateManager
         IConfigurationManager<ISqliteConfig> sqliteConfigurationManager,
         TimeProvider timeProvider)
     {
-        this.cacheRepository = Guard.Against.Null(cacheRepository, nameof(cacheRepository));
-        this.logger = Guard.Against.Null(logger, nameof(logger));
-        this.timeProvider = Guard.Against.Null(timeProvider, nameof(timeProvider));
+        this.cacheRepository = Guard.Against.Null(cacheRepository);
+        this.logger = Guard.Against.Null(logger);
+        this.timeProvider = Guard.Against.Null(timeProvider);
 
-        sqliteConfigurationManager = Guard.Against.Null(sqliteConfigurationManager, nameof(sqliteConfigurationManager));
-        this.sqliteConfig = sqliteConfigurationManager.Configuration;
+        sqliteConfigurationManager = Guard.Against.Null(sqliteConfigurationManager);
+        sqliteConfig = sqliteConfigurationManager.Configuration;
     }
 
     #region Interface Implementations
@@ -56,11 +56,11 @@ internal class SqlCacheUpdateManager : ICacheUpdateManager
 
         if (!deleted)
         {
-            logger.LogWarning("Unable to delete cache for culture: {CultureName}", cultureInfo.Name);
+            LogUnableToDeleteCacheForCultureCultureName(cultureInfo.Name);
             return;
         }
 
-        logger.LogTrace("Deleted update cache for culture: {CultureName}", cultureInfo.Name);
+        LogDeletedUpdateCacheForCultureCultureName(cultureInfo.Name);
     }
 
     /// <inheritdoc/>
@@ -70,12 +70,28 @@ internal class SqlCacheUpdateManager : ICacheUpdateManager
 
         if (!deleted)
         {
-            logger.LogWarning("Unable to delete cache for all cultures");
+            LogUnableToDeleteCacheForAllCultures();
             return;
         }
 
-        logger.LogTrace("Deleted update cache for all cultures");
+        LogDeletedUpdateCacheForAllCultures();
     }
 
     #endregion Interface Implementations
+
+    #region Logging
+
+    [LoggerMessage(LogLevel.Trace, "Deleted update cache for culture: {CultureName}")]
+    partial void LogDeletedUpdateCacheForCultureCultureName(string cultureName);
+
+    [LoggerMessage(LogLevel.Warning, "Unable to delete cache for culture: {CultureName}")]
+    partial void LogUnableToDeleteCacheForCultureCultureName(string cultureName);
+
+    [LoggerMessage(LogLevel.Warning, "Unable to delete cache for all cultures")]
+    partial void LogUnableToDeleteCacheForAllCultures();
+
+    [LoggerMessage(LogLevel.Trace, "Deleted update cache for all cultures")]
+    partial void LogDeletedUpdateCacheForAllCultures();
+
+    #endregion Logging
 }

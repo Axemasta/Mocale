@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using Mocale.Abstractions;
 namespace Mocale.Cache.SQLite.Managers;
 
-internal class LocalisationCacheManager(
+internal partial class LocalisationCacheManager(
     ICacheUpdateManager cacheUpdateManager,
     ILogger<LocalisationCacheManager> logger,
     ITranslationsRepository translationsRepository)
@@ -30,7 +30,7 @@ internal class LocalisationCacheManager(
 
         if (!saved)
         {
-            logger.LogWarning("Failed to add translations for culture: {CultureName}", cultureInfo.Name);
+            LogFailedToAddTranslationsForCultureCultureName(cultureInfo.Name);
             return false;
         }
 
@@ -38,11 +38,21 @@ internal class LocalisationCacheManager(
 
         if (!cacheUpdated)
         {
-            logger.LogWarning("Translations for culture: {CultureName} were saved to the cache database but the cache history was not updated", cultureInfo.Name);
+            LogTranslationsForCultureCultureNameWereSavedToTheCacheDatabaseButTheCacheHistoryWasNotUpdated(cultureInfo.Name);
         }
 
         return cacheUpdated;
     }
 
     #endregion Interface Implementations
+
+    #region Logging
+
+    [LoggerMessage(LogLevel.Warning, "Failed to add translations for culture: {CultureName}")]
+    partial void LogFailedToAddTranslationsForCultureCultureName(string cultureName);
+
+    [LoggerMessage(LogLevel.Warning, "Translations for culture: {CultureName} were saved to the cache database but the cache history was not updated")]
+    partial void LogTranslationsForCultureCultureNameWereSavedToTheCacheDatabaseButTheCacheHistoryWasNotUpdated(string cultureName);
+
+    #endregion Logging
 }

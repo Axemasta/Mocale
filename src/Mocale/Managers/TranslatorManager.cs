@@ -57,11 +57,11 @@ internal partial class TranslatorManager : IInternalTranslatorManager
 
         if (BackupLocalizations.TryGetValue(key, out var internalTranslation))
         {
-            logger.LogDebug("Key: {Key} was found in backup localizations", key);
+            LogKeyKeyWasFoundInBackupLocalizations(key);
             return internalTranslation;
         }
 
-        logger.LogWarning("Resource key not found '{ResourceKey}'", key);
+        LogResourceKeyNotFoundResourceKey(key);
 
         if (!mocaleConfiguration.ShowMissingKeys)
         {
@@ -86,7 +86,7 @@ internal partial class TranslatorManager : IInternalTranslatorManager
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "An exception occurred formating translation for key {Key}: '{Translation}' with parameters: {Parameters}", key, translation, parameters);
+            LogAnExceptionOccurredFormatingTranslationForKeyKeyTranslationWithParametersParameters(ex, key, translation, parameters);
             return translation;
         }
     }
@@ -148,4 +148,17 @@ internal partial class TranslatorManager : IInternalTranslatorManager
     #endregion - INotifyPropertyChanged
 
     #endregion Interface Implementations
+
+    #region Logging
+
+    [LoggerMessage(LogLevel.Debug, "Key: {Key} was found in backup localizations")]
+    partial void LogKeyKeyWasFoundInBackupLocalizations(string key);
+
+    [LoggerMessage(LogLevel.Warning, "Resource key not found '{ResourceKey}'")]
+    partial void LogResourceKeyNotFoundResourceKey(string resourceKey);
+
+    [LoggerMessage(LogLevel.Error, "An exception occurred formating translation for key {Key}: '{Translation}' with parameters: {Parameters}")]
+    partial void LogAnExceptionOccurredFormatingTranslationForKeyKeyTranslationWithParametersParameters(Exception exception, string key, string translation, object[] parameters);
+
+    #endregion Logging
 }

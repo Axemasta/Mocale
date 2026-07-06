@@ -1,9 +1,10 @@
 using System.Globalization;
 using Ardalis.GuardClauses;
 using Mocale.Providers.GitHub.Raw.Helpers;
+
 namespace Mocale.Providers.GitHub.Raw;
 
-internal class GitHubRawProvider : IExternalLocalizationProvider
+internal partial class GitHubRawProvider : IExternalLocalizationProvider
 {
     #region Fields
 
@@ -27,7 +28,7 @@ internal class GitHubRawProvider : IExternalLocalizationProvider
     {
         githubConfigurationManager = Guard.Against.Null(githubConfigurationManager, nameof(githubConfigurationManager));
 
-        this.githubConfig = githubConfigurationManager.Configuration;
+        githubConfig = githubConfigurationManager.Configuration;
         this.externalFileNameHelper = Guard.Against.Null(externalFileNameHelper, nameof(externalFileNameHelper));
         this.httpClient = Guard.Against.Null(httpClient, nameof(httpClient));
         this.localizationParser = Guard.Against.Null(localizationParser, nameof(localizationParser));
@@ -45,12 +46,9 @@ internal class GitHubRawProvider : IExternalLocalizationProvider
             if (!response.IsSuccessStatusCode)
             {
                 // Handle Error
-                logger.LogWarning("Api call failed with status code: {StatusCode}, for resource url: {ResourceUrl}", (int)response.StatusCode, resourceUri);
+                LogApiCallFailedWithStatusCodeStatusCodeForResourceUrlResourceUrl((int)response.StatusCode, resourceUri);
 
-                return new ExternalLocalizationResult()
-                {
-                    Success = false,
-                };
+                return new ExternalLocalizationResult { Success = false };
             }
 
             await using var resourceStream = await response.Content.ReadAsStreamAsync();
@@ -59,28 +57,18 @@ internal class GitHubRawProvider : IExternalLocalizationProvider
 
             if (localizations is null)
             {
-                logger.LogWarning($"Api call succeeded but resource could not be deserialized as {nameof(Dictionary<string, string>)}");
+                LogApiCallSucceededButResourceCouldNotBeDeserializedAsDictionaryStringString();
 
-                return new ExternalLocalizationResult()
-                {
-                    Success = false,
-                };
+                return new ExternalLocalizationResult { Success = false };
             }
 
-            return new ExternalLocalizationResult()
-            {
-                Success = true,
-                Localizations = localizations,
-            };
+            return new ExternalLocalizationResult { Success = true, Localizations = localizations };
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "An exception occurred quering raw resource: {ResourceUrl}", resourceUri);
+            LogAnExceptionOccurredQueringRawResourceResourceUrl(ex, resourceUri);
 
-            return new ExternalLocalizationResult()
-            {
-                Success = false,
-            };
+            return new ExternalLocalizationResult { Success = false };
         }
     }
 
@@ -92,4 +80,17 @@ internal class GitHubRawProvider : IExternalLocalizationProvider
 
         return await QueryResourceUrlForLocalizations(resourceUrl);
     }
+
+    #region Logging
+
+    [LoggerMessage(LogLevel.Warning, "Api call failed with status code: {StatusCode}, for resource url: {ResourceUrl}")]
+    partial void LogApiCallFailedWithStatusCodeStatusCodeForResourceUrlResourceUrl(int statusCode, Uri resourceUrl);
+
+    [LoggerMessage(LogLevel.Warning, "Api call succeeded but resource could not be deserialized as Dictionary<string, string>")]
+    partial void LogApiCallSucceededButResourceCouldNotBeDeserializedAsDictionaryStringString();
+
+    [LoggerMessage(LogLevel.Error, "An exception occurred quering raw resource: {ResourceUrl}")]
+    partial void LogAnExceptionOccurredQueringRawResourceResourceUrl(Exception exception, Uri resourceUrl);
+
+    #endregion Logging
 }

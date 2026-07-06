@@ -3,7 +3,7 @@ using System.Reflection;
 using System.Text.Json;
 namespace Mocale.Providers;
 
-internal class EmbeddedResourceProvider(
+internal partial class EmbeddedResourceProvider(
     IConfigurationManager<IEmbeddedResourcesConfig> jsonConfigurationManager,
     ILogger<EmbeddedResourceProvider> logger)
     : IInternalLocalizationProvider
@@ -16,7 +16,7 @@ internal class EmbeddedResourceProvider(
         // read assembly
         if (localConfig.ResourcesAssembly is null)
         {
-            logger.LogWarning("Configured resource assembly was null");
+            LogConfiguredResourceAssemblyWasNull();
             return null;
         }
 
@@ -34,7 +34,7 @@ internal class EmbeddedResourceProvider(
 
         if (localesFolderResources.Count < 1)
         {
-            logger.LogWarning("No assembly resources found with prefix: {FolderPrefix}", folderPrefix);
+            LogNoAssemblyResourcesFoundWithPrefixFolderPrefix(folderPrefix);
             return null;
         }
 
@@ -47,7 +47,7 @@ internal class EmbeddedResourceProvider(
             return ParseFile(cultureMatch, localConfig.ResourcesAssembly);
         }
 
-        logger.LogWarning("Unable to find resource for selected culture: {CultureName}", cultureInfo.Name);
+        LogUnableToFindResourceForSelectedCultureCultureName(cultureInfo.Name);
 
         return null;
     }
@@ -69,7 +69,7 @@ internal class EmbeddedResourceProvider(
 
         if (fileStream is null)
         {
-            logger.LogWarning("File stream was null for assembly resource: {FilePath}", filePath);
+            LogFileStreamWasNullForAssemblyResourceFilePath(filePath);
             return null;
         }
 
@@ -79,9 +79,28 @@ internal class EmbeddedResourceProvider(
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "An exception occurred loading & parsing assembly resource {FilePath}", filePath);
+            LogAnExceptionOccurredLoadingParsingAssemblyResourceFilePath(ex, filePath);
 
             return null;
         }
     }
+
+    #region Logging
+
+    [LoggerMessage(LogLevel.Warning, "Configured resource assembly was null")]
+    partial void LogConfiguredResourceAssemblyWasNull();
+
+    [LoggerMessage(LogLevel.Warning, "No assembly resources found with prefix: {FolderPrefix}")]
+    partial void LogNoAssemblyResourcesFoundWithPrefixFolderPrefix(string folderPrefix);
+
+    [LoggerMessage(LogLevel.Warning, "Unable to find resource for selected culture: {CultureName}")]
+    partial void LogUnableToFindResourceForSelectedCultureCultureName(string cultureName);
+
+    [LoggerMessage(LogLevel.Warning, "File stream was null for assembly resource: {FilePath}")]
+    partial void LogFileStreamWasNullForAssemblyResourceFilePath(string filePath);
+
+    [LoggerMessage(LogLevel.Error, "An exception occurred loading & parsing assembly resource {FilePath}")]
+    partial void LogAnExceptionOccurredLoadingParsingAssemblyResourceFilePath(Exception exception, string filePath);
+
+    #endregion Logging
 }

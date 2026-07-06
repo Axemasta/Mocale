@@ -6,7 +6,7 @@ using Mocale.Exceptions;
 
 namespace Mocale.Providers;
 
-internal class AppResourceProvider : IInternalLocalizationProvider
+internal partial class AppResourceProvider : IInternalLocalizationProvider
 {
     private readonly ILogger logger;
     private readonly IMocaleConfiguration mocaleConfiguration;
@@ -45,14 +45,14 @@ internal class AppResourceProvider : IInternalLocalizationProvider
 
                 if (defaultSet is null)
                 {
-                    logger.LogWarning("Unable to load default resource set");
+                    LogUnableToLoadDefaultResourceSet();
                     return null;
                 }
 
                 return ConvertResourceSet(defaultSet);
             }
 
-            logger.LogWarning("No resources found for culture {CultureName}", cultureInfo.Name);
+            LogNoResourcesFoundForCultureCultureName(cultureInfo.Name);
             return null;
         }
 
@@ -67,4 +67,14 @@ internal class AppResourceProvider : IInternalLocalizationProvider
                     r.Key.ToString() ?? string.Empty,
                 r => r.Value?.ToString() ?? string.Empty);
     }
+
+    #region Logging
+
+    [LoggerMessage(LogLevel.Warning, "Unable to load default resource set")]
+    partial void LogUnableToLoadDefaultResourceSet();
+
+    [LoggerMessage(LogLevel.Warning, "No resources found for culture {CultureName}")]
+    partial void LogNoResourcesFoundForCultureCultureName(string cultureName);
+
+    #endregion Logging
 }
