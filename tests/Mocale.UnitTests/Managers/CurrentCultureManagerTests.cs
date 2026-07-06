@@ -12,15 +12,14 @@ public class CurrentCultureManagerTests : FixtureBase<ICurrentCultureManager>
 
 	private const string CorrectPreferencesKey = "Mocale_LastUsedCulture";
 
-	private readonly Mock<IConfigurationManager<IMocaleConfiguration>> mocaleConfigurationManager;
-	private readonly Mock<ILogger<CurrentCultureManager>> logger;
-	private readonly Mock<IPreferences> preferences;
+	private readonly Mock<IConfigurationManager<IMocaleConfiguration>> mocaleConfigurationManager = new();
+	private readonly Mock<ILogger<CurrentCultureManager>> logger = new();
+	private readonly Mock<IPreferences> preferences = new();
 
 	public CurrentCultureManagerTests()
 	{
-		mocaleConfigurationManager = new Mock<IConfigurationManager<IMocaleConfiguration>>();
-		logger = new Mock<ILogger<CurrentCultureManager>>();
-		preferences = new Mock<IPreferences>();
+		logger.Setup(m => m.IsEnabled(It.IsAny<LogLevel>()))
+			.Returns(true);
 	}
 
 	public override ICurrentCultureManager CreateSystemUnderTest()

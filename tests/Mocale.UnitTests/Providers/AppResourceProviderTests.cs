@@ -17,6 +17,12 @@ public class AppResourceProviderTests : FixtureBase<IInternalLocalizationProvide
 	private readonly Mock<IConfigurationManager<IMocaleConfiguration>> mocaleConfigurationManager = new();
 	private readonly Mock<ILogger<AppResourceProvider>> logger = new();
 
+	public AppResourceProviderTests()
+	{
+		logger.Setup(m => m.IsEnabled(It.IsAny<LogLevel>()))
+			.Returns(true);
+	}
+
 	public override IInternalLocalizationProvider CreateSystemUnderTest()
 	{
 		return new AppResourceProvider(

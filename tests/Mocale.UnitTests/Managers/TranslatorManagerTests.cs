@@ -14,6 +14,12 @@ public class TranslatorManagerTests : FixtureBase
 	private readonly Mock<ILogger<TranslatorManager>> logger = new();
 	private readonly Mock<IConfigurationManager<IMocaleConfiguration>> configManager = new();
 
+	public TranslatorManagerTests()
+	{
+		logger.Setup(m => m.IsEnabled(It.IsAny<LogLevel>()))
+			.Returns(true);
+	}
+
 	public override object CreateSystemUnderTest()
 	{
 		return new TranslatorManager(logger.Object, configManager.Object);

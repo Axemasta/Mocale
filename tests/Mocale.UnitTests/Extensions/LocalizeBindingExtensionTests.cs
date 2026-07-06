@@ -234,6 +234,62 @@ public partial class LocalizeBindingExtensionTests : FixtureBase<LocalizeBinding
 	}
 
 	[Fact]
+	public void ConvertTranslationKey_WhenSecondValueIsString_ShouldFollowNonIFormattablePath()
+	{
+		// Arrange
+		// string does not implement IFormattable, so the else branch is taken and value?.ToString() is called directly
+		Sut.TranslationKey = "Key";
+		Sut.KeyConverter = null;
+
+		// Act
+		var result = Sut.Convert(["Hello {0}", "World"], typeof(Label), null!, CultureInfo.InvariantCulture);
+
+		// Assert
+		Assert.Equal("Hello World", result);
+	}
+
+	[Fact]
+	public void ConvertTranslationKey_WhenSecondValueIsDouble_ShouldFollowIFormattablePath()
+	{
+		// Arrange
+		// double implements IFormattable, so the if branch is taken and the value is formatted using the translator manager's current culture
+		Sut.TranslationKey = "Key";
+		Sut.KeyConverter = null;
+
+		translatorManager.UpdateTranslations(new Localization(new CultureInfo("en-GB"))
+		{
+			Translations = new Dictionary<string, string> { { "Key", "The number is {0}" } },
+		}, TranslationSource.Internal);
+
+		// Act
+		var result = Sut.Convert(["The number is {0}", 28.3d], typeof(Label), null!, CultureInfo.InvariantCulture);
+
+		// Assert
+		Assert.Equal("The number is 28.3", result);
+	}
+
+	[Theory]
+	[MemberData(nameof(DoubleWithCultureFormattingTestData))]
+	public void ConvertTranslationKey_WhenSecondValueIsDouble_ShouldFormatUsingCurrentCulture(CultureInfo culture, double value, string formatString, string expectedResult)
+	{
+		// Arrange
+		// The translator manager's current culture is used by the IFormattable path, so the decimal separator matches the active localization culture
+		Sut.TranslationKey = "Key";
+		Sut.KeyConverter = null;
+
+		translatorManager.UpdateTranslations(new Localization(culture)
+		{
+			Translations = new Dictionary<string, string> { { "Key", formatString } },
+		}, TranslationSource.Internal);
+
+		// Act
+		var result = Sut.Convert([formatString, value], typeof(Label), null!, CultureInfo.InvariantCulture);
+
+		// Assert
+		Assert.Equal(expectedResult, result);
+	}
+
+	[Fact]
 	public void ConvertBack_ShouldNotBeImplemented()
 	{
 		Assert.Throws<NotImplementedException>(() => Sut.ConvertBack("Hello Name", [typeof(Label)], null!, CultureInfo.InvariantCulture));
@@ -633,6 +689,12 @@ public partial class LocalizeBindingExtensionTests : FixtureBase<LocalizeBinding
 	{
 		{ "The temperature is {0}\u00b0C", 28.3d, "The temperature is 28.3\u00b0C", new CultureInfo("en-GB") },
 		{ "La température est {0}\u00b0C", 28.3d, "La température est 28.3\u00b0C", new CultureInfo("fr-FR") },
+	};
+
+	public static TheoryData<CultureInfo, double, string, string> DoubleWithCultureFormattingTestData => new()
+	{
+		{ new CultureInfo("en-GB"), 28.3d, "The number is {0}", "The number is 28.3" },
+		{ new CultureInfo("hu-HU"), 28.3d, "A sz\u00e1m {0}", "A sz\u00e1m 28,3" },
 	};
 
 	private sealed partial class GreetingViewModel : ObservableObject

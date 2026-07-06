@@ -18,6 +18,12 @@ public class SqlCacheUpdateManagerTests : FixtureBase<ICacheUpdateManager>
 	private readonly Mock<IConfigurationManager<ISqliteConfig>> configurationManager = new();
 	private readonly FakeTimeProvider timeProvider = new(new DateTimeOffset(2025, 2, 26, 22, 16, 0, TimeSpan.FromHours(0)));
 
+	public SqlCacheUpdateManagerTests()
+	{
+		logger.Setup(m => m.IsEnabled(It.IsAny<LogLevel>()))
+			.Returns(true);
+	}
+
 	public override ICacheUpdateManager CreateSystemUnderTest()
 	{
 		return new SqlCacheUpdateManager(

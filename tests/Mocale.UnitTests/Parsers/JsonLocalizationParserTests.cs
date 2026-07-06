@@ -9,11 +9,12 @@ public class JsonLocalizationParserTests : FixtureBase
 {
 	#region Setup
 
-	private readonly Mock<ILogger<JsonLocalizationParser>> logger;
+	private readonly Mock<ILogger<JsonLocalizationParser>> logger = new();
 
 	public JsonLocalizationParserTests()
 	{
-		logger = new Mock<ILogger<JsonLocalizationParser>>();
+		logger.Setup(m => m.IsEnabled(It.IsAny<LogLevel>()))
+			.Returns(true);
 	}
 
 	public override object CreateSystemUnderTest()

@@ -22,11 +22,14 @@ public class LocalizationManagerTests : FixtureBase<ILocalizationManager>
 
 	public LocalizationManagerTests()
 	{
+		configurationManager.SetupGet(m => m.Configuration)
+			.Returns(mocaleConfiguration.Object);
+
 		mocaleConfiguration.SetupGet(m => m.UseExternalProvider)
 			.Returns(true);
 
-		configurationManager.SetupGet(m => m.Configuration)
-			.Returns(mocaleConfiguration.Object);
+		logger.Setup(m => m.IsEnabled(It.IsAny<LogLevel>()))
+			.Returns(true);
 	}
 
 	~LocalizationManagerTests()

@@ -17,6 +17,12 @@ public class TranslationResolverTests : FixtureBase<ITranslationResolver>
 	private readonly Mock<ILocalisationCacheManager> localisationCacheManager = new();
 	private readonly Mock<ILogger<TranslationResolver>> logger = new();
 
+	public TranslationResolverTests()
+	{
+		logger.Setup(m => m.IsEnabled(It.IsAny<LogLevel>()))
+			.Returns(true);
+	}
+
 	public override ITranslationResolver CreateSystemUnderTest()
 	{
 		return new TranslationResolver(

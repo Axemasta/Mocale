@@ -19,6 +19,9 @@ public class EmbeddedResourceProviderTests : FixtureBase<IInternalLocalizationPr
 		embeddedResourcesConfig = new Mock<IEmbeddedResourcesConfig>();
 		logger = new Mock<ILogger<EmbeddedResourceProvider>>();
 
+		logger.Setup(m => m.IsEnabled(It.IsAny<LogLevel>()))
+			.Returns(true);
+
 		configurationManager.SetupGet(m => m.Configuration)
 			.Returns(embeddedResourcesConfig.Object);
 	}
