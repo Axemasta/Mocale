@@ -14,11 +14,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Mocale\Mocale.csproj" />
+    <ProjectReference Include="..\Mocale\Mocale.csproj"/>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="sqlite-net-pcl" />
-    <PackageReference Include="SQLitePCLRaw.bundle_green" />
+    <PackageReference Include="sqlite-net-e"/>
   </ItemGroup>
 </Project>
