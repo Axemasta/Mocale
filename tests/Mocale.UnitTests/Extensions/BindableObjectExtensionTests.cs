@@ -1137,7 +1137,7 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
 
 		translatorManager.UpdateTranslations(frFrLocalization, TranslationSource.Internal);
 
-		Assert.Equal("La température est 21.3 \u00b0C", label.Text);
+		Assert.Equal("La température est 21,3 \u00b0C", label.Text);
 	}
 
 	#endregion -- Void (Translation Key)
@@ -1391,7 +1391,7 @@ public partial class BindableObjectExtensionTests : ControlsFixtureBase
 
 		translatorManager.UpdateTranslations(frFrLocalization, TranslationSource.Internal);
 
-		Assert.Equal("La température est 21.3 \u00b0C", label.Text);
+		Assert.Equal("La température est 21,3 \u00b0C", label.Text);
 	}
 
 	#endregion -- View (Translation Key)

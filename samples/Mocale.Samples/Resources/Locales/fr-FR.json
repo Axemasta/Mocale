@@ -34,5 +34,6 @@
 	"OrderStatus_Pending": "Commande en attente",
 	"OrderStatus_Shipped": "Votre commande a été expédiée !",
 	"OrderStatus_Delivered": "Votre commande a été livrée",
-	"OrderStatus_Cancelled": "Votre commande a été annulée"
+	"OrderStatus_Cancelled": "Votre commande a été annulée",
+	"ParameterPage_BigNumberLabel": "FR_This is a really big number: {0}!"
 }

@@ -34,5 +34,6 @@
 	"OrderStatus_Pending": "Order Pending",
 	"OrderStatus_Shipped": "Your Order Has Been Shipped!",
 	"OrderStatus_Delivered": "Your Order Has Been Delivered",
-	"OrderStatus_Cancelled": "Your Order Was Cancelled"
+	"OrderStatus_Cancelled": "Your Order Was Cancelled",
+	"ParameterPage_BigNumberLabel": "This is a really big number: {0}!"
 }

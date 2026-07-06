@@ -11,6 +11,7 @@ public partial class IntroductionPageViewModel : BaseViewModel
 		"en-GB",
 		"fr-FR",
 		"it-IT",
+		"hu-HU",
 	];
 
 	[ObservableProperty]

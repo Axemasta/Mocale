@@ -11,6 +11,9 @@ public sealed partial class ParameterViewModel : BaseViewModel
 	[ObservableProperty]
 	public partial int Number { get; set; }
 
+	[ObservableProperty]
+	public partial double BigNumber { get; set; } = 1_230_034_456.78978743;
+
 	private static readonly Random Random = new();
 
 	private readonly string[] names =

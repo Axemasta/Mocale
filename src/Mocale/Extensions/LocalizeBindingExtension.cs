@@ -119,7 +119,7 @@ public class LocalizeBindingExtension(ITranslatorManager translatorManager)
 			$"Neither {nameof(TranslationKey)} or {nameof(KeyConverter)} were set. Use must set one of these, please see the documentation for details");
 	}
 
-	private string ConvertTranslationKeyBinding(object[]? values)
+	private string ConvertTranslationKeyBinding(object?[]? values)
 	{
 		// values[0] will be translated value
 		// values[1] will be the binded value
@@ -135,21 +135,19 @@ public class LocalizeBindingExtension(ITranslatorManager translatorManager)
 
 		string? formatParameter;
 
-		if (values[1] is string localizeParameter)
+		if (values[1] is IFormattable formattable)
 		{
-			formatParameter = localizeParameter;
+			formatParameter = formattable.ToString(null, translatorManager.CurrentCulture);
 		}
 		else
 		{
-			// We need to ToString() here otherwise the formatting can go a bit wierd on other cultures...
-			// TODO: This might need some future consideration ie hungarian would use decimal commas 1.000.000,01 and comma decimals!
 			formatParameter = values[1]?.ToString();
 		}
 
 		return string.Format(translatorManager.CurrentCulture, localizedFormat, formatParameter);
 	}
 
-	internal string? ConvertKeyConverterBinding(object[]? values, Type targetType, CultureInfo culture)
+	internal string? ConvertKeyConverterBinding(object?[]? values, Type targetType, CultureInfo culture)
 	{
 		if (KeyConverter is null)
 		{
