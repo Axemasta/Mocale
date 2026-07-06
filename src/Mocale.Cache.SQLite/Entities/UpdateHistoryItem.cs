@@ -5,13 +5,13 @@ namespace Mocale.Cache.SQLite.Entities;
 [Table("UpdateHistory")]
 internal class UpdateHistoryItem
 {
-    [PrimaryKey]
-    [AutoIncrement]
-    public int Id { get; set; }
+	[PrimaryKey]
+	[AutoIncrement]
+	public int Id { get; set; }
 
-    public string CultureName { get; set; }
+	public string CultureName { get; set; }
 
-    public DateTime LastUpdated { get; set; }
+	public DateTime LastUpdated { get; set; }
 }
 
 #nullable enable

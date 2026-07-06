@@ -5,9 +5,9 @@ namespace Mocale.Cache.SQLite.Abstractions;
 /// </summary>
 public interface IDatabaseConnectionProvider
 {
-    /// <summary>
-    /// Get connection to the sqlite database
-    /// </summary>
-    /// <returns></returns>
-    SQLiteConnection GetDatabaseConnection();
+	/// <summary>
+	/// Get connection to the sqlite database
+	/// </summary>
+	/// <returns></returns>
+	SQLiteConnection GetDatabaseConnection();
 }

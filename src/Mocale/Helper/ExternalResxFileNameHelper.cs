@@ -5,38 +5,38 @@ namespace Mocale.Helper;
 
 internal class ExternalResxFileNameHelper : IExternalFileNameHelper
 {
-    private readonly ResxResourceFileDetails resourceFileDetails;
+	private readonly ResxResourceFileDetails resourceFileDetails;
 
-    public ExternalResxFileNameHelper(IConfigurationManager<IExternalProviderConfiguration> configurationManager)
-    {
-        configurationManager = Guard.Against.Null(configurationManager, nameof(configurationManager));
+	public ExternalResxFileNameHelper(IConfigurationManager<IExternalProviderConfiguration> configurationManager)
+	{
+		configurationManager = Guard.Against.Null(configurationManager, nameof(configurationManager));
 
-        if (configurationManager.Configuration.ResourceFileDetails is not ResxResourceFileDetails fileDetails)
-        {
-            throw new NotSupportedException("Resource file details were not for resx files");
-        }
+		if (configurationManager.Configuration.ResourceFileDetails is not ResxResourceFileDetails fileDetails)
+		{
+			throw new NotSupportedException("Resource file details were not for resx files");
+		}
 
-        this.resourceFileDetails = fileDetails;
-    }
+		resourceFileDetails = fileDetails;
+	}
 
-    public string GetExpectedFileName(CultureInfo culture)
-    {
-        string fileName;
+	public string GetExpectedFileName(CultureInfo culture)
+	{
+		string fileName;
 
-        if (resourceFileDetails.PrimaryCulture != null && resourceFileDetails.PrimaryCulture.Equals(culture))
-        {
-            fileName = $"{resourceFileDetails.ResourcePrefix}.resx";
-        }
-        else
-        {
-            fileName = $"{resourceFileDetails.ResourcePrefix}.{culture.Name}.resx";
-        }
+		if (resourceFileDetails.PrimaryCulture != null && resourceFileDetails.PrimaryCulture.Equals(culture))
+		{
+			fileName = $"{resourceFileDetails.ResourcePrefix}.resx";
+		}
+		else
+		{
+			fileName = $"{resourceFileDetails.ResourcePrefix}.{culture.Name}.resx";
+		}
 
-        if (!string.IsNullOrEmpty(resourceFileDetails.VersionPrefix))
-        {
-            fileName = string.Join("/", resourceFileDetails.VersionPrefix, fileName);
-        }
+		if (!string.IsNullOrEmpty(resourceFileDetails.VersionPrefix))
+		{
+			fileName = string.Join("/", resourceFileDetails.VersionPrefix, fileName);
+		}
 
-        return fileName;
-    }
+		return fileName;
+	}
 }

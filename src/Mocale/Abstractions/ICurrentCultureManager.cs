@@ -7,16 +7,15 @@ namespace Mocale.Abstractions;
 /// </summary>
 public interface ICurrentCultureManager
 {
-    /// <summary>
-    /// Get Active Culture
-    /// </summary>
-    /// <returns></returns>
-    CultureInfo GetActiveCulture();
+	/// <summary>
+	/// Get Active Culture
+	/// </summary>
+	/// <returns></returns>
+	CultureInfo GetActiveCulture();
 
-    /// <summary>
-    /// Set Active Culture
-    /// </summary>
-    /// <param name="cultureInfo"></param>
-    void SetActiveCulture(CultureInfo cultureInfo);
+	/// <summary>
+	/// Set Active Culture
+	/// </summary>
+	/// <param name="cultureInfo"></param>
+	void SetActiveCulture(CultureInfo cultureInfo);
 }
-

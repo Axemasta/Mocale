@@ -1,0 +1,38 @@
+<Solution>
+	<Folder Name="/Library/">
+		<File Path="../src/directory.build.props"/>
+		<Project Path="../src/Mocale/Mocale.csproj"/>
+	</Folder>
+	<Folder Name="/Library/Cache/">
+		<Project Path="../src/Mocale.Cache.SQLite/Mocale.Cache.SQLite.csproj"/>
+	</Folder>
+	<Folder Name="/Library/Generators/">
+		<Project Path="../src/Mocale.SourceGenerators/Mocale.SourceGenerators.csproj"/>
+	</Folder>
+	<Folder Name="/Library/Providers/">
+		<Project Path="../src/Mocale.Providers.Aws.S3/Mocale.Providers.AWS.S3.csproj"/>
+		<Project Path="../src/Mocale.Providers.Azure.Blob/Mocale.Providers.Azure.Blob.csproj"/>
+		<Project Path="../src/Mocale.Providers.GitHub.Raw/Mocale.Providers.GitHub.Raw.csproj"/>
+	</Folder>
+	<Folder Name="/Library/Tests/">
+		<Project Path="../src/Mocale.Testing/Mocale.Testing.csproj"/>
+	</Folder>
+	<Folder Name="/Samples/">
+		<Project Path="Mocale.GeneratorSample/Mocale.GeneratorSample.csproj"/>
+		<Project Path="Mocale.Samples/Mocale.Samples.csproj">
+			<Deploy/>
+		</Project>
+	</Folder>
+	<Folder Name="/Solution Items/">
+		<File Path="../.editorconfig"/>
+		<File Path="../directory.build.props"/>
+		<File Path="../directory.packages.props"/>
+		<File Path="../global.json"/>
+		<File Path="../nuget.config"/>
+		<File Path="../version.json"/>
+	</Folder>
+	<Folder Name="/Tests/">
+		<File Path="../tests/directory.packages.props"/>
+		<Project Path="../tests/Mocale.UnitTests/Mocale.UnitTests.csproj"/>
+	</Folder>
+</Solution>

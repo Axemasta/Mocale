@@ -11,184 +11,190 @@ namespace Mocale.UnitTests.Cache;
 
 public class SqlCacheUpdateManagerTests : FixtureBase<ICacheUpdateManager>
 {
-    #region Setup
+	#region Setup
 
-    private readonly Mock<ICacheRepository> cacheRepository = new();
-    private readonly Mock<ILogger<SqlCacheUpdateManager>> logger = new();
-    private readonly Mock<IConfigurationManager<ISqliteConfig>> configurationManager = new();
-    private readonly FakeTimeProvider timeProvider = new(new DateTimeOffset(2025, 2, 26, 22, 16, 0, TimeSpan.FromHours(0)));
+	private readonly Mock<ICacheRepository> cacheRepository = new();
+	private readonly Mock<ILogger<SqlCacheUpdateManager>> logger = new();
+	private readonly Mock<IConfigurationManager<ISqliteConfig>> configurationManager = new();
+	private readonly FakeTimeProvider timeProvider = new(new DateTimeOffset(2025, 2, 26, 22, 16, 0, TimeSpan.FromHours(0)));
 
-    public override ICacheUpdateManager CreateSystemUnderTest()
-    {
-        return new SqlCacheUpdateManager(
-            cacheRepository.Object,
-            logger.Object,
-            configurationManager.Object,
-            timeProvider);
-    }
+	public SqlCacheUpdateManagerTests()
+	{
+		logger.Setup(m => m.IsEnabled(It.IsAny<LogLevel>()))
+			.Returns(true);
+	}
 
-    #endregion Setup
+	public override ICacheUpdateManager CreateSystemUnderTest()
+	{
+		return new SqlCacheUpdateManager(
+			cacheRepository.Object,
+			logger.Object,
+			configurationManager.Object,
+			timeProvider);
+	}
 
-    #region Tests
+	#endregion Setup
 
-    [Fact]
-    public void CanUpdateCache_WhenCultureNotCached_ShouldReturnTrue()
-    {
-        // Arrange
-        cacheRepository.Setup(m => m.GetItem(new CultureInfo("en-GB")))
-            .Returns(() => null);
+	#region Tests
 
-        // Act
-        var canUpdate = Sut.CanUpdateCache(new CultureInfo("en-GB"));
+	[Fact]
+	public void CanUpdateCache_WhenCultureNotCached_ShouldReturnTrue()
+	{
+		// Arrange
+		cacheRepository.Setup(m => m.GetItem(new CultureInfo("en-GB")))
+			.Returns(() => null);
 
-        // Assert
-        Assert.True(canUpdate);
-    }
+		// Act
+		var canUpdate = Sut.CanUpdateCache(new CultureInfo("en-GB"));
 
-    [Fact]
-    public void CanUpdateCache_WhenCultureCachedAndOutsideWarmCacheWindow_ShouldReturnTrue()
-    {
-        // Arrange
-        configurationManager.Setup(m => m.Configuration)
-            .Returns(new SqliteConfig()
-            {
-                UpdateInterval = TimeSpan.FromDays(1),
-            });
+		// Assert
+		Assert.True(canUpdate);
+	}
 
-        cacheRepository.Setup(m => m.GetItem(new CultureInfo("en-GB")))
-            .Returns(new UpdateHistoryItem()
-            {
-                Id = 0,
-                CultureName = "en-GB",
-                LastUpdated = new DateTime(2025, 1, 1, 12, 0, 0)
-            });
+	[Fact]
+	public void CanUpdateCache_WhenCultureCachedAndOutsideWarmCacheWindow_ShouldReturnTrue()
+	{
+		// Arrange
+		configurationManager.Setup(m => m.Configuration)
+			.Returns(new SqliteConfig
+			{
+				UpdateInterval = TimeSpan.FromDays(1),
+			});
 
-        // Act
-        var canUpdate = Sut.CanUpdateCache(new CultureInfo("en-GB"));
+		cacheRepository.Setup(m => m.GetItem(new CultureInfo("en-GB")))
+			.Returns(new UpdateHistoryItem
+			{
+				Id = 0,
+				CultureName = "en-GB",
+				LastUpdated = new DateTime(2025, 1, 1, 12, 0, 0),
+			});
 
-        // Assert
-        Assert.True(canUpdate);
-    }
+		// Act
+		var canUpdate = Sut.CanUpdateCache(new CultureInfo("en-GB"));
 
-    [Fact]
-    public void CanUpdateCache_WhenCultureCachedAndInsideWarmCacheWindow_ShouldReturnFalse()
-    {
-        // Arrange
-        configurationManager.Setup(m => m.Configuration)
-            .Returns(new SqliteConfig()
-            {
-                UpdateInterval = TimeSpan.FromDays(1),
-            });
+		// Assert
+		Assert.True(canUpdate);
+	}
 
-        cacheRepository.Setup(m => m.GetItem(new CultureInfo("en-GB")))
-            .Returns(new UpdateHistoryItem()
-            {
-                Id = 0,
-                CultureName = "en-GB",
-                LastUpdated = new DateTime(2025, 2, 26, 17, 40, 0)
-            });
+	[Fact]
+	public void CanUpdateCache_WhenCultureCachedAndInsideWarmCacheWindow_ShouldReturnFalse()
+	{
+		// Arrange
+		configurationManager.Setup(m => m.Configuration)
+			.Returns(new SqliteConfig
+			{
+				UpdateInterval = TimeSpan.FromDays(1),
+			});
 
-        // Act
-        var canUpdate = Sut.CanUpdateCache(new CultureInfo("en-GB"));
+		cacheRepository.Setup(m => m.GetItem(new CultureInfo("en-GB")))
+			.Returns(new UpdateHistoryItem
+			{
+				Id = 0,
+				CultureName = "en-GB",
+				LastUpdated = new DateTime(2025, 2, 26, 17, 40, 0),
+			});
 
-        // Assert
-        Assert.False(canUpdate);
-    }
+		// Act
+		var canUpdate = Sut.CanUpdateCache(new CultureInfo("en-GB"));
 
-    [Fact]
-    public void SetCacheUpdated_ShouldReturnTrue_WhenAddOrUpdateItemSucceeds()
-    {
-        // Arrange
-        cacheRepository.Setup(m => m.AddOrUpdateItem(
-                It.Is<CultureInfo>(c => c.Name == "fr-FR"),
-                It.Is<DateTime>(d => d == new DateTime(2025, 2, 26, 22, 16, 0))))
-            .Returns(true);
+		// Assert
+		Assert.False(canUpdate);
+	}
 
-        // Act
-        var frFrUpdated = Sut.SetCacheUpdated(new CultureInfo("fr-FR"));
+	[Fact]
+	public void SetCacheUpdated_ShouldReturnTrue_WhenAddOrUpdateItemSucceeds()
+	{
+		// Arrange
+		cacheRepository.Setup(m => m.AddOrUpdateItem(
+				It.Is<CultureInfo>(c => c.Name == "fr-FR"),
+				It.Is<DateTime>(d => d == new DateTime(2025, 2, 26, 22, 16, 0))))
+			.Returns(true);
 
-        // Assert
-        Assert.True(frFrUpdated);
-    }
+		// Act
+		var frFrUpdated = Sut.SetCacheUpdated(new CultureInfo("fr-FR"));
 
-    [Fact]
-    public void SetCacheUpdated_ShouldReturnFalse_WhenAddOrUpdateItemFails()
-    {
-        // Arrange
-        cacheRepository.Setup(m => m.AddOrUpdateItem(
-                It.Is<CultureInfo>(c => c.Name == "en-GB"),
-                It.Is<DateTime>(d => d == new DateTime(2025, 2, 26, 22, 16, 0))))
-            .Returns(false);
+		// Assert
+		Assert.True(frFrUpdated);
+	}
 
-        // Act
-        var enGbUpdated = Sut.SetCacheUpdated(new CultureInfo("en-GB"));
+	[Fact]
+	public void SetCacheUpdated_ShouldReturnFalse_WhenAddOrUpdateItemFails()
+	{
+		// Arrange
+		cacheRepository.Setup(m => m.AddOrUpdateItem(
+				It.Is<CultureInfo>(c => c.Name == "en-GB"),
+				It.Is<DateTime>(d => d == new DateTime(2025, 2, 26, 22, 16, 0))))
+			.Returns(false);
 
-        // Assert
-        Assert.False(enGbUpdated);
-    }
+		// Act
+		var enGbUpdated = Sut.SetCacheUpdated(new CultureInfo("en-GB"));
 
-    [Fact]
-    public void ClearCache_WithCulture_ShouldLogWarning_WhenDeleteItemFails()
-    {
-        // Arrange
-        cacheRepository.Setup(repo => repo.DeleteItem(new CultureInfo("en-US")))
-            .Returns(false);
+		// Assert
+		Assert.False(enGbUpdated);
+	}
 
-        // Act
-        Sut.ClearCache(new CultureInfo("en-US"));
+	[Fact]
+	public void ClearCache_WithCulture_ShouldLogWarning_WhenDeleteItemFails()
+	{
+		// Arrange
+		cacheRepository.Setup(repo => repo.DeleteItem(new CultureInfo("en-US")))
+			.Returns(false);
 
-        // Assert
-        logger.VerifyLog(log => log.LogWarning("Unable to delete cache for culture: {CultureName}", "en-US"), Times.Once);
-        logger.VerifyLog(log => log.LogTrace("Deleted update cache for culture: {CultureName}", It.IsAny<string>()), Times.Never);
-    }
+		// Act
+		Sut.ClearCache(new CultureInfo("en-US"));
 
-    [Fact]
-    public void ClearCache_WithCulture_ShouldLogTrace_WhenDeleteItemSucceeds()
-    {
-        // Arrange
-        cacheRepository.Setup(repo => repo.DeleteItem(new CultureInfo("en-US"))).Returns(true);
+		// Assert
+		logger.VerifyLog(log => log.LogWarning("Unable to delete cache for culture: {CultureName}", "en-US"), Times.Once);
+		logger.VerifyLog(log => log.LogTrace("Deleted update cache for culture: {CultureName}", It.IsAny<string>()), Times.Never);
+	}
 
-        // Act
-        Sut.ClearCache(new CultureInfo("en-US"));
+	[Fact]
+	public void ClearCache_WithCulture_ShouldLogTrace_WhenDeleteItemSucceeds()
+	{
+		// Arrange
+		cacheRepository.Setup(repo => repo.DeleteItem(new CultureInfo("en-US"))).Returns(true);
 
-        // Assert
-        logger.VerifyLog(log => log.LogWarning("Unable to delete cache for culture: {CultureName}", It.IsAny<string>()), Times.Never);
-        logger.VerifyLog(log => log.LogTrace("Deleted update cache for culture: {CultureName}", "en-US"), Times.Once);
-    }
+		// Act
+		Sut.ClearCache(new CultureInfo("en-US"));
 
-    [Fact]
-    public void ClearCache_ShouldLogWarning_WhenDeleteAllFails()
-    {
-        // Arrange
-        cacheRepository.Setup(repo => repo.DeleteAll())
-            .Returns(false);
+		// Assert
+		logger.VerifyLog(log => log.LogWarning("Unable to delete cache for culture: {CultureName}", It.IsAny<string>()), Times.Never);
+		logger.VerifyLog(log => log.LogTrace("Deleted update cache for culture: {CultureName}", "en-US"), Times.Once);
+	}
 
-        // Act
+	[Fact]
+	public void ClearCache_ShouldLogWarning_WhenDeleteAllFails()
+	{
+		// Arrange
+		cacheRepository.Setup(repo => repo.DeleteAll())
+			.Returns(false);
+
+		// Act
 #pragma warning disable CA1304
-        Sut.ClearCache();
+		Sut.ClearCache();
 #pragma warning restore CA1304
 
-        // Assert
-        logger.VerifyLog(log => log.LogWarning("Unable to delete cache for all cultures"), Times.Once);
-        logger.VerifyLog(log => log.LogTrace("Deleted update cache for all cultures"), Times.Never);
-    }
+		// Assert
+		logger.VerifyLog(log => log.LogWarning("Unable to delete cache for all cultures"), Times.Once);
+		logger.VerifyLog(log => log.LogTrace("Deleted update cache for all cultures"), Times.Never);
+	}
 
-    [Fact]
-    public void ClearCache_ShouldLogTrace_WhenDeleteAllSucceeds()
-    {
-        // Arrange
-        cacheRepository.Setup(repo => repo.DeleteAll())
-            .Returns(true);
+	[Fact]
+	public void ClearCache_ShouldLogTrace_WhenDeleteAllSucceeds()
+	{
+		// Arrange
+		cacheRepository.Setup(repo => repo.DeleteAll())
+			.Returns(true);
 
-        // Act
+		// Act
 #pragma warning disable CA1304
-        Sut.ClearCache();
+		Sut.ClearCache();
 #pragma warning restore CA1304
 
-        // Assert
-        logger.VerifyLog(log => log.LogWarning("Unable to delete cache for all cultures"), Times.Never);
-        logger.VerifyLog(log => log.LogTrace("Deleted update cache for all cultures"), Times.Once);
-    }
+		// Assert
+		logger.VerifyLog(log => log.LogWarning("Unable to delete cache for all cultures"), Times.Never);
+		logger.VerifyLog(log => log.LogTrace("Deleted update cache for all cultures"), Times.Once);
+	}
 
-    #endregion Tests
+	#endregion Tests
 }

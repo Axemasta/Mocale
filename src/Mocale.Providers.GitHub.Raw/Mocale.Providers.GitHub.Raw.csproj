@@ -1,26 +1,26 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFrameworks>$(MauiPlatformTargetFrameworks);</TargetFrameworks>
-        <UseMaui>true</UseMaui>
-        <SingleProject>true</SingleProject>
+	<PropertyGroup>
+		<TargetFrameworks>$(MauiPlatformTargetFrameworks);</TargetFrameworks>
+		<UseMaui>true</UseMaui>
+		<SingleProject>true</SingleProject>
 
-        <AssemblyName>Mocale.Providers.Github.Raw</AssemblyName>
-        <RootNamespace>Mocale.Providers.Github.Raw</RootNamespace>
-        <PackageId>Mocale.Providers.Github.Raw</PackageId>
-        <Summary>GitHub Raw Provider For Mocale</Summary>
-        <PackageTags>maui,mocale,localization,localisation,translation,github,raw,githubraw,provider,mocaleprovider</PackageTags>
-        <Title>Mocale.Providers.GitHub.Raw</Title>
-        <Description>GitHub raw external provider for Mocale. This package will attempt to use the configured GitHub repository to download localizations to be used in your maui application.</Description>
-      <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    </PropertyGroup>
+		<AssemblyName>Mocale.Providers.Github.Raw</AssemblyName>
+		<RootNamespace>Mocale.Providers.Github.Raw</RootNamespace>
+		<PackageId>Mocale.Providers.Github.Raw</PackageId>
+		<Summary>GitHub Raw Provider For Mocale</Summary>
+		<PackageTags>maui,mocale,localization,localisation,translation,github,raw,githubraw,provider,mocaleprovider</PackageTags>
+		<Title>Mocale.Providers.GitHub.Raw</Title>
+		<Description>GitHub raw external provider for Mocale. This package will attempt to use the configured GitHub repository to download localizations to be used in your maui application.</Description>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+	</PropertyGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\Mocale\Mocale.csproj" />
-    </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Mocale\Mocale.csproj"/>
+	</ItemGroup>
 
-    <ItemGroup>
-      <PackageReference Include="Microsoft.Extensions.Http" />
-    </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.Http"/>
+	</ItemGroup>
 
 </Project>

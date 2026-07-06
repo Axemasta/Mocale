@@ -23,12 +23,12 @@ namespace Mocale;
 /// </summary>
 public static class MocaleLocator
 {
-    /// <summary>
-    /// Localization Manager
-    /// </summary>
-    public static ITranslatorManager TranslatorManager { get; internal set; }
+	/// <summary>
+	/// Localization Manager
+	/// </summary>
+	public static ITranslatorManager TranslatorManager { get; internal set; }
 
-    internal static IMocaleConfiguration MocaleConfiguration { get; set; }
+	internal static IMocaleConfiguration MocaleConfiguration { get; set; }
 }
 
 #nullable enable

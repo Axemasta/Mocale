@@ -5,13 +5,13 @@ namespace Mocale.Enums;
 /// </summary>
 public enum LocaleResourceType
 {
-    /// <summary>
-    /// Resx File
-    /// </summary>
-    Resx = 0,
+	/// <summary>
+	/// Resx File
+	/// </summary>
+	Resx = 0,
 
-    /// <summary>
-    /// Json File
-    /// </summary>
-    Json = 1,
+	/// <summary>
+	/// Json File
+	/// </summary>
+	Json = 1,
 }

@@ -1,29 +1,29 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFrameworks>$(MauiPlatformTargetFrameworks);</TargetFrameworks>
-    <UseMaui>true</UseMaui>
-    <AssemblyName>Mocale</AssemblyName>
-    <RootNamespace>Mocale</RootNamespace>
-    <PackageId>Mocale</PackageId>
-    <Summary>Localization framework for .NET Maui</Summary>
-    <PackageTags>maui,mocale,localization,localisation,translation</PackageTags>
-    <Title>Mocale</Title>
-    <Description>Localization framework for .NET Maui with support for over the air localization updates from external data sources.</Description>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks>$(MauiPlatformTargetFrameworks);</TargetFrameworks>
+		<UseMaui>true</UseMaui>
+		<AssemblyName>Mocale</AssemblyName>
+		<RootNamespace>Mocale</RootNamespace>
+		<PackageId>Mocale</PackageId>
+		<Summary>Localization framework for .NET Maui</Summary>
+		<PackageTags>maui,mocale,localization,localisation,translation</PackageTags>
+		<Title>Mocale</Title>
+		<Description>Localization framework for .NET Maui with support for over the air localization updates from external data sources.</Description>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <InternalsVisibleTo Include="$(AssemblyName).Providers.AWS.S3" />
-    <InternalsVisibleTo Include="$(AssemblyName).Providers.Azure.Blob" />
-    <InternalsVisibleTo Include="$(AssemblyName).Providers.GitHub.Raw" />
-    <InternalsVisibleTo Include="$(AssemblyName).Cache.SQLite" />
-    <InternalsVisibleTo Include="$(AssemblyName).UnitTests" />
-    <InternalsVisibleTo Include="$(AssemblyName).Testing" />
-  </ItemGroup>
+	<ItemGroup>
+		<InternalsVisibleTo Include="$(AssemblyName).Providers.AWS.S3"/>
+		<InternalsVisibleTo Include="$(AssemblyName).Providers.Azure.Blob"/>
+		<InternalsVisibleTo Include="$(AssemblyName).Providers.GitHub.Raw"/>
+		<InternalsVisibleTo Include="$(AssemblyName).Cache.SQLite"/>
+		<InternalsVisibleTo Include="$(AssemblyName).UnitTests"/>
+		<InternalsVisibleTo Include="$(AssemblyName).Testing"/>
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Caching.Memory" />
-    <PackageReference Include="ResXResourceReader.NetStandard" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.Caching.Memory"/>
+		<PackageReference Include="ResXResourceReader.NetStandard"/>
+	</ItemGroup>
 
 </Project>

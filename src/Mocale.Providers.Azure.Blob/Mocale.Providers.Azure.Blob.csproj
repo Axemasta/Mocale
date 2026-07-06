@@ -1,27 +1,27 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFrameworks>$(MauiPlatformTargetFrameworks);</TargetFrameworks>
-    <UseMaui>true</UseMaui>
-    <SingleProject>true</SingleProject>
+	<PropertyGroup>
+		<TargetFrameworks>$(MauiPlatformTargetFrameworks);</TargetFrameworks>
+		<UseMaui>true</UseMaui>
+		<SingleProject>true</SingleProject>
 
-    <AssemblyName>Mocale.Providers.Azure.Blob</AssemblyName>
-    <RootNamespace>Mocale.Providers.Azure.Blob</RootNamespace>
-    <PackageId>Mocale.Providers.Azure.Blob</PackageId>
-    <Summary>Azure Blob Storage Provider For Mocale</Summary>
-    <PackageTags>maui,mocale,localization,localisation,translation,azure,blob,storage,provider,mocaleprovider</PackageTags>
-    <Title>Mocale.Providers.Azure.Blob</Title>
-    <Description>Azure blob storage external provider for Mocale. This package provides the ability to query azure blob storage for localization files to be used in your maui application.</Description>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-  </PropertyGroup>
+		<AssemblyName>Mocale.Providers.Azure.Blob</AssemblyName>
+		<RootNamespace>Mocale.Providers.Azure.Blob</RootNamespace>
+		<PackageId>Mocale.Providers.Azure.Blob</PackageId>
+		<Summary>Azure Blob Storage Provider For Mocale</Summary>
+		<PackageTags>maui,mocale,localization,localisation,translation,azure,blob,storage,provider,mocaleprovider</PackageTags>
+		<Title>Mocale.Providers.Azure.Blob</Title>
+		<Description>Azure blob storage external provider for Mocale. This package provides the ability to query azure blob storage for localization files to be used in your maui application.</Description>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Mocale\Mocale.csproj"/>
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Mocale\Mocale.csproj"/>
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Azure.Core" />
-    <PackageReference Include="Azure.Storage.Blobs" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Azure.Core"/>
+		<PackageReference Include="Azure.Storage.Blobs"/>
+	</ItemGroup>
 
 </Project>

@@ -1,46 +1,46 @@
 <Project>
 
-  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
+	<Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))"/>
 
-  <PropertyGroup>
-    <ImplicitUsings>true</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
+	<PropertyGroup>
+		<ImplicitUsings>true</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	</PropertyGroup>
 
-  <PropertyGroup Label="NuGet">
-    <Authors>Axemasta</Authors>
-    <Owners>Axemasta</Owners>
-    <NeutralLanguage>en</NeutralLanguage>
-    <Copyright>Copyright © 2025 Axemasta</Copyright>
-    <RepositoryUrl>https://github.com/Axemasta/Mocale</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageProjectUrl>https://github.com/Axemasta/Mocale</PackageProjectUrl>
-    <PackageIcon>mocale_icon_light_small.png</PackageIcon>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <IncludeSymbols>True</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-  </PropertyGroup>
+	<PropertyGroup Label="NuGet">
+		<Authors>Axemasta</Authors>
+		<Owners>Axemasta</Owners>
+		<NeutralLanguage>en</NeutralLanguage>
+		<Copyright>Copyright © 2025 Axemasta</Copyright>
+		<RepositoryUrl>https://github.com/Axemasta/Mocale</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+		<PackageProjectUrl>https://github.com/Axemasta/Mocale</PackageProjectUrl>
+		<PackageIcon>mocale_icon_light_small.png</PackageIcon>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<IncludeSymbols>True</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <InternalsVisibleTo Include="Mocale.UnitTests"/>
-    <InternalsVisibleTo Include="DynamicProxyGenAssembly2"/>
-  </ItemGroup>
+	<ItemGroup>
+		<InternalsVisibleTo Include="Mocale.UnitTests"/>
+		<InternalsVisibleTo Include="DynamicProxyGenAssembly2"/>
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Include="..\..\assets\mocale_icon_light_small.png" PackagePath="\" Pack="true"/>
-    <None Include="..\..\README.md" PackagePath="\" Pack="true"/>
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\assets\mocale_icon_light_small.png" PackagePath="\" Pack="true"/>
+		<None Include="..\..\README.md" PackagePath="\" Pack="true"/>
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Ardalis.GuardClauses" />
-    <PackageReference Include="Nerdbank.GitVersioning">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Ardalis.GuardClauses"/>
+		<PackageReference Include="Nerdbank.GitVersioning">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
 
 </Project>

@@ -5,18 +5,18 @@ namespace Mocale.Cache.SQLite.Abstractions;
 /// </summary>
 public interface ISqliteConfig
 {
-    /// <summary>
-    /// The name of the cache database
-    /// </summary>
-    string DatabaseName { get; }
+	/// <summary>
+	/// The name of the cache database
+	/// </summary>
+	string DatabaseName { get; }
 
-    /// <summary>
-    /// The database directory: FileSystem.AppDataDirectory
-    /// </summary>
-    string DatabaseDirectory { get; }
+	/// <summary>
+	/// The database directory: FileSystem.AppDataDirectory
+	/// </summary>
+	string DatabaseDirectory { get; }
 
-    /// <summary>
-    /// The interval in which the cache should be updated
-    /// </summary>
-    TimeSpan UpdateInterval { get; }
+	/// <summary>
+	/// The interval in which the cache should be updated
+	/// </summary>
+	TimeSpan UpdateInterval { get; }
 }

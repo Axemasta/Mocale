@@ -1,6 +1,6 @@
 <Project>
-  <ItemGroup>
-    <AdditionalFiles Include="$(MocaleResourcePath)" />
-  </ItemGroup>
+	<ItemGroup>
+		<AdditionalFiles Include="$(MocaleResourcePath)"/>
+	</ItemGroup>
 </Project>
 

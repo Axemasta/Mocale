@@ -2,197 +2,189 @@ using System.Globalization;
 using Microsoft.Extensions.Logging;
 using Mocale.Abstractions;
 using Mocale.Providers;
+
 namespace Mocale.UnitTests.Providers;
 
 public class EmbeddedResourceProviderTests : FixtureBase<IInternalLocalizationProvider>
 {
-    #region Setup
+	#region Setup
 
-    private readonly Mock<IConfigurationManager<IEmbeddedResourcesConfig>> configurationManager;
-    private readonly Mock<IEmbeddedResourcesConfig> embeddedResourcesConfig;
-    private readonly Mock<ILogger<EmbeddedResourceProvider>> logger;
+	private readonly Mock<IConfigurationManager<IEmbeddedResourcesConfig>> configurationManager;
+	private readonly Mock<IEmbeddedResourcesConfig> embeddedResourcesConfig;
+	private readonly Mock<ILogger<EmbeddedResourceProvider>> logger;
 
-    public EmbeddedResourceProviderTests()
-    {
-        configurationManager = new Mock<IConfigurationManager<IEmbeddedResourcesConfig>>();
-        embeddedResourcesConfig = new Mock<IEmbeddedResourcesConfig>();
-        logger = new Mock<ILogger<EmbeddedResourceProvider>>();
+	public EmbeddedResourceProviderTests()
+	{
+		configurationManager = new Mock<IConfigurationManager<IEmbeddedResourcesConfig>>();
+		embeddedResourcesConfig = new Mock<IEmbeddedResourcesConfig>();
+		logger = new Mock<ILogger<EmbeddedResourceProvider>>();
 
-        configurationManager.SetupGet(m => m.Configuration)
-            .Returns(embeddedResourcesConfig.Object);
-    }
+		logger.Setup(m => m.IsEnabled(It.IsAny<LogLevel>()))
+			.Returns(true);
 
-    public override IInternalLocalizationProvider CreateSystemUnderTest()
-    {
-        return new EmbeddedResourceProvider(
-            configurationManager.Object,
-            logger.Object);
-    }
+		configurationManager.SetupGet(m => m.Configuration)
+			.Returns(embeddedResourcesConfig.Object);
+	}
 
-    #endregion Setup
+	public override IInternalLocalizationProvider CreateSystemUnderTest()
+	{
+		return new EmbeddedResourceProvider(
+			configurationManager.Object,
+			logger.Object);
+	}
 
-    #region Tests
+	#endregion Setup
 
-    [Fact]
-    public void GetValuesForCulture_WhenResourceAssemblyIsNull_ShouldReturnNull()
-    {
-        // Arrange
-        embeddedResourcesConfig.SetupGet(m => m.ResourcesAssembly)
-            .Returns(() => null);
+	#region Tests
 
-        var culture = new CultureInfo("en-GB");
+	[Fact]
+	public void GetValuesForCulture_WhenResourceAssemblyIsNull_ShouldReturnNull()
+	{
+		// Arrange
+		embeddedResourcesConfig.SetupGet(m => m.ResourcesAssembly)
+			.Returns(() => null);
 
-        // Act
-        var values = Sut.GetValuesForCulture(culture);
+		var culture = new CultureInfo("en-GB");
 
-        // Assert
-        Assert.Null(values);
+		// Act
+		var values = Sut.GetValuesForCulture(culture);
 
-        logger.VerifyLog(log => log.LogWarning("Configured resource assembly was null"),
-            Times.Once());
-    }
+		// Assert
+		Assert.Null(values);
 
-    [Fact]
-    public void GetValuesForCulture_WhenResourceFolderNotFound_ShouldReturnNull()
-    {
-        // Arrange
-        embeddedResourcesConfig.SetupGet(m => m.ResourcesAssembly)
-            .Returns(typeof(EmbeddedResourceProviderTests).Assembly);
+		logger.VerifyLog(log => log.LogWarning("Configured resource assembly was null"),
+			Times.Once());
+	}
 
-        embeddedResourcesConfig.SetupGet(m => m.UseResourceFolder)
-            .Returns(true);
+	[Fact]
+	public void GetValuesForCulture_WhenResourceFolderNotFound_ShouldReturnNull()
+	{
+		// Arrange
+		embeddedResourcesConfig.SetupGet(m => m.ResourcesAssembly)
+			.Returns(typeof(EmbeddedResourceProviderTests).Assembly);
 
-        embeddedResourcesConfig.SetupGet(m => m.ResourcesPath)
-            .Returns("Locales");
+		embeddedResourcesConfig.SetupGet(m => m.UseResourceFolder)
+			.Returns(true);
 
-        var culture = new CultureInfo("en-GB");
+		embeddedResourcesConfig.SetupGet(m => m.ResourcesPath)
+			.Returns("Locales");
 
-        // Act
-        var values = Sut.GetValuesForCulture(culture);
+		var culture = new CultureInfo("en-GB");
 
-        // Assert
-        Assert.Null(values);
+		// Act
+		var values = Sut.GetValuesForCulture(culture);
 
-        logger.VerifyLog(log => log.LogWarning("No assembly resources found with prefix: {FolderPrefix}", "Mocale.UnitTests.Resources.Locales"),
-            Times.Once());
-    }
+		// Assert
+		Assert.Null(values);
 
-    [Fact]
-    public void GetValuesForCulture_WhenResourceFolderFoundButNoMatchingFiles_ShouldReturnNull()
-    {
-        // Arrange
-        embeddedResourcesConfig.SetupGet(m => m.ResourcesAssembly)
-            .Returns(typeof(EmbeddedResourceProviderTests).Assembly);
+		logger.VerifyLog(log => log.LogWarning("No assembly resources found with prefix: {FolderPrefix}", "Mocale.UnitTests.Resources.Locales"),
+			Times.Once());
+	}
 
-        embeddedResourcesConfig.SetupGet(m => m.UseResourceFolder)
-            .Returns(false);
+	[Fact]
+	public void GetValuesForCulture_WhenResourceFolderFoundButNoMatchingFiles_ShouldReturnNull()
+	{
+		// Arrange
+		embeddedResourcesConfig.SetupGet(m => m.ResourcesAssembly)
+			.Returns(typeof(EmbeddedResourceProviderTests).Assembly);
 
-        embeddedResourcesConfig.SetupGet(m => m.ResourcesPath)
-            .Returns("Resources.Misc");
+		embeddedResourcesConfig.SetupGet(m => m.UseResourceFolder)
+			.Returns(false);
 
-        var culture = new CultureInfo("en-GB");
+		embeddedResourcesConfig.SetupGet(m => m.ResourcesPath)
+			.Returns("Resources.Misc");
 
-        // Act
-        var values = Sut.GetValuesForCulture(culture);
+		var culture = new CultureInfo("en-GB");
 
-        // Assert
-        Assert.Null(values);
+		// Act
+		var values = Sut.GetValuesForCulture(culture);
 
-        logger.VerifyLog(log => log.LogWarning("Unable to find resource for selected culture: {CultureName}", "en-GB"),
-            Times.Once());
-    }
+		// Assert
+		Assert.Null(values);
 
-    [Fact]
-    public void GetValuesForCulture_WhenResourceFolderContainsInvalidCultureFiles_ShouldReturnNull()
-    {
-        // Arrange
-        embeddedResourcesConfig.SetupGet(m => m.ResourcesAssembly)
-            .Returns(typeof(EmbeddedResourceProviderTests).Assembly);
+		logger.VerifyLog(log => log.LogWarning("Unable to find resource for selected culture: {CultureName}", "en-GB"),
+			Times.Once());
+	}
 
-        embeddedResourcesConfig.SetupGet(m => m.UseResourceFolder)
-            .Returns(true);
+	[Fact]
+	public void GetValuesForCulture_WhenResourceFolderContainsInvalidCultureFiles_ShouldReturnNull()
+	{
+		// Arrange
+		embeddedResourcesConfig.SetupGet(m => m.ResourcesAssembly)
+			.Returns(typeof(EmbeddedResourceProviderTests).Assembly);
 
-        embeddedResourcesConfig.SetupGet(m => m.ResourcesPath)
-            .Returns("Invalid");
+		embeddedResourcesConfig.SetupGet(m => m.UseResourceFolder)
+			.Returns(true);
 
-        var culture = new CultureInfo("en-GB");
+		embeddedResourcesConfig.SetupGet(m => m.ResourcesPath)
+			.Returns("Invalid");
 
-        // Act
-        var values = Sut.GetValuesForCulture(culture);
+		var culture = new CultureInfo("en-GB");
 
-        // Assert
-        Assert.Null(values);
+		// Act
+		var values = Sut.GetValuesForCulture(culture);
 
-        logger.VerifyLog(
-            log => log.LogError(
-                It.IsAny<Exception>(),
-                "An exception occurred loading & parsing assembly resource {FilePath}",
-                It.IsAny<string>()),
-            Times.Once());
-    }
+		// Assert
+		Assert.Null(values);
 
-    [Fact]
-    public void GetValuesForCulture_WhenResourceFolderContainsValidCultureFiles_ShouldReturnLocalizations()
-    {
-        // Arrange
-        embeddedResourcesConfig.SetupGet(m => m.ResourcesAssembly)
-            .Returns(typeof(EmbeddedResourceProviderTests).Assembly);
+		logger.VerifyLog(
+			log => log.LogError(
+				It.IsAny<Exception>(),
+				"An exception occurred loading & parsing assembly resource {FilePath}",
+				It.IsAny<string>()),
+			Times.Once());
+	}
 
-        embeddedResourcesConfig.SetupGet(m => m.UseResourceFolder)
-            .Returns(true);
+	[Fact]
+	public void GetValuesForCulture_WhenResourceFolderContainsValidCultureFiles_ShouldReturnLocalizations()
+	{
+		// Arrange
+		embeddedResourcesConfig.SetupGet(m => m.ResourcesAssembly)
+			.Returns(typeof(EmbeddedResourceProviderTests).Assembly);
 
-        var culture = new CultureInfo("en-GB");
+		embeddedResourcesConfig.SetupGet(m => m.UseResourceFolder)
+			.Returns(true);
 
-        // Act
-        var values = Sut.GetValuesForCulture(culture);
+		var culture = new CultureInfo("en-GB");
 
-        // Assert
-        Assert.NotNull(values);
-        Assert.NotEmpty(values);
+		// Act
+		var values = Sut.GetValuesForCulture(culture);
 
-        var expectedLocalizations = new Dictionary<string, string>()
-        {
-            {
-                "CurrentLocaleName", "English"
-            },
-            {
-                "LocalizationCurrentProviderIs", "The current localization provider is:"
-            },
-            {
-                "LocalizationProviderName", "Json"
-            },
-            {
-                "MocaleDescription", "Localization framework for .NET Maui"
-            },
-            {
-                "MocaleTitle", "Mocale"
-            },
-            {
-                "ExternalPrefixExplanation", "Strings prefixed with GR_ indicate they have been pulled from the external provider (GitHub.Raw), when the local cache expires if these values change, so will the text displayed!"
-            },
-        };
+		// Assert
+		Assert.NotNull(values);
+		Assert.NotEmpty(values);
 
-        values.Should()
-            .BeEquivalentTo(expectedLocalizations);
-    }
+		var expectedLocalizations = new Dictionary<string, string>
+		{
+			{ "CurrentLocaleName", "English" },
+			{ "LocalizationCurrentProviderIs", "The current localization provider is:" },
+			{ "LocalizationProviderName", "Json" },
+			{ "MocaleDescription", "Localization framework for .NET Maui" },
+			{ "MocaleTitle", "Mocale" },
+			{ "ExternalPrefixExplanation", "Strings prefixed with GR_ indicate they have been pulled from the external provider (GitHub.Raw), when the local cache expires if these values change, so will the text displayed!" },
+		};
 
-    [Fact]
-    public void ParseFile_WhenFileStreamIsNull_ShouldLogAndReturnNull()
-    {
-        // Arrange
-        var sut = (EmbeddedResourceProvider)Sut;
+		values.Should()
+			.BeEquivalentTo(expectedLocalizations);
+	}
+
+	[Fact]
+	public void ParseFile_WhenFileStreamIsNull_ShouldLogAndReturnNull()
+	{
+		// Arrange
+		var sut = (EmbeddedResourceProvider)Sut;
 
 
-        // Act
-        var translations = sut.ParseFile("ThisIsNotAValidPath!", typeof(EmbeddedResourceProviderTests).Assembly);
+		// Act
+		var translations = sut.ParseFile("ThisIsNotAValidPath!", typeof(EmbeddedResourceProviderTests).Assembly);
 
-        // Assert
-        Assert.Null(translations);
-        logger.VerifyLog(log => log.LogWarning(
-                "File stream was null for assembly resource: {FilePath}",
-                "ThisIsNotAValidPath!"),
-            Times.Once());
-    }
+		// Assert
+		Assert.Null(translations);
+		logger.VerifyLog(log => log.LogWarning(
+				"File stream was null for assembly resource: {FilePath}",
+				"ThisIsNotAValidPath!"),
+			Times.Once());
+	}
 
-    #endregion Tests
+	#endregion Tests
 }

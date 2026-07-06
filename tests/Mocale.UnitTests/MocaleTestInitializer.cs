@@ -4,9 +4,9 @@ namespace Mocale.UnitTests;
 
 public static class MocaleTestInitializer
 {
-    [ModuleInitializer]
-    public static void Init()
-    {
-        VerifySourceGenerators.Initialize();
-    }
+	[ModuleInitializer]
+	public static void Init()
+	{
+		VerifySourceGenerators.Initialize();
+	}
 }

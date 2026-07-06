@@ -4,34 +4,34 @@ namespace Mocale.Samples.Converters;
 
 internal sealed class CityDescriptionConverter : IValueConverter
 {
-    private readonly ITranslatorManager translatorManager = MocaleLocator.TranslatorManager;
+	private readonly ITranslatorManager translatorManager = MocaleLocator.TranslatorManager;
 
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-    {
-        if (value == null)
-        {
-            return null;
-        }
+	public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+	{
+		if (value is null)
+		{
+			return null;
+		}
 
-        if (value is not string)
-        {
-            throw new InvalidOperationException($"Value must be of type {nameof(String)}");
-        }
+		if (value is not string)
+		{
+			throw new InvalidOperationException($"Value must be of type {nameof(String)}");
+		}
 
-        var key = $"CityDescription_{value}";
+		var key = $"CityDescription_{value}";
 
-        //return new Binding
-        //{
-        //    Mode = BindingMode.OneWay,
-        //    Path = $"[{key}]",
-        //    Source = translatorManager,
-        //};
+		//return new Binding
+		//{
+		//    Mode = BindingMode.OneWay,
+		//    Path = $"[{key}]",
+		//    Source = translatorManager,
+		//};
 
-        return translatorManager.Translate(key);
-    }
+		return translatorManager.Translate(key);
+	}
 
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-    {
-        throw new NotImplementedException();
-    }
+	public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+	{
+		throw new NotImplementedException();
+	}
 }

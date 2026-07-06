@@ -5,8 +5,8 @@ namespace Mocale.Abstractions;
 /// </summary>
 public interface IAppResourcesConfig
 {
-    /// <summary>
-    /// The type for the app resources
-    /// </summary>
-    Type? AppResourcesType { get; }
+	/// <summary>
+	/// The type for the app resources
+	/// </summary>
+	Type? AppResourcesType { get; }
 }

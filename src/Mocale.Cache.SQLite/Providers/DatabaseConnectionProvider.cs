@@ -1,53 +1,61 @@
 using Microsoft.Extensions.Logging;
+
 namespace Mocale.Cache.SQLite.Providers;
 
-internal class DatabaseConnectionProvider : IDatabaseConnectionProvider
+internal partial class DatabaseConnectionProvider : IDatabaseConnectionProvider
 {
-    #region Fields
+	#region Fields
 
-    private readonly Lazy<SQLiteConnection> connectionLazy;
-    private readonly IDatabasePathProvider databasePathProvider;
-    private readonly ILogger logger;
+	private readonly Lazy<SQLiteConnection> connectionLazy;
+	private readonly IDatabasePathProvider databasePathProvider;
+	private readonly ILogger logger;
 
-    #endregion
+	#endregion Fields
 
-    #region Constructors
+	#region Constructors
 
-    public DatabaseConnectionProvider(
-        IDatabasePathProvider databasePathProvider,
-        ILogger<DatabaseConnectionProvider> logger)
-    {
-        this.databasePathProvider = Guard.Against.Null(databasePathProvider, nameof(databasePathProvider));
-        this.logger = Guard.Against.Null(logger, nameof(logger));
+	public DatabaseConnectionProvider(
+		IDatabasePathProvider databasePathProvider,
+		ILogger<DatabaseConnectionProvider> logger)
+	{
+		this.databasePathProvider = Guard.Against.Null(databasePathProvider);
+		this.logger = Guard.Against.Null(logger);
 
-        // This could cause issues if we need to rebuild the connection...
-        this.connectionLazy = new Lazy<SQLiteConnection>(BuildConnection, LazyThreadSafetyMode.ExecutionAndPublication);
-    }
+		// This could cause issues if we need to rebuild the connection...
+		connectionLazy = new Lazy<SQLiteConnection>(BuildConnection, LazyThreadSafetyMode.ExecutionAndPublication);
+	}
 
-    #endregion Constructors
+	#endregion Constructors
 
-    #region Methods
+	#region Methods
 
-    private SQLiteConnection BuildConnection()
-    {
-        var databasePath = databasePathProvider.GetDatabasePath();
+	private SQLiteConnection BuildConnection()
+	{
+		var databasePath = databasePathProvider.GetDatabasePath();
 
-        logger.LogTrace("Opening connecting to database: {DatabasePath}", databasePath);
+		LogOpeningConnectingToDatabaseDatabasePath(databasePath);
 
-        return new SQLiteConnection(
-            databasePath,
-            SQLiteOpenFlags.Create | SQLiteOpenFlags.FullMutex | SQLiteOpenFlags.ReadWrite,
-            true);
-    }
+		return new SQLiteConnection(
+			databasePath,
+			SQLiteOpenFlags.Create | SQLiteOpenFlags.FullMutex | SQLiteOpenFlags.ReadWrite,
+			true);
+	}
 
-    #endregion Methods
+	#endregion Methods
 
-    #region Interface Implementations
+	#region Interface Implementations
 
-    public SQLiteConnection GetDatabaseConnection()
-    {
-        return connectionLazy.Value;
-    }
+	public SQLiteConnection GetDatabaseConnection()
+	{
+		return connectionLazy.Value;
+	}
 
-    #endregion Interface Implementations
+	#endregion Interface Implementations
+
+	#region Logging
+
+	[LoggerMessage(LogLevel.Trace, "Opening connecting to database: {DatabasePath}")]
+	partial void LogOpeningConnectingToDatabaseDatabasePath(string databasePath);
+
+	#endregion Logging
 }

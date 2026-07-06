@@ -3,21 +3,27 @@ using Ardalis.GuardClauses;
 
 namespace Mocale.Parsers;
 
-internal class JsonLocalizationParser(ILogger<JsonLocalizationParser> logger) : ILocalizationParser
+internal partial class JsonLocalizationParser(ILogger<JsonLocalizationParser> logger) : ILocalizationParser
 {
-    private readonly ILogger logger = Guard.Against.Null(logger, nameof(logger));
+	private readonly ILogger logger = Guard.Against.Null(logger, nameof(logger));
 
-    public Dictionary<string, string>? ParseLocalizationStream(Stream resourceStream)
-    {
-        try
-        {
-            return JsonSerializer.Deserialize<Dictionary<string, string>>(resourceStream);
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "An exception occurred parsing localization stream");
-            return null;
-        }
-    }
+	public Dictionary<string, string>? ParseLocalizationStream(Stream resourceStream)
+	{
+		try
+		{
+			return JsonSerializer.Deserialize<Dictionary<string, string>>(resourceStream);
+		}
+		catch (Exception ex)
+		{
+			LogAnExceptionOccurredParsingLocalizationStream(ex);
+			return null;
+		}
+	}
+
+	#region Logging
+
+	[LoggerMessage(LogLevel.Error, "An exception occurred parsing localization stream")]
+	partial void LogAnExceptionOccurredParsingLocalizationStream(Exception exception);
+
+	#endregion Logging
 }
-

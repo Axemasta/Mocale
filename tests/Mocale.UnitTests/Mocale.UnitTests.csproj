@@ -1,76 +1,76 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <LangVersion>preview</LangVersion>
-    <TargetFramework>$(StandardTargetFramework)</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <IsPackable>false</IsPackable>
-    <UseMaui>true</UseMaui>
-    <IsTestProject>true</IsTestProject>
-    <NoWarn>$(NoWarn);CA2254;IDE0005;xUnit1045;CA1416;</NoWarn>
-  </PropertyGroup>
+	<PropertyGroup>
+		<LangVersion>preview</LangVersion>
+		<TargetFramework>$(StandardTargetFramework)</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<IsPackable>false</IsPackable>
+		<UseMaui>true</UseMaui>
+		<IsTestProject>true</IsTestProject>
+		<NoWarn>$(NoWarn);CA2254;IDE0005;xUnit1045;CA1416;CA1873;</NoWarn>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Mvvm" />
-    <PackageReference Include="FluentAssertions" />
-    <PackageReference Include="ILogger.Moq" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
-    <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" />
-    <PackageReference Include="Moq.Contrib.HttpClient" />
-    <PackageReference Include="Verify.SourceGenerators" />
-    <PackageReference Include="Verify.Xunit" />
-    <PackageReference Include="xunit" />
-    <PackageReference Include="xunit.runner.visualstudio">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="coverlet.collector">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="Moq" />
-    <PackageReference Include="Microsoft.Extensions.Caching.Memory" />
-    <PackageReference Include="Ardalis.GuardClauses" />
-    <PackageReference Include="ResXResourceReader.NetStandard" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="CommunityToolkit.Mvvm"/>
+		<PackageReference Include="FluentAssertions"/>
+		<PackageReference Include="ILogger.Moq"/>
+		<PackageReference Include="Microsoft.CodeAnalysis.Analyzers">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp"/>
+		<PackageReference Include="Microsoft.Extensions.TimeProvider.Testing"/>
+		<PackageReference Include="Microsoft.NET.Test.Sdk"/>
+		<PackageReference Include="Moq.Contrib.HttpClient"/>
+		<PackageReference Include="Verify.SourceGenerators"/>
+		<PackageReference Include="Verify.Xunit"/>
+		<PackageReference Include="xunit"/>
+		<PackageReference Include="xunit.runner.visualstudio">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="coverlet.collector">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="Moq"/>
+		<PackageReference Include="Microsoft.Extensions.Caching.Memory"/>
+		<PackageReference Include="Ardalis.GuardClauses"/>
+		<PackageReference Include="ResXResourceReader.NetStandard"/>
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\Mocale.Cache.SQLite\Mocale.Cache.SQLite.csproj" />
-    <ProjectReference Include="..\..\src\Mocale.Providers.Aws.S3\Mocale.Providers.AWS.S3.csproj" />
-    <ProjectReference Include="..\..\src\Mocale.Providers.Azure.Blob\Mocale.Providers.Azure.Blob.csproj" />
-    <ProjectReference Include="..\..\src\Mocale.Providers.Github.Raw\Mocale.Providers.Github.Raw.csproj" />
-    <ProjectReference Include="..\..\src\Mocale.SourceGenerators\Mocale.SourceGenerators.csproj" />
-    <ProjectReference Include="..\..\src\Mocale.Testing\Mocale.Testing.csproj" />
-    <ProjectReference Include="..\..\src\Mocale\Mocale.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\src\Mocale.Cache.SQLite\Mocale.Cache.SQLite.csproj"/>
+		<ProjectReference Include="..\..\src\Mocale.Providers.Aws.S3\Mocale.Providers.AWS.S3.csproj"/>
+		<ProjectReference Include="..\..\src\Mocale.Providers.Azure.Blob\Mocale.Providers.Azure.Blob.csproj"/>
+		<ProjectReference Include="..\..\src\Mocale.Providers.Github.Raw\Mocale.Providers.Github.Raw.csproj"/>
+		<ProjectReference Include="..\..\src\Mocale.SourceGenerators\Mocale.SourceGenerators.csproj"/>
+		<ProjectReference Include="..\..\src\Mocale.Testing\Mocale.Testing.csproj"/>
+		<ProjectReference Include="..\..\src\Mocale\Mocale.csproj"/>
+	</ItemGroup>
 
-  <ItemGroup>
-    <!-- Some fake files embedded to allow testing embedded resource loading -->
-    <EmbeddedResource Include="Resources/**/*.json" />
-    <EmbeddedResource Include="Resources/**/*.txt" />
-  </ItemGroup>
+	<ItemGroup>
+		<!-- Some fake files embedded to allow testing embedded resource loading -->
+		<EmbeddedResource Include="Resources/**/*.json"/>
+		<EmbeddedResource Include="Resources/**/*.txt"/>
+	</ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Update="Resources\Resx\TestResources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>TestResources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <Compile Update="Resources\Resx\TestResources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>TestResources.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Update="Resources\Resx\TestResources.resx">
+			<Generator>ResXFileCodeGenerator</Generator>
+			<LastGenOutput>TestResources.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+		<Compile Update="Resources\Resx\TestResources.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>TestResources.resx</DependentUpon>
+		</Compile>
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Remove="Snapshots\Locales\en-GB.json" />
-    <AdditionalFiles Include="Snapshots\Locales\en-GB.json" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Remove="Snapshots\Locales\en-GB.json"/>
+		<AdditionalFiles Include="Snapshots\Locales\en-GB.json"/>
+	</ItemGroup>
 
 </Project>

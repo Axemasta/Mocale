@@ -1,19 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>$(StandardTargetFramework)</TargetFramework>
+	<PropertyGroup>
+		<TargetFramework>$(StandardTargetFramework)</TargetFramework>
 
-    <AssemblyName>Mocale.Testing</AssemblyName>
-    <RootNamespace>Mocale.Testing</RootNamespace>
-    <PackageId>Mocale.Testing</PackageId>
-    <Summary>Testing compatibility package for mocale</Summary>
-    <PackageTags>maui,mocale,localization,localisation,translation,testing,mocale.testing</PackageTags>
-    <Title>Mocale.Testing</Title>
-    <Description>Testing compatibility package for Mocale to enable seemless unit testing of Maui components that use mocale.</Description>
-  </PropertyGroup>
+		<AssemblyName>Mocale.Testing</AssemblyName>
+		<RootNamespace>Mocale.Testing</RootNamespace>
+		<PackageId>Mocale.Testing</PackageId>
+		<Summary>Testing compatibility package for mocale</Summary>
+		<PackageTags>maui,mocale,localization,localisation,translation,testing,mocale.testing</PackageTags>
+		<Title>Mocale.Testing</Title>
+		<Description>Testing compatibility package for Mocale to enable seemless unit testing of Maui components that use mocale.</Description>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\Mocale\Mocale.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\src\Mocale\Mocale.csproj"/>
+	</ItemGroup>
 
 </Project>

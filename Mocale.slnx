@@ -1,0 +1,26 @@
+<Solution>
+  <Folder Name="/Cache/">
+    <Project Path="src/Mocale.Cache.SQLite/Mocale.Cache.SQLite.csproj" />
+  </Folder>
+  <Folder Name="/Generators/">
+    <Project Path="src/Mocale.SourceGenerators/Mocale.SourceGenerators.csproj" />
+  </Folder>
+  <Folder Name="/Providers/">
+    <Project Path="src/Mocale.Providers.AWS.S3/Mocale.Providers.AWS.S3.csproj" />
+    <Project Path="src/Mocale.Providers.Azure.Blob/Mocale.Providers.Azure.Blob.csproj" />
+    <Project Path="src/Mocale.Providers.GitHub.Raw/Mocale.Providers.GitHub.Raw.csproj" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path="directory.build.props" />
+    <File Path="directory.packages.props" />
+    <File Path="global.json" />
+    <File Path="src/directory.build.props" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <File Path="tests/directory.packages.props" />
+    <Project Path="src/Mocale.Testing/Mocale.Testing.csproj" />
+    <Project Path="tests/Mocale.UnitTests/Mocale.UnitTests.csproj" />
+  </Folder>
+  <Project Path="src/Mocale/Mocale.csproj" />
+</Solution>

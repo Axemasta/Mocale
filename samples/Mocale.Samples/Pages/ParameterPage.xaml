@@ -44,6 +44,12 @@
 
                 </VerticalStackLayout>
             </Border>
+
+            <Border Padding="20">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="{mocale:LocalizeBinding BigNumber, TranslationKey={x:Static keys:TranslationKeys.ParameterPageBigNumberLabel}}" />
+                </VerticalStackLayout>
+            </Border>
         </VerticalStackLayout>
     </ScrollView>
 </pages:BasePage>

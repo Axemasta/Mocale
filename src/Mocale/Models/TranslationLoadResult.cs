@@ -5,18 +5,18 @@ namespace Mocale.Models;
 /// </summary>
 public class TranslationLoadResult
 {
-    /// <summary>
-    /// Whether translations were loaded
-    /// </summary>
-    public bool Loaded { get; set; }
+	/// <summary>
+	/// Whether translations were loaded
+	/// </summary>
+	public bool Loaded { get; set; }
 
-    /// <summary>
-    /// Source of the translations
-    /// </summary>
-    public TranslationSource Source { get; set; }
+	/// <summary>
+	/// Source of the translations
+	/// </summary>
+	public TranslationSource Source { get; set; }
 
-    /// <summary>
-    ///
-    /// </summary>
-    public required Localization Localization { get; set; }
+	/// <summary>
+	///
+	/// </summary>
+	public required Localization Localization { get; set; }
 }

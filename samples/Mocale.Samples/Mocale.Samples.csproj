@@ -1,104 +1,105 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <LangVersion>preview</LangVersion>
-    <TargetFrameworks>$(MauiPlatformTargetFrameworks);</TargetFrameworks>
-    <UseMaui>true</UseMaui>
-    <OutputType Condition="'$(TargetFramework)' != '$(StandardTargetFramework)'">Exe</OutputType>
-    <RootNamespace>Mocale.Samples</RootNamespace>
-    <SingleProject>true</SingleProject>
-    <ImplicitUsings>true</ImplicitUsings>
-    <NoWarn>$(NoWarn);IDE0005</NoWarn>
-    <GenerateSatelliteAssembliesForCore>true</GenerateSatelliteAssembliesForCore>
-    <MauiEnableXamlCBindingWithSourceCompilation>true</MauiEnableXamlCBindingWithSourceCompilation>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Nullable>enable</Nullable>
+	<PropertyGroup>
+		<MauiVersion>10.0.80</MauiVersion>
+		<LangVersion>preview</LangVersion>
+		<TargetFrameworks>$(MauiPlatformTargetFrameworks);</TargetFrameworks>
+		<UseMaui>true</UseMaui>
+		<OutputType Condition="'$(TargetFramework)' != '$(StandardTargetFramework)'">Exe</OutputType>
+		<RootNamespace>Mocale.Samples</RootNamespace>
+		<SingleProject>true</SingleProject>
+		<ImplicitUsings>true</ImplicitUsings>
+		<NoWarn>$(NoWarn);IDE0005</NoWarn>
+		<GenerateSatelliteAssembliesForCore>true</GenerateSatelliteAssembliesForCore>
+		<MauiEnableXamlCBindingWithSourceCompilation>true</MauiEnableXamlCBindingWithSourceCompilation>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<Nullable>enable</Nullable>
 
-    <!-- Display name -->
-    <ApplicationTitle>Mocale.Samples</ApplicationTitle>
+		<!-- Display name -->
+		<ApplicationTitle>Mocale.Samples</ApplicationTitle>
 
-    <!-- App Identifier -->
-    <ApplicationId>com.axemasta.mocale.samples</ApplicationId>
-    <ApplicationIdGuid>432e5f26-7a6a-4945-a189-7d5f776ba14b</ApplicationIdGuid>
+		<!-- App Identifier -->
+		<ApplicationId>com.axemasta.mocale.samples</ApplicationId>
+		<ApplicationIdGuid>432e5f26-7a6a-4945-a189-7d5f776ba14b</ApplicationIdGuid>
 
-    <!-- Versions -->
-    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
-    <ApplicationVersion>1</ApplicationVersion>
+		<!-- Versions -->
+		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+		<ApplicationVersion>1</ApplicationVersion>
 
-    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
-    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">15.0</SupportedOSPlatformVersion>
-    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
-    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
-    <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
-    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
-  </PropertyGroup>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">15.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
+		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)'=='Debug|$(IosTargetFramework)'">
-    <CreatePackage>false</CreatePackage>
-    <CodesignProvision>Automatic</CodesignProvision>
-    <CodesignKey>iPhone Developer</CodesignKey>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)'=='Release|$(MacTargetFramework)'">
-    <CreatePackage>false</CreatePackage>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)'=='Debug|$(MacTargetFramework)'">
-    <CreatePackage>false</CreatePackage>
-    <CodesignKey>Mac Developer</CodesignKey>
-    <PackageSigningKey>3rd Party Mac Developer Installer</PackageSigningKey>
-    <CodesignEntitlements>Platforms\MacCatalyst\Entitlements.plist</CodesignEntitlements>
-  </PropertyGroup>
-  <ItemGroup>
-    <!-- App Icon -->
-    <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)'=='Debug|$(IosTargetFramework)'">
+		<CreatePackage>false</CreatePackage>
+		<CodesignProvision>Automatic</CodesignProvision>
+		<CodesignKey>iPhone Developer</CodesignKey>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)'=='Release|$(MacTargetFramework)'">
+		<CreatePackage>false</CreatePackage>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)'=='Debug|$(MacTargetFramework)'">
+		<CreatePackage>false</CreatePackage>
+		<CodesignKey>Mac Developer</CodesignKey>
+		<PackageSigningKey>3rd Party Mac Developer Installer</PackageSigningKey>
+		<CodesignEntitlements>Platforms\MacCatalyst\Entitlements.plist</CodesignEntitlements>
+	</PropertyGroup>
+	<ItemGroup>
+		<!-- App Icon -->
+		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4"/>
 
-    <!-- Splash Screen -->
-    <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
+		<!-- Splash Screen -->
+		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128"/>
 
-    <!-- Images -->
-		<MauiImage Include="Resources\Images\*" />
-		<MauiImage Update="Resources\Images\dotnet_bot.svg" BaseSize="168,208" />
+		<!-- Images -->
+		<MauiImage Include="Resources\Images\*"/>
+		<MauiImage Update="Resources\Images\dotnet_bot.svg" BaseSize="168,208"/>
 
 		<!-- Custom Fonts -->
-		<MauiFont Include="Resources\Fonts\*" />
+		<MauiFont Include="Resources\Fonts\*"/>
 
-    <!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
-    <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
-  </ItemGroup>
+		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
+		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)"/>
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Maui" />
-    <PackageReference Include="CommunityToolkit.Maui.Markup" />
-    <PackageReference Include="CommunityToolkit.Mvvm" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="CommunityToolkit.Maui"/>
+		<PackageReference Include="CommunityToolkit.Maui.Markup"/>
+		<PackageReference Include="CommunityToolkit.Mvvm"/>
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug"/>
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\Mocale.Cache.SQLite\Mocale.Cache.SQLite.csproj" />
-    <ProjectReference Include="..\..\src\Mocale.Providers.GitHub.Raw\Mocale.Providers.GitHub.Raw.csproj" />
-    <ProjectReference Include="..\..\src\Mocale.SourceGenerators\Mocale.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
-    <ProjectReference Include="..\..\src\Mocale.Providers.Aws.S3\Mocale.Providers.AWS.S3.csproj" />
-    <ProjectReference Include="..\..\src\Mocale.Providers.Azure.Blob\Mocale.Providers.Azure.Blob.csproj" />
-    <ProjectReference Include="..\..\src\Mocale\Mocale.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\src\Mocale.Cache.SQLite\Mocale.Cache.SQLite.csproj"/>
+		<ProjectReference Include="..\..\src\Mocale.Providers.GitHub.Raw\Mocale.Providers.GitHub.Raw.csproj"/>
+		<ProjectReference Include="..\..\src\Mocale.SourceGenerators\Mocale.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
+		<ProjectReference Include="..\..\src\Mocale.Providers.Aws.S3\Mocale.Providers.AWS.S3.csproj"/>
+		<ProjectReference Include="..\..\src\Mocale.Providers.Azure.Blob\Mocale.Providers.Azure.Blob.csproj"/>
+		<ProjectReference Include="..\..\src\Mocale\Mocale.csproj"/>
+	</ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="Resources\Resx\AppResources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>AppResources.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Update="Resources\Resx\AppResources.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>AppResources.resx</DependentUpon>
+		</Compile>
+	</ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Update="Resources\Resx\AppResources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>AppResources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Update="Resources\Resx\AppResources.resx">
+			<Generator>ResXFileCodeGenerator</Generator>
+			<LastGenOutput>AppResources.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+	</ItemGroup>
 
-  <Import Project="..\..\src\Mocale.SourceGenerators\build\Package.props" />
-  <Import Project="..\..\src\Mocale.SourceGenerators\build\Package.targets" />
-  <Import Project="..\..\src\Mocale\build\Package.props" />
-  <Import Project="..\..\src\Mocale\build\Package.targets" />
+	<Import Project="..\..\src\Mocale.SourceGenerators\build\Package.props"/>
+	<Import Project="..\..\src\Mocale.SourceGenerators\build\Package.targets"/>
+	<Import Project="..\..\src\Mocale\build\Package.props"/>
+	<Import Project="..\..\src\Mocale\build\Package.targets"/>
 
 </Project>

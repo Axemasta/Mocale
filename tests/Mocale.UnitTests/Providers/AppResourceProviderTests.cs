@@ -1,6 +1,5 @@
 using System.Globalization;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities.Resources;
 using Mocale.Abstractions;
 using Mocale.Exceptions;
 using Mocale.Models;
@@ -12,153 +11,159 @@ namespace Mocale.UnitTests.Providers;
 [Collection(CollectionNames.ThreadCultureTests)]
 public class AppResourceProviderTests : FixtureBase<IInternalLocalizationProvider>
 {
-    #region Setup
+	#region Setup
 
-    private readonly Mock<IConfigurationManager<IAppResourcesConfig>> appResourcesConfigManager = new();
-    private readonly Mock<IConfigurationManager<IMocaleConfiguration>> mocaleConfigurationManager = new();
-    private readonly Mock<ILogger<AppResourceProvider>> logger = new();
+	private readonly Mock<IConfigurationManager<IAppResourcesConfig>> appResourcesConfigManager = new();
+	private readonly Mock<IConfigurationManager<IMocaleConfiguration>> mocaleConfigurationManager = new();
+	private readonly Mock<ILogger<AppResourceProvider>> logger = new();
 
-    public override IInternalLocalizationProvider CreateSystemUnderTest()
-    {
-        return new AppResourceProvider(
-            appResourcesConfigManager.Object,
-            mocaleConfigurationManager.Object,
-            logger.Object);
-    }
+	public AppResourceProviderTests()
+	{
+		logger.Setup(m => m.IsEnabled(It.IsAny<LogLevel>()))
+			.Returns(true);
+	}
 
-    #endregion Setup
+	public override IInternalLocalizationProvider CreateSystemUnderTest()
+	{
+		return new AppResourceProvider(
+			appResourcesConfigManager.Object,
+			mocaleConfigurationManager.Object,
+			logger.Object);
+	}
 
-    #region Tests
+	#endregion Setup
 
-    [Fact]
-    public void Constructor_WhenAppResourcesTypeIsNull_ShouldThrow()
-    {
-        // Arrange
-        appResourcesConfigManager.Setup(m => m.Configuration)
-            .Returns(new AppResourcesConfig()
-            {
-                AppResourcesType = null,
-            });
+	#region Tests
 
-        mocaleConfigurationManager.Setup(m => m.Configuration)
-            .Returns(new MocaleConfiguration());
+	[Fact]
+	public void Constructor_WhenAppResourcesTypeIsNull_ShouldThrow()
+	{
+		// Arrange
+		appResourcesConfigManager.Setup(m => m.Configuration)
+			.Returns(new AppResourcesConfig
+			{
+				AppResourcesType = null,
+			});
 
-        // Act
-        var ex = Assert.Throws<InitializationException>(() => new AppResourceProvider(
-            appResourcesConfigManager.Object,
-            mocaleConfigurationManager.Object,
-            logger.Object));
+		mocaleConfigurationManager.Setup(m => m.Configuration)
+			.Returns(new MocaleConfiguration());
 
-        // Assert
-        Assert.Equal("App Resource Type has not been set, this should be configured during startup", ex.Message);
-    }
+		// Act
+		var ex = Assert.Throws<InitializationException>(() => new AppResourceProvider(
+			appResourcesConfigManager.Object,
+			mocaleConfigurationManager.Object,
+			logger.Object));
 
-    [Fact]
-    public void Constructor_WhenAppResourcesTypeIsNotResx_ShouldReturnNull()
-    {
-        // Arrange
-        Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
-        Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
-        CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
-        CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
+		// Assert
+		Assert.Equal("App Resource Type has not been set, this should be configured during startup", ex.Message);
+	}
 
-        appResourcesConfigManager.Setup(m => m.Configuration)
-            .Returns(new AppResourcesConfig()
-            {
-                AppResourcesType = typeof(string),
-            });
+	[Fact]
+	public void Constructor_WhenAppResourcesTypeIsNotResx_ShouldReturnNull()
+	{
+		// Arrange
+		Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+		Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
+		CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
+		CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
 
-        mocaleConfigurationManager.Setup(m => m.Configuration)
-            .Returns(new MocaleConfiguration()
-            {
-                DefaultCulture = new CultureInfo("en-GB"),
-            });
+		appResourcesConfigManager.Setup(m => m.Configuration)
+			.Returns(new AppResourcesConfig
+			{
+				AppResourcesType = typeof(string),
+			});
 
-        // Act
-        var values = Sut.GetValuesForCulture(new CultureInfo("en-GB"));
+		mocaleConfigurationManager.Setup(m => m.Configuration)
+			.Returns(new MocaleConfiguration
+			{
+				DefaultCulture = new CultureInfo("en-GB"),
+			});
 
-        // Assert
-        Assert.Null(values);
-        logger.VerifyLog(log => log.LogWarning("Unable to load default resource set"), Times.Once);
-    }
+		// Act
+		var values = Sut.GetValuesForCulture(new CultureInfo("en-GB"));
 
-    [Fact]
-    public void GetValuesForCulture_WhenCultureIsDefault_ShouldLoadTranslations()
-    {
-        // Arrange
-        appResourcesConfigManager.Setup(m => m.Configuration)
-            .Returns(new AppResourcesConfig()
-            {
-                AppResourcesType = typeof(Resources.Resx.TestResources),
-            });
+		// Assert
+		Assert.Null(values);
+		logger.VerifyLog(log => log.LogWarning("Unable to load default resource set"), Times.Once);
+	}
 
-        mocaleConfigurationManager.Setup(m => m.Configuration)
-            .Returns(new MocaleConfiguration()
-            {
-                DefaultCulture = new CultureInfo("en-GB"),
-            });
+	[Fact]
+	public void GetValuesForCulture_WhenCultureIsDefault_ShouldLoadTranslations()
+	{
+		// Arrange
+		appResourcesConfigManager.Setup(m => m.Configuration)
+			.Returns(new AppResourcesConfig
+			{
+				AppResourcesType = typeof(Resources.Resx.TestResources),
+			});
 
-        // Act
-        var values = Sut.GetValuesForCulture(new CultureInfo("en-GB"));
+		mocaleConfigurationManager.Setup(m => m.Configuration)
+			.Returns(new MocaleConfiguration
+			{
+				DefaultCulture = new CultureInfo("en-GB"),
+			});
 
-        // Assert
-        Assert.NotNull(values);
-        Assert.Equal(2, values.Count);
-        Assert.Equal("Value One", values["KeyOne"]);
-        Assert.Equal("Value Two", values["KeyTwo"]);
-    }
+		// Act
+		var values = Sut.GetValuesForCulture(new CultureInfo("en-GB"));
 
-    [Fact]
-    public void GetValuesForCulture_WhenCultureIsPresentButNotDefault_ShouldLoadTranslations()
-    {
-        // Arrange
-        appResourcesConfigManager.Setup(m => m.Configuration)
-            .Returns(new AppResourcesConfig()
-            {
-                AppResourcesType = typeof(Resources.Resx.TestResources),
-            });
+		// Assert
+		Assert.NotNull(values);
+		Assert.Equal(2, values.Count);
+		Assert.Equal("Value One", values["KeyOne"]);
+		Assert.Equal("Value Two", values["KeyTwo"]);
+	}
 
-        mocaleConfigurationManager.Setup(m => m.Configuration)
-            .Returns(new MocaleConfiguration()
-            {
-                DefaultCulture = new CultureInfo("en-GB"),
-            });
+	[Fact]
+	public void GetValuesForCulture_WhenCultureIsPresentButNotDefault_ShouldLoadTranslations()
+	{
+		// Arrange
+		appResourcesConfigManager.Setup(m => m.Configuration)
+			.Returns(new AppResourcesConfig
+			{
+				AppResourcesType = typeof(Resources.Resx.TestResources),
+			});
 
-        // Act
-        var values = Sut.GetValuesForCulture(new CultureInfo("fr-FR"));
+		mocaleConfigurationManager.Setup(m => m.Configuration)
+			.Returns(new MocaleConfiguration
+			{
+				DefaultCulture = new CultureInfo("en-GB"),
+			});
 
-        // Assert
-        Assert.NotNull(values);
-        Assert.Equal(2, values.Count);
-        Assert.Equal("Clé un", values["KeyOne"]);
-        Assert.Equal("Clé deux", values["KeyTwo"]);
-    }
+		// Act
+		var values = Sut.GetValuesForCulture(new CultureInfo("fr-FR"));
 
-    [Fact]
-    public void GetValuesForCulture_WhenCultureIsNotPresent_ShouldReturnNull()
-    {
-        // Arrange
-        appResourcesConfigManager.Setup(m => m.Configuration)
-            .Returns(new AppResourcesConfig()
-            {
-                AppResourcesType = typeof(Resources.Resx.TestResources),
-            });
+		// Assert
+		Assert.NotNull(values);
+		Assert.Equal(2, values.Count);
+		Assert.Equal("Clé un", values["KeyOne"]);
+		Assert.Equal("Clé deux", values["KeyTwo"]);
+	}
 
-        mocaleConfigurationManager.Setup(m => m.Configuration)
-            .Returns(new MocaleConfiguration()
-            {
-                DefaultCulture = new CultureInfo("en-GB"),
-            });
+	[Fact]
+	public void GetValuesForCulture_WhenCultureIsNotPresent_ShouldReturnNull()
+	{
+		// Arrange
+		appResourcesConfigManager.Setup(m => m.Configuration)
+			.Returns(new AppResourcesConfig
+			{
+				AppResourcesType = typeof(Resources.Resx.TestResources),
+			});
 
-        // Act
-        var values = Sut.GetValuesForCulture(new CultureInfo("it-IT"));
+		mocaleConfigurationManager.Setup(m => m.Configuration)
+			.Returns(new MocaleConfiguration
+			{
+				DefaultCulture = new CultureInfo("en-GB"),
+			});
 
-        // Assert
-        Assert.Null(values);
+		// Act
+		var values = Sut.GetValuesForCulture(new CultureInfo("it-IT"));
 
-        logger.VerifyLog(log => log.LogWarning("No resources found for culture {CultureName}", "it-IT"),
-            Times.Once);
-    }
+		// Assert
+		Assert.Null(values);
 
-    #endregion Tests
+		logger.VerifyLog(log => log.LogWarning("No resources found for culture {CultureName}", "it-IT"),
+			Times.Once);
+	}
+
+	#endregion Tests
 }
