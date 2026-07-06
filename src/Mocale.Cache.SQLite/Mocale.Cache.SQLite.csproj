@@ -1,24 +1,24 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFrameworks>$(MauiPlatformTargetFrameworks);</TargetFrameworks>
-    <UseMaui>true</UseMaui>
+	<PropertyGroup>
+		<TargetFrameworks>$(MauiPlatformTargetFrameworks);</TargetFrameworks>
+		<UseMaui>true</UseMaui>
 
-    <AssemblyName>Mocale.Cache.SQLite</AssemblyName>
-    <RootNamespace>Mocale.Cache.SQLite</RootNamespace>
-    <PackageId>Mocale.Cache.SQLite</PackageId>
-    <Summary>Caching implementation for Mocale.</Summary>
-    <PackageTags>maui,mocale,localization,localisation,translation,cache,sqlite</PackageTags>
-    <Title>Mocale.Cache.SQLite</Title>
-    <Description>Caching implementation for Mocale. This cache provider utilizes a SQLite database to store translations and other details important for Mocales library functions.</Description>
-  </PropertyGroup>
+		<AssemblyName>Mocale.Cache.SQLite</AssemblyName>
+		<RootNamespace>Mocale.Cache.SQLite</RootNamespace>
+		<PackageId>Mocale.Cache.SQLite</PackageId>
+		<Summary>Caching implementation for Mocale.</Summary>
+		<PackageTags>maui,mocale,localization,localisation,translation,cache,sqlite</PackageTags>
+		<Title>Mocale.Cache.SQLite</Title>
+		<Description>Caching implementation for Mocale. This cache provider utilizes a SQLite database to store translations and other details important for Mocales library functions.</Description>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Mocale\Mocale.csproj"/>
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Mocale\Mocale.csproj"/>
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="sqlite-net-e"/>
-    <PackageReference Include="SourceGear.sqlite3"/>
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="sqlite-net-e"/>
+		<PackageReference Include="SourceGear.sqlite3"/>
+	</ItemGroup>
 </Project>

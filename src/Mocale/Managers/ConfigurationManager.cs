@@ -7,14 +7,14 @@ namespace Mocale.Managers;
 /// </summary>
 /// <typeparam name="TConfig"></typeparam>
 public class ConfigurationManager<TConfig>(TConfig config)
-    : IConfigurationManager<TConfig>, IConfigurationUpdateManager<TConfig>
+	: IConfigurationManager<TConfig>, IConfigurationUpdateManager<TConfig>
 {
-    /// <inheritdoc/>
-    public TConfig Configuration { get; } = Guard.Against.Null(config);
+	/// <inheritdoc/>
+	public TConfig Configuration { get; } = Guard.Against.Null(config);
 
-    /// <inheritdoc/>
-    public void UpdateConfiguration(Action<TConfig> configuration)
-    {
-        configuration(Configuration);
-    }
+	/// <inheritdoc/>
+	public void UpdateConfiguration(Action<TConfig> configuration)
+	{
+		configuration(Configuration);
+	}
 }

@@ -1,58 +1,59 @@
 using System.Globalization;
 using Microsoft.Extensions.Logging;
 using Mocale.Abstractions;
+
 namespace Mocale.Cache.SQLite.Managers;
 
 internal partial class LocalisationCacheManager(
-    ICacheUpdateManager cacheUpdateManager,
-    ILogger<LocalisationCacheManager> logger,
-    ITranslationsRepository translationsRepository)
-    : ILocalisationCacheManager
+	ICacheUpdateManager cacheUpdateManager,
+	ILogger<LocalisationCacheManager> logger,
+	ITranslationsRepository translationsRepository)
+	: ILocalisationCacheManager
 {
-    #region Fields
+	#region Fields
 
-    private readonly ICacheUpdateManager cacheUpdateManager = Guard.Against.Null(cacheUpdateManager);
-    private readonly ILogger logger = Guard.Against.Null(logger);
-    private readonly ITranslationsRepository translationsRepository = Guard.Against.Null(translationsRepository);
+	private readonly ICacheUpdateManager cacheUpdateManager = Guard.Against.Null(cacheUpdateManager);
+	private readonly ILogger logger = Guard.Against.Null(logger);
+	private readonly ITranslationsRepository translationsRepository = Guard.Against.Null(translationsRepository);
 
-    #endregion Fields
+	#endregion Fields
 
-    #region Interface Implementations
+	#region Interface Implementations
 
-    public Dictionary<string, string>? GetCachedLocalizations(CultureInfo cultureInfo)
-    {
-        return translationsRepository.GetTranslations(cultureInfo);
-    }
+	public Dictionary<string, string>? GetCachedLocalizations(CultureInfo cultureInfo)
+	{
+		return translationsRepository.GetTranslations(cultureInfo);
+	}
 
-    public bool SaveCachedLocalizations(CultureInfo cultureInfo, Dictionary<string, string> localizations)
-    {
-        var saved = translationsRepository.AddTranslations(cultureInfo, localizations);
+	public bool SaveCachedLocalizations(CultureInfo cultureInfo, Dictionary<string, string> localizations)
+	{
+		var saved = translationsRepository.AddTranslations(cultureInfo, localizations);
 
-        if (!saved)
-        {
-            LogFailedToAddTranslationsForCultureCultureName(cultureInfo.Name);
-            return false;
-        }
+		if (!saved)
+		{
+			LogFailedToAddTranslationsForCultureCultureName(cultureInfo.Name);
+			return false;
+		}
 
-        var cacheUpdated = cacheUpdateManager.SetCacheUpdated(cultureInfo);
+		var cacheUpdated = cacheUpdateManager.SetCacheUpdated(cultureInfo);
 
-        if (!cacheUpdated)
-        {
-            LogTranslationsForCultureCultureNameWereSavedToTheCacheDatabaseButTheCacheHistoryWasNotUpdated(cultureInfo.Name);
-        }
+		if (!cacheUpdated)
+		{
+			LogTranslationsForCultureCultureNameWereSavedToTheCacheDatabaseButTheCacheHistoryWasNotUpdated(cultureInfo.Name);
+		}
 
-        return cacheUpdated;
-    }
+		return cacheUpdated;
+	}
 
-    #endregion Interface Implementations
+	#endregion Interface Implementations
 
-    #region Logging
+	#region Logging
 
-    [LoggerMessage(LogLevel.Warning, "Failed to add translations for culture: {CultureName}")]
-    partial void LogFailedToAddTranslationsForCultureCultureName(string cultureName);
+	[LoggerMessage(LogLevel.Warning, "Failed to add translations for culture: {CultureName}")]
+	partial void LogFailedToAddTranslationsForCultureCultureName(string cultureName);
 
-    [LoggerMessage(LogLevel.Warning, "Translations for culture: {CultureName} were saved to the cache database but the cache history was not updated")]
-    partial void LogTranslationsForCultureCultureNameWereSavedToTheCacheDatabaseButTheCacheHistoryWasNotUpdated(string cultureName);
+	[LoggerMessage(LogLevel.Warning, "Translations for culture: {CultureName} were saved to the cache database but the cache history was not updated")]
+	partial void LogTranslationsForCultureCultureNameWereSavedToTheCacheDatabaseButTheCacheHistoryWasNotUpdated(string cultureName);
 
-    #endregion Logging
+	#endregion Logging
 }

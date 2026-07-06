@@ -1,6 +1,6 @@
 <Project>
-  <ItemGroup>
-    <EmbeddedResource Include="$(MocaleResourcePath)" />
-  </ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Include="$(MocaleResourcePath)"/>
+	</ItemGroup>
 </Project>
 

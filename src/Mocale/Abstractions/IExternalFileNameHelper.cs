@@ -4,5 +4,5 @@ namespace Mocale.Abstractions;
 
 internal interface IExternalFileNameHelper
 {
-    string GetExpectedFileName(CultureInfo culture);
+	string GetExpectedFileName(CultureInfo culture);
 }

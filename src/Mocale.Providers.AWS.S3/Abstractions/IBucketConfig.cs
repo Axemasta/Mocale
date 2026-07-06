@@ -5,8 +5,8 @@ namespace Mocale.Providers.AWS.S3.Abstractions;
 /// </summary>
 public interface IBucketConfig : IExternalProviderConfiguration
 {
-    /// <summary>
-    /// Uri for the blob container
-    /// </summary>
-    Uri? BucketUri { get; }
+	/// <summary>
+	/// Uri for the blob container
+	/// </summary>
+	Uri? BucketUri { get; }
 }

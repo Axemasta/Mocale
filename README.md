@@ -12,14 +12,14 @@ The following packages are available via NuGet
 
 <img src="assets/mocale_icon_light_rounded.png" width="100"> <img src="assets/mocale_icon_dark_rounded.png" width="100">
 
-| Package                                                      | NuGet                                                        |
-| ------------------------------------------------------------ | ------------------------------------------------------------ |
-| [Mocale](https://www.nuget.org/packages/Mocale/)             | [![Mocale NuGet Shield](https://img.shields.io/nuget/v/mocale)](https://www.nuget.org/packages/Mocale/) |
-| [Mocale.Cache.SQLite](https://www.nuget.org/packages/Mocale.Cache.SQLite/) | [![Mocale.Cache.SQLite NuGet Shield](https://img.shields.io/nuget/v/mocale.cache.sqlite)](https://www.nuget.org/packages/Mocale.Cache.SQLite/) |
+| Package                                                                                    | NuGet                                                                                                                                                                  |
+|--------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [Mocale](https://www.nuget.org/packages/Mocale/)                                           | [![Mocale NuGet Shield](https://img.shields.io/nuget/v/mocale)](https://www.nuget.org/packages/Mocale/)                                                                |
+| [Mocale.Cache.SQLite](https://www.nuget.org/packages/Mocale.Cache.SQLite/)                 | [![Mocale.Cache.SQLite NuGet Shield](https://img.shields.io/nuget/v/mocale.cache.sqlite)](https://www.nuget.org/packages/Mocale.Cache.SQLite/)                         |
 | [Mocale.Providers.Azure.Blob](https://www.nuget.org/packages/Mocale.Providers.Azure.Blob/) | [![Mocale.Providers.Azure.Blob NuGet Shield](https://img.shields.io/nuget/v/mocale.providers.azure.blob)](https://www.nuget.org/packages/Mocale.Providers.Azure.Blob/) |
 | [Mocale.Providers.GitHub.Raw](https://www.nuget.org/packages/Mocale.Providers.Github.Raw/) | [![Mocale.Providers.GitHub.Raw NuGet Shield](https://img.shields.io/nuget/v/mocale.providers.github.raw)](https://www.nuget.org/packages/Mocale.Providers.Github.Raw/) |
-| [Mocale.SourceGenerators](https://www.nuget.org/packages/Mocale.SourceGenerators/) | [![Mocale.SourceGenerators NuGet Shield](https://img.shields.io/nuget/v/mocale.sourcegenerators)](https://www.nuget.org/packages/Mocale.SourceGenerators/) |
-| [Mocale.Testing](https://www.nuget.org/packages/Mocale.Testing/) | [![Mocale.Testing NuGet Shield](https://img.shields.io/nuget/v/mocale.testing)](https://www.nuget.org/packages/Mocale.Testing/) |
+| [Mocale.SourceGenerators](https://www.nuget.org/packages/Mocale.SourceGenerators/)         | [![Mocale.SourceGenerators NuGet Shield](https://img.shields.io/nuget/v/mocale.sourcegenerators)](https://www.nuget.org/packages/Mocale.SourceGenerators/)             |
+| [Mocale.Testing](https://www.nuget.org/packages/Mocale.Testing/)                           | [![Mocale.Testing NuGet Shield](https://img.shields.io/nuget/v/mocale.testing)](https://www.nuget.org/packages/Mocale.Testing/)                                        |
 
 ## Setup
 
@@ -79,7 +79,10 @@ and can be load immediately
 
 #### Embedded Resource Provider
 
-This will use Json to load localizations that have been registered as an `EmbeddedResource`. These files are governed by the `MocaleResource` property which is set to `Resources/Locales` by default. To override this directory then set `MocaleResource`:
+This will use Json to load localizations that have been registered as an `EmbeddedResource`. These files are governed by
+the `MocaleResource` property which is set to `Resources/Locales` by default. To override this directory then set
+`MocaleResource`:
+
 ```xml
 <MocaleResourcePath>MyCustomPath\Locales\*.json</MocaleResourcePath>
 ```
@@ -338,7 +341,9 @@ issue until runtime, now if you have a reference through code, removing it will 
 
 To get this source generator to work:
 
-- Place your json files in the locales folder, by default this is `Resources/Locales`, if you want to use another directory then override `<MocaleResourcePath>` in your csproj:
+- Place your json files in the locales folder, by default this is `Resources/Locales`, if you want to use another
+  directory then override `<MocaleResourcePath>` in your csproj:
+
 ```xml
 <MocaleResource Include="MyCustomPath\Locales\*.json" />
 ```
@@ -396,8 +401,8 @@ These are features not yet currently in Mocale which I intend to add in the near
 needing them. Feel free to raise a PR if I haven't got around to implementing them 😄
 
 - String formatting
-    - Stretch: Definable format criteria aka not just `"Replace {0} and {1}"` but for complicated strings
-      like `"Replace {value} and {name}"`
+	- Stretch: Definable format criteria aka not just `"Replace {0} and {1}"` but for complicated strings
+	  like `"Replace {value} and {name}"`
 - Support for different types of locale file (aka `resx`, `json`), currently json is assumed
 - Support for multiple external providers
 - Add a more MVVM friendly mechanism to resolve translations (such as a `ITranslationProvider` where you request a

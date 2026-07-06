@@ -6,10 +6,10 @@ namespace Mocale.Abstractions;
 /// <typeparam name="TConfig">The config for this manager</typeparam>
 public interface IConfigurationManager<TConfig>
 {
-    /// <summary>
-    /// The configuration for the given area
-    /// </summary>
-    TConfig Configuration { get; }
+	/// <summary>
+	/// The configuration for the given area
+	/// </summary>
+	TConfig Configuration { get; }
 }
 
 /// <summary>
@@ -18,9 +18,9 @@ public interface IConfigurationManager<TConfig>
 /// <typeparam name="TConfig"></typeparam>
 public interface IConfigurationUpdateManager<TConfig>
 {
-    /// <summary>
-    /// Update Configuration
-    /// </summary>
-    /// <param name="configuration"></param>
-    void UpdateConfiguration(Action<TConfig> configuration);
+	/// <summary>
+	/// Update Configuration
+	/// </summary>
+	/// <param name="configuration"></param>
+	void UpdateConfiguration(Action<TConfig> configuration);
 }

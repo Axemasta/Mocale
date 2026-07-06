@@ -14,19 +14,20 @@ root = true
 # All Files
 [*]
 charset = utf-8
-indent_style = space
+indent_style = tab
 indent_size = 4
 insert_final_newline = true
 trim_trailing_whitespace = true
 csharp_indent_labels = no_change
-csharp_using_directive_placement = inside_namespace:warning
+csharp_using_directive_placement = outside_namespace:warning
 csharp_prefer_simple_using_statement = true:suggestion
 csharp_prefer_braces = true:warning
-csharp_style_namespace_declarations = file_scoped:warning
+csharp_style_namespace_declarations = file_scoped:error
+dotnet_diagnostic.IDE0161.severity = error
 csharp_style_prefer_method_group_conversion = true:silent
 csharp_style_prefer_top_level_statements = true:silent
-csharp_style_expression_bodied_methods = true:warning
-csharp_style_expression_bodied_constructors = true:warning
+csharp_style_expression_bodied_methods = false:none
+csharp_style_expression_bodied_constructors = false:none
 csharp_style_expression_bodied_operators = true:warning
 csharp_style_expression_bodied_properties = true:warning
 csharp_style_expression_bodied_indexers = true:warning
@@ -58,6 +59,7 @@ indent_size = 2
 # YAML Files
 [*.{yml,yaml}]
 indent_size = 2
+indent_style = space
 
 # Markdown Files
 [*.md]
@@ -96,8 +98,6 @@ dotnet_analyzer_diagnostic.severity = warning
 # .NET Style Rules
 # https://docs.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/language-rules#net-style-rules
 [*.{cs,csx,cake,vb,vbx}]
-# Custom rules
-dotnet_diagnostic.CA1848.severity = warning
 # "this." and "Me." qualifiers
 dotnet_style_qualification_for_field = false:none
 dotnet_style_qualification_for_property = false:none
@@ -107,7 +107,7 @@ dotnet_style_qualification_for_event = false:none
 dotnet_style_predefined_type_for_locals_parameters_members = true:warning
 dotnet_style_predefined_type_for_member_access = true:warning
 # Modifier preferences
-dotnet_style_require_accessibility_modifiers = always:warning
+dotnet_style_require_accessibility_modifiers = for_non_interface_members:warning
 csharp_preferred_modifier_order = public, private, protected, internal, static, extern, new, virtual, abstract, sealed, override, readonly, unsafe, volatile, async:warning
 visual_basic_preferred_modifier_order = Partial, Default, Private, Protected, Public, Friend, NotOverridable, Overridable, MustOverride, Overloads, Overrides, MustInherit, NotInheritable, Static, Shared, Shadows, ReadOnly, WriteOnly, Dim, Const, WithEvents, Widening, Narrowing, Custom, Async:warning
 dotnet_style_readonly_field = true:warning
@@ -143,13 +143,6 @@ dotnet_style_operator_placement_when_wrapping = end_of_line
 csharp_style_prefer_null_check_over_type_check = true:warning
 dotnet_style_namespace_match_folder = true:suggestion
 dotnet_diagnostic.IDE0130.severity = suggestion
-
-# Rule IDE0040: Add accessibility modifiers
-# https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0040
-# https://github.com/dotnet/msbuild/issues/11426#issuecomment-2662244499
-dotnet_diagnostic.IDE0040.severity = none
-# options
-dotnet_style_require_accessibility_modifiers = for_non_interface_members:warning
 
 # C# Style Rules
 # https://docs.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/language-rules#c-style-rules
@@ -194,7 +187,7 @@ dotnet_diagnostic.IDE0065.severity = none
 # Modifier preferences
 csharp_prefer_static_local_function = true:warning
 # Undocumented
-csharp_style_namespace_declarations = file_scoped:warning
+csharp_style_namespace_declarations = file_scoped:silent
 
 ##########################################
 # Unnecessary Code Rules
@@ -275,6 +268,39 @@ csharp_space_between_square_brackets = false
 # https://docs.microsoft.com/visualstudio/ide/editorconfig-formatting-conventions#wrap-options
 csharp_preserve_single_line_statements = false
 csharp_preserve_single_line_blocks = true
+
+# ReSharper/Rider XML documentation comment indentation
+resharper_xmldoc_indent_child_elements = ZeroIndent
+resharper_xmldoc_indent_text = ZeroIndent
+
+# ReSharper/Rider specific wrapping settings for object initializers
+# Force object initializers to wrap when multiple properties are present
+resharper_csharp_wrap_object_and_collection_initializer_style = chop_always
+resharper_csharp_max_initializer_elements_on_line = 1
+resharper_wrap_object_and_collection_initializer_style = chop_always
+resharper_max_initializer_elements_on_line = 1
+resharper_keep_existing_initializer_arrangement = false
+# Trailing comma settings - keep trailing commas for better git diffs
+resharper_trailing_comma_in_multiline_lists = true
+resharper_trailing_comma_in_singleline_lists = false
+# Attribute placement - ensure each attribute is on its own line
+resharper_csharp_place_attribute_on_same_line = never
+resharper_place_attribute_on_same_line = never
+resharper_csharp_place_type_attribute_on_same_line = never
+resharper_place_type_attribute_on_same_line = never
+resharper_csharp_place_method_attribute_on_same_line = never
+resharper_place_method_attribute_on_same_line = never
+resharper_csharp_place_accessorholder_attribute_on_same_line = never
+resharper_place_accessorholder_attribute_on_same_line = never
+resharper_csharp_place_simple_attribute_on_same_line = never
+resharper_place_simple_attribute_on_same_line = never
+resharper_csharp_place_field_attribute_on_same_line = never
+resharper_place_field_attribute_on_same_line = never
+resharper_csharp_max_attribute_length_for_same_line = 0
+resharper_max_attribute_length_for_same_line = 0
+# Ensure multiple attributes on enum members are split
+resharper_csharp_wrap_multiple_type_parameter_constraints_style = chop_always
+resharper_wrap_multiple_type_parameter_constraints_style = chop_always
 
 ##########################################
 # .NET Naming Rules
@@ -441,6 +467,41 @@ dotnet_naming_rule.parameters_rule.style = camel_case_style
 dotnet_naming_rule.parameters_rule.severity = warning
 tab_width = 4
 end_of_line = crlf
+
+# Resharper
+[resharper_]
+csharp_place_accessorholder_attribute_on_same_line = never
+csharp_place_attribute_on_same_line = never
+place_accessorholder_attribute_on_same_line = never
+place_attribute_on_same_line = never
+wrap_arguments_style = wrap_if_long
+wrap_ternary_expr_style = chop_always
+wrap_enumeration_style = chop_always
+wrap_braced_init_list_style = chop_always
+max_initializer_elements_on_line = 1
+# Ensure each attribute is on its own line
+csharp_max_attribute_length_for_same_line = 0
+max_attribute_length_for_same_line = 0
+place_simple_attribute_on_same_line = never
+csharp_place_simple_attribute_on_same_line = never
+csharp_place_type_attribute_on_same_line = never
+place_type_attribute_on_same_line = never
+csharp_place_method_attribute_on_same_line = never
+place_method_attribute_on_same_line = never
+csharp_place_field_attribute_on_same_line = never
+place_field_attribute_on_same_line = never
+
+[*.{cs,vb}]
+dotnet_analyzer_diagnostic.category-Style.severity = none
+dotnet_diagnostic.CA1822.severity = none
+dotnet_diagnostic.CA1848.severity = none
+dotnet_diagnostic.CA1859.severity = none # https://learn.microsoft.com/en-gb/dotnet/fundamentals/code-analysis/quality-rules/ca1859
+dotnet_diagnostic.CS9179.severity = none # Primary constructor parameter is shadowed by a member from base
+
+[I*.cs]
+# Only applied to interface files
+# This fixes the hint that suggests putting public on interfaces, even though interface members are implicitly public!
+resharper_arrange_type_member_modifiers_highlighting = none # https://www.jetbrains.com/help/rider/ArrangeTypeMemberModifiers.html?utm_source=product
 
 ##########################################
 # License

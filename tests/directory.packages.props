@@ -1,23 +1,23 @@
 <Project>
-  <Import Project="..\Directory.Packages.props" />
-  <ItemGroup>
-    <PackageVersion Include="FluentAssertions" Version="[7.0.0]" />
-    <!-- DO NOT TOUCH, 8.0.0 requires paid license... -->
-    <PackageVersion Include="ILogger.Moq" Version="2.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.TimeProvider.Testing" Version="10.7.0" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.7.0" />
-    <PackageVersion Include="Moq.Contrib.HttpClient" Version="1.4.0" />
-    <PackageVersion Include="Verify.SourceGenerators" Version="2.5.0" />
-    <PackageVersion Include="Verify.Xunit" Version="31.12.5" />
-    <PackageVersion Include="xunit" Version="2.9.3" />
-    <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageVersion>
-    <PackageVersion Include="coverlet.collector" Version="10.0.1 ">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageVersion>
-    <PackageVersion Include="Moq" Version="4.20.72" />
-  </ItemGroup>
+	<Import Project="..\Directory.Packages.props"/>
+	<ItemGroup>
+		<PackageVersion Include="FluentAssertions" Version="[7.0.0]"/>
+		<!-- DO NOT TOUCH, 8.0.0 requires paid license... -->
+		<PackageVersion Include="ILogger.Moq" Version="2.0.0"/>
+		<PackageVersion Include="Microsoft.Extensions.TimeProvider.Testing" Version="10.7.0"/>
+		<PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.7.0"/>
+		<PackageVersion Include="Moq.Contrib.HttpClient" Version="1.4.0"/>
+		<PackageVersion Include="Verify.SourceGenerators" Version="2.5.0"/>
+		<PackageVersion Include="Verify.Xunit" Version="31.12.5"/>
+		<PackageVersion Include="xunit" Version="2.9.3"/>
+		<PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageVersion>
+		<PackageVersion Include="coverlet.collector" Version="10.0.1 ">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageVersion>
+		<PackageVersion Include="Moq" Version="4.20.72"/>
+	</ItemGroup>
 </Project>

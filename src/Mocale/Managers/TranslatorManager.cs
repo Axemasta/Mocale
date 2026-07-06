@@ -7,158 +7,158 @@ namespace Mocale.Managers;
 /// <inheritdoc />
 internal partial class TranslatorManager : IInternalTranslatorManager
 {
-    #region Fields
+	#region Fields
 
-    private readonly ILogger logger;
-    private readonly IMocaleConfiguration mocaleConfiguration;
+	private readonly ILogger logger;
+	private readonly IMocaleConfiguration mocaleConfiguration;
 
-    #endregion Fields
+	#endregion Fields
 
-    #region Properties
+	#region Properties
 
-    public CultureInfo? CurrentCulture { get; private set; }
+	public CultureInfo? CurrentCulture { get; private set; }
 
-    internal Dictionary<string, string> PreferredLocalizations { get; } = [];
+	internal Dictionary<string, string> PreferredLocalizations { get; } = [];
 
-    internal Dictionary<string, string> BackupLocalizations { get; } = [];
+	internal Dictionary<string, string> BackupLocalizations { get; } = [];
 
-    #endregion Properties
+	#endregion Properties
 
-    #region Constructors
+	#region Constructors
 
-    public TranslatorManager(
-        ILogger<TranslatorManager> logger,
-        IConfigurationManager<IMocaleConfiguration> mocaleConfigurationManager)
-    {
-        this.logger = Guard.Against.Null(logger);
+	public TranslatorManager(
+		ILogger<TranslatorManager> logger,
+		IConfigurationManager<IMocaleConfiguration> mocaleConfigurationManager)
+	{
+		this.logger = Guard.Against.Null(logger);
 
-        mocaleConfigurationManager = Guard.Against.Null(mocaleConfigurationManager);
-        mocaleConfiguration = mocaleConfigurationManager.Configuration;
-    }
+		mocaleConfigurationManager = Guard.Against.Null(mocaleConfigurationManager);
+		mocaleConfiguration = mocaleConfigurationManager.Configuration;
+	}
 
-    #endregion Constructors
+	#endregion Constructors
 
-    #region Methods
+	#region Methods
 
-    public object this[string resourceKey] => Translate(resourceKey);
+	public object this[string resourceKey] => Translate(resourceKey);
 
-    #endregion Methods
+	#endregion Methods
 
-    #region Interface Implementations
+	#region Interface Implementations
 
-    #region - ITranslatorManager
+	#region - ITranslatorManager
 
-    public string Translate(string key)
-    {
-        if (PreferredLocalizations.TryGetValue(key, out var externalTranslation))
-        {
-            return externalTranslation;
-        }
+	public string Translate(string key)
+	{
+		if (PreferredLocalizations.TryGetValue(key, out var externalTranslation))
+		{
+			return externalTranslation;
+		}
 
-        if (BackupLocalizations.TryGetValue(key, out var internalTranslation))
-        {
-            LogKeyKeyWasFoundInBackupLocalizations(key);
-            return internalTranslation;
-        }
+		if (BackupLocalizations.TryGetValue(key, out var internalTranslation))
+		{
+			LogKeyKeyWasFoundInBackupLocalizations(key);
+			return internalTranslation;
+		}
 
-        LogResourceKeyNotFoundResourceKey(key);
+		LogResourceKeyNotFoundResourceKey(key);
 
-        if (!mocaleConfiguration.ShowMissingKeys)
-        {
-            return string.Empty;
-        }
+		if (!mocaleConfiguration.ShowMissingKeys)
+		{
+			return string.Empty;
+		}
 
-        return mocaleConfiguration.NotFoundSymbol + key + StringExtension.Reverse(mocaleConfiguration.NotFoundSymbol);
-    }
+		return mocaleConfiguration.NotFoundSymbol + key + StringExtension.Reverse(mocaleConfiguration.NotFoundSymbol);
+	}
 
-    public string Translate(string key, object[] parameters)
-    {
-        var translation = Translate(key);
+	public string Translate(string key, object[] parameters)
+	{
+		var translation = Translate(key);
 
-        if (string.IsNullOrEmpty(translation))
-        {
-            return translation;
-        }
+		if (string.IsNullOrEmpty(translation))
+		{
+			return translation;
+		}
 
-        try
-        {
-            return string.Format(CurrentCulture, translation, parameters);
-        }
-        catch (Exception ex)
-        {
-            LogAnExceptionOccurredFormatingTranslationForKeyKeyTranslationWithParametersParameters(ex, key, translation, parameters);
-            return translation;
-        }
-    }
+		try
+		{
+			return string.Format(CurrentCulture, translation, parameters);
+		}
+		catch (Exception ex)
+		{
+			LogAnExceptionOccurredFormatingTranslationForKeyKeyTranslationWithParametersParameters(ex, key, translation, parameters);
+			return translation;
+		}
+	}
 
-    #endregion - ITranslatorManager
+	#endregion - ITranslatorManager
 
-    #region - ITranslationUpdater
+	#region - ITranslationUpdater
 
-    /// <inheritdoc />
-    public void UpdateTranslations(Localization localization, TranslationSource source, bool notify = true)
-    {
-        if (!Equals(CurrentCulture, localization.CultureInfo))
-        {
-            CurrentCulture = localization.CultureInfo;
-            PreferredLocalizations.Clear();
-            BackupLocalizations.Clear();
-        }
+	/// <inheritdoc />
+	public void UpdateTranslations(Localization localization, TranslationSource source, bool notify = true)
+	{
+		if (!Equals(CurrentCulture, localization.CultureInfo))
+		{
+			CurrentCulture = localization.CultureInfo;
+			PreferredLocalizations.Clear();
+			BackupLocalizations.Clear();
+		}
 
-        switch (source)
-        {
-            default:
-            case TranslationSource.External:
-            case TranslationSource.WarmCache:
-            case TranslationSource.ColdCache:
-            {
-                PreferredLocalizations.AddOrUpdateValues(localization.Translations);
-                break;
-            }
+		switch (source)
+		{
+			default:
+			case TranslationSource.External:
+			case TranslationSource.WarmCache:
+			case TranslationSource.ColdCache:
+			{
+				PreferredLocalizations.AddOrUpdateValues(localization.Translations);
+				break;
+			}
 
-            case TranslationSource.Internal:
-            {
-                BackupLocalizations.AddOrUpdateValues(localization.Translations);
-                break;
-            }
-        }
+			case TranslationSource.Internal:
+			{
+				BackupLocalizations.AddOrUpdateValues(localization.Translations);
+				break;
+			}
+		}
 
-        if (notify)
-        {
-            RaisePropertyChanged();
-        }
-    }
+		if (notify)
+		{
+			RaisePropertyChanged();
+		}
+	}
 
-    #endregion - ITranslationUpdater
+	#endregion - ITranslationUpdater
 
-    #region - INotifyPropertyChanged
+	#region - INotifyPropertyChanged
 
-    public event PropertyChangedEventHandler? PropertyChanged;
+	public event PropertyChangedEventHandler? PropertyChanged;
 
-    public void RaisePropertyChanged(string? propertyName = null)
-    {
-        if (PropertyChanged is null)
-        {
-            return;
-        }
+	public void RaisePropertyChanged(string? propertyName = null)
+	{
+		if (PropertyChanged is null)
+		{
+			return;
+		}
 
-        PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
+		PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
+	}
 
-    #endregion - INotifyPropertyChanged
+	#endregion - INotifyPropertyChanged
 
-    #endregion Interface Implementations
+	#endregion Interface Implementations
 
-    #region Logging
+	#region Logging
 
-    [LoggerMessage(LogLevel.Debug, "Key: {Key} was found in backup localizations")]
-    partial void LogKeyKeyWasFoundInBackupLocalizations(string key);
+	[LoggerMessage(LogLevel.Debug, "Key: {Key} was found in backup localizations")]
+	partial void LogKeyKeyWasFoundInBackupLocalizations(string key);
 
-    [LoggerMessage(LogLevel.Warning, "Resource key not found '{ResourceKey}'")]
-    partial void LogResourceKeyNotFoundResourceKey(string resourceKey);
+	[LoggerMessage(LogLevel.Warning, "Resource key not found '{ResourceKey}'")]
+	partial void LogResourceKeyNotFoundResourceKey(string resourceKey);
 
-    [LoggerMessage(LogLevel.Error, "An exception occurred formating translation for key {Key}: '{Translation}' with parameters: {Parameters}")]
-    partial void LogAnExceptionOccurredFormatingTranslationForKeyKeyTranslationWithParametersParameters(Exception exception, string key, string translation, object[] parameters);
+	[LoggerMessage(LogLevel.Error, "An exception occurred formating translation for key {Key}: '{Translation}' with parameters: {Parameters}")]
+	partial void LogAnExceptionOccurredFormatingTranslationForKeyKeyTranslationWithParametersParameters(Exception exception, string key, string translation, object[] parameters);
 
-    #endregion Logging
+	#endregion Logging
 }

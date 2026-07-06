@@ -6,25 +6,25 @@ namespace Mocale.UnitTests.Providers;
 
 public class InactiveExternalLocalizationProviderTests : FixtureBase<IExternalLocalizationProvider>
 {
-    #region Setup
+	#region Setup
 
-    public override IExternalLocalizationProvider CreateSystemUnderTest()
-    {
-        return new InactiveExternalLocalizationProvider();
-    }
+	public override IExternalLocalizationProvider CreateSystemUnderTest()
+	{
+		return new InactiveExternalLocalizationProvider();
+	}
 
-    #endregion Setup
+	#endregion Setup
 
-    #region Tests
+	#region Tests
 
-    [Fact]
-    public async Task GetValuesForCultureAsync_WhenCalled_ShouldReturnBlankResult()
-    {
-        var loadResult = await Sut.GetValuesForCultureAsync(new CultureInfo("en-GB"));
+	[Fact]
+	public async Task GetValuesForCultureAsync_WhenCalled_ShouldReturnBlankResult()
+	{
+		var loadResult = await Sut.GetValuesForCultureAsync(new CultureInfo("en-GB"));
 
-        Assert.False(loadResult.Success);
-        Assert.Null(loadResult.Localizations);
-    }
+		Assert.False(loadResult.Success);
+		Assert.Null(loadResult.Localizations);
+	}
 
-    #endregion Tests
+	#endregion Tests
 }

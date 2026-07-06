@@ -2,95 +2,95 @@ namespace Mocale.Providers.Azure.Blob.Managers;
 
 internal partial class BlobResourceLocator : IBlobResourceLocator
 {
-    #region Fields
+	#region Fields
 
-    private readonly IBlobStorageConfig blobStorageConfig;
-    private readonly IExternalFileNameHelper externalFileNameHelper;
-    private readonly ILogger logger;
+	private readonly IBlobStorageConfig blobStorageConfig;
+	private readonly IExternalFileNameHelper externalFileNameHelper;
+	private readonly ILogger logger;
 
-    #endregion Fields
+	#endregion Fields
 
-    #region Constructors
+	#region Constructors
 
-    public BlobResourceLocator(
-        IConfigurationManager<IBlobStorageConfig> blobConfigurationManager,
-        IExternalFileNameHelper externalFileNameHelper,
-        ILogger<BlobResourceLocator> logger)
-    {
-        this.logger = Guard.Against.Null(logger);
-        this.externalFileNameHelper = Guard.Against.Null(externalFileNameHelper);
+	public BlobResourceLocator(
+		IConfigurationManager<IBlobStorageConfig> blobConfigurationManager,
+		IExternalFileNameHelper externalFileNameHelper,
+		ILogger<BlobResourceLocator> logger)
+	{
+		this.logger = Guard.Against.Null(logger);
+		this.externalFileNameHelper = Guard.Against.Null(externalFileNameHelper);
 
-        blobConfigurationManager = Guard.Against.Null(blobConfigurationManager);
-        blobStorageConfig = blobConfigurationManager.Configuration;
-    }
+		blobConfigurationManager = Guard.Against.Null(blobConfigurationManager);
+		blobStorageConfig = blobConfigurationManager.Configuration;
+	}
 
-    #endregion Constructors
+	#endregion Constructors
 
-    #region Methods
+	#region Methods
 
-    private static bool FindMatchingBlobResource(IReadOnlyList<BlobItem> blobItems, string fileSlug, out BlobResourceInfo? blobInfo)
-    {
-        blobInfo = default;
+	private static bool FindMatchingBlobResource(IReadOnlyList<BlobItem> blobItems, string fileSlug, out BlobResourceInfo? blobInfo)
+	{
+		blobInfo = default;
 
-        foreach (var blobItem in blobItems)
-        {
-            if (!blobItem.Name.Equals(fileSlug, StringComparison.OrdinalIgnoreCase))
-            {
-                continue;
-            }
+		foreach (var blobItem in blobItems)
+		{
+			if (!blobItem.Name.Equals(fileSlug, StringComparison.OrdinalIgnoreCase))
+			{
+				continue;
+			}
 
-            blobInfo = new BlobResourceInfo()
-            {
-                Exists = true,
-                ResourceName = blobItem.Name,
-            };
+			blobInfo = new BlobResourceInfo
+			{
+				Exists = true,
+				ResourceName = blobItem.Name,
+			};
 
-            return true;
-        }
+			return true;
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    #endregion Methods
+	#endregion Methods
 
-    #region Interface Implementations
+	#region Interface Implementations
 
-    /// <inheritdoc/>
-    public async Task<BlobResourceInfo> TryLocateResource(CultureInfo cultureInfo)
-    {
-        try
-        {
-            var expectedFileSlug = externalFileNameHelper.GetExpectedFileName(cultureInfo);
+	/// <inheritdoc/>
+	public async Task<BlobResourceInfo> TryLocateResource(CultureInfo cultureInfo)
+	{
+		try
+		{
+			var expectedFileSlug = externalFileNameHelper.GetExpectedFileName(cultureInfo);
 
-            var client = new BlobContainerClient(blobStorageConfig.BlobContainerUri);
+			var client = new BlobContainerClient(blobStorageConfig.BlobContainerUri);
 
-            var pages = client.GetBlobsAsync().AsPages();
+			var pages = client.GetBlobsAsync().AsPages();
 
-            await foreach (var page in pages)
-            {
-                if (FindMatchingBlobResource(page.Values, expectedFileSlug, out var info) && info is not null)
-                {
-                    return info;
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            LogAnExceptionOccurredLocationResourceForCultureCultureName(ex, cultureInfo.Name);
-        }
+			await foreach (var page in pages)
+			{
+				if (FindMatchingBlobResource(page.Values, expectedFileSlug, out var info) && info is not null)
+				{
+					return info;
+				}
+			}
+		}
+		catch (Exception ex)
+		{
+			LogAnExceptionOccurredLocationResourceForCultureCultureName(ex, cultureInfo.Name);
+		}
 
-        return new BlobResourceInfo
-        {
-            Exists = false,
-        };
-    }
+		return new BlobResourceInfo
+		{
+			Exists = false,
+		};
+	}
 
-    #endregion Interface Implementations
+	#endregion Interface Implementations
 
-    #region Logging
+	#region Logging
 
-    [LoggerMessage(LogLevel.Error, "An exception occurred location resource for culture: {CultureName}")]
-    partial void LogAnExceptionOccurredLocationResourceForCultureCultureName(Exception exception, string cultureName);
+	[LoggerMessage(LogLevel.Error, "An exception occurred location resource for culture: {CultureName}")]
+	partial void LogAnExceptionOccurredLocationResourceForCultureCultureName(Exception exception, string cultureName);
 
-    #endregion Logging
+	#endregion Logging
 }

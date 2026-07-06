@@ -5,13 +5,13 @@ namespace Mocale.Abstractions;
 /// </summary>
 public interface IExternalLocalizationResult
 {
-    /// <summary>
-    /// Whether the attempt succeeded
-    /// </summary>
-    bool Success { get; }
+	/// <summary>
+	/// Whether the attempt succeeded
+	/// </summary>
+	bool Success { get; }
 
-    /// <summary>
-    /// Localizations from the external provider
-    /// </summary>
-    Dictionary<string, string>? Localizations { get; }
+	/// <summary>
+	/// Localizations from the external provider
+	/// </summary>
+	Dictionary<string, string>? Localizations { get; }
 }

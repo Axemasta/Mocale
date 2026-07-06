@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.Globalization;
+
 namespace Mocale.Abstractions;
 
 /// <summary>
@@ -7,23 +8,23 @@ namespace Mocale.Abstractions;
 /// </summary>
 public interface ITranslatorManager : INotifyPropertyChanged
 {
-    /// <summary>
-    /// Current Culture
-    /// </summary>
-    CultureInfo? CurrentCulture { get; }
+	/// <summary>
+	/// Current Culture
+	/// </summary>
+	CultureInfo? CurrentCulture { get; }
 
-    /// <summary>
-    /// Translate
-    /// </summary>
-    /// <param name="key">Key to translate</param>
-    /// <returns>Translation result</returns>
-    string Translate(string key);
+	/// <summary>
+	/// Translate
+	/// </summary>
+	/// <param name="key">Key to translate</param>
+	/// <returns>Translation result</returns>
+	string Translate(string key);
 
-    /// <summary>
-    /// Translate
-    /// </summary>
-    /// <param name="key">Key to translate</param>
-    /// <param name="parameters">Parameters to translate</param>
-    /// <returns>Translation result</returns>
-    string Translate(string key, object[] parameters);
+	/// <summary>
+	/// Translate
+	/// </summary>
+	/// <param name="key">Key to translate</param>
+	/// <param name="parameters">Parameters to translate</param>
+	/// <returns>Translation result</returns>
+	string Translate(string key, object[] parameters);
 }

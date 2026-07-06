@@ -1,8 +1,8 @@
 {
-  "profiles": {
-    "Debug": {
-      "commandName": "DebugRoslynComponent",
-      "targetProject": "..\\..\\samples\\Mocale.GeneratorSample\\Mocale.GeneratorSample.csproj"
-    }
-  }
+	"profiles": {
+		"Debug": {
+			"commandName": "DebugRoslynComponent",
+			"targetProject": "..\\..\\samples\\Mocale.GeneratorSample\\Mocale.GeneratorSample.csproj"
+		}
+	}
 }

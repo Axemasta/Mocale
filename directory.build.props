@@ -4,26 +4,26 @@
 		<SkipValidateMauiImplicitPackageReferences>true</SkipValidateMauiImplicitPackageReferences>
 	</PropertyGroup>
 
-  <PropertyGroup>
-    <MauiVersion>10.0.1</MauiVersion>
-    <NetVersion>10</NetVersion>
+	<PropertyGroup>
+		<MauiVersion>10.0.1</MauiVersion>
+		<NetVersion>10</NetVersion>
 
-    <StandardTargetFramework>net$(NetVersion).0</StandardTargetFramework>
-    <IosTargetFramework>net$(NetVersion).0-ios</IosTargetFramework>
-    <AndroidTargetFramework>net$(NetVersion).0-android</AndroidTargetFramework>
-    <MacTargetFramework>net$(NetVersion).0-maccatalyst</MacTargetFramework>
-    <WindowsTargetFramework>net$(NetVersion).0-windows10.0.19041.0</WindowsTargetFramework>
+		<StandardTargetFramework>net$(NetVersion).0</StandardTargetFramework>
+		<IosTargetFramework>net$(NetVersion).0-ios</IosTargetFramework>
+		<AndroidTargetFramework>net$(NetVersion).0-android</AndroidTargetFramework>
+		<MacTargetFramework>net$(NetVersion).0-maccatalyst</MacTargetFramework>
+		<WindowsTargetFramework>net$(NetVersion).0-windows10.0.19041.0</WindowsTargetFramework>
 
-    <MauiPlatformTargetFrameworks>$(StandardTargetFramework);$(AndroidTargetFramework);$(IosTargetFramework);$(MacTargetFramework);</MauiPlatformTargetFrameworks>
-    <MauiPlatformTargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(StandardTargetFramework);$(AndroidTargetFramework);$(IosTargetFramework);$(MacTargetFramework);$(WindowsTargetFramework);</MauiPlatformTargetFrameworks>
-  </PropertyGroup>
+		<MauiPlatformTargetFrameworks>$(StandardTargetFramework);$(AndroidTargetFramework);$(IosTargetFramework);$(MacTargetFramework);</MauiPlatformTargetFrameworks>
+		<MauiPlatformTargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(StandardTargetFramework);$(AndroidTargetFramework);$(IosTargetFramework);$(MacTargetFramework);$(WindowsTargetFramework);</MauiPlatformTargetFrameworks>
+	</PropertyGroup>
 
 	<ItemGroup Condition=" $(UseMaui) == 'true' ">
-		<PackageReference Include="Microsoft.Maui.Controls" />
+		<PackageReference Include="Microsoft.Maui.Controls"/>
 	</ItemGroup>
 
-  <ItemGroup>
-    <None Include="build\Package.props" Pack="true" PackagePath="buildTransitive\$(PackageId).props" Condition="exists('build\Package.props')"/>
-    <None Include="build\Package.targets" Pack="true" PackagePath="buildTransitive\$(PackageId).targets" Condition="exists('build\Package.targets')"/>
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="build\Package.props" Pack="true" PackagePath="buildTransitive\$(PackageId).props" Condition="exists('build\Package.props')"/>
+		<None Include="build\Package.targets" Pack="true" PackagePath="buildTransitive\$(PackageId).targets" Condition="exists('build\Package.targets')"/>
+	</ItemGroup>
 </Project>
