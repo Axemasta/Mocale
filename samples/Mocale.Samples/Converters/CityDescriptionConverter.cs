@@ -6,9 +6,9 @@ internal sealed class CityDescriptionConverter : IValueConverter
 {
     private readonly ITranslatorManager translatorManager = MocaleLocator.TranslatorManager;
 
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (value == null)
+        if (value is null)
         {
             return null;
         }
@@ -30,7 +30,7 @@ internal sealed class CityDescriptionConverter : IValueConverter
         return translatorManager.Translate(key);
     }
 
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         throw new NotImplementedException();
     }

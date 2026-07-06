@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <MauiVersion>10.0.80</MauiVersion>
     <LangVersion>preview</LangVersion>
     <TargetFrameworks>$(MauiPlatformTargetFrameworks);</TargetFrameworks>
     <UseMaui>true</UseMaui>

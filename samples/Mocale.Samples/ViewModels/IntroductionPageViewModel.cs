@@ -6,7 +6,12 @@ public partial class IntroductionPageViewModel : BaseViewModel
 {
     private readonly ILocalizationManager localizationManager;
 
-    public ObservableRangeCollection<string> Locales { get; }
+    public ObservableRangeCollection<string> Locales { get; } =
+    [
+        "en-GB",
+        "fr-FR",
+        "it-IT"
+    ];
 
     [ObservableProperty]
     public partial string SelectedLocale { get; set; }
@@ -14,13 +19,6 @@ public partial class IntroductionPageViewModel : BaseViewModel
     public IntroductionPageViewModel(ILocalizationManager localizationManager)
     {
         this.localizationManager = localizationManager;
-
-        Locales = new ObservableRangeCollection<string>(
-        [
-            "en-GB",
-            "fr-FR",
-            "it-IT",
-        ]);
 
         var selectedLocale = Locales.FirstOrDefault(localizationManager.CurrentCulture.Name.Equals);
 

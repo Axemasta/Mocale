@@ -19,5 +19,6 @@
 
   <ItemGroup>
     <PackageReference Include="sqlite-net-e"/>
+    <PackageReference Include="SourceGear.sqlite3"/>
   </ItemGroup>
 </Project>

@@ -4,14 +4,9 @@ namespace Mocale.Samples.Converters;
 
 internal sealed class LanguageEmojiConverter : IValueConverter
 {
-    private readonly ITranslatorManager translatorManager;
+    private readonly ITranslatorManager translatorManager = MocaleLocator.TranslatorManager;
 
-    public LanguageEmojiConverter()
-    {
-        translatorManager = MocaleLocator.TranslatorManager;
-    }
-
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         var currentCulture = translatorManager.CurrentCulture;
 
@@ -23,7 +18,7 @@ internal sealed class LanguageEmojiConverter : IValueConverter
         return GetFlag(currentCulture.EnglishName);
     }
 
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         throw new NotImplementedException();
     }
