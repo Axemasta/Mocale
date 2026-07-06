@@ -11,9 +11,9 @@ internal partial class LocalisationCacheManager(
 {
     #region Fields
 
-    private readonly ICacheUpdateManager cacheUpdateManager = Guard.Against.Null(cacheUpdateManager, nameof(cacheUpdateManager));
-    private readonly ILogger logger = Guard.Against.Null(logger, nameof(logger));
-    private readonly ITranslationsRepository translationsRepository = Guard.Against.Null(translationsRepository, nameof(translationsRepository));
+    private readonly ICacheUpdateManager cacheUpdateManager = Guard.Against.Null(cacheUpdateManager);
+    private readonly ILogger logger = Guard.Against.Null(logger);
+    private readonly ITranslationsRepository translationsRepository = Guard.Against.Null(translationsRepository);
 
     #endregion Fields
 

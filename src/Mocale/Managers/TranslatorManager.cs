@@ -30,9 +30,9 @@ internal partial class TranslatorManager : IInternalTranslatorManager
         ILogger<TranslatorManager> logger,
         IConfigurationManager<IMocaleConfiguration> mocaleConfigurationManager)
     {
-        this.logger = Guard.Against.Null(logger, nameof(logger));
+        this.logger = Guard.Against.Null(logger);
 
-        mocaleConfigurationManager = Guard.Against.Null(mocaleConfigurationManager, nameof(mocaleConfigurationManager));
+        mocaleConfigurationManager = Guard.Against.Null(mocaleConfigurationManager);
         mocaleConfiguration = mocaleConfigurationManager.Configuration;
     }
 

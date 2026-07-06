@@ -17,7 +17,7 @@ internal partial class AppResourceProvider : IInternalLocalizationProvider
         IConfigurationManager<IMocaleConfiguration> mocaleConfigurationManager,
         ILogger<AppResourceProvider> logger)
     {
-        this.logger = Guard.Against.Null(logger, nameof(logger));
+        this.logger = Guard.Against.Null(logger);
 
         var appResourcesConfig = appResourcesConfigurationManager.Configuration;
         mocaleConfiguration = mocaleConfigurationManager.Configuration;

@@ -17,10 +17,10 @@ internal partial class BlobResourceLocator : IBlobResourceLocator
         IExternalFileNameHelper externalFileNameHelper,
         ILogger<BlobResourceLocator> logger)
     {
-        this.logger = Guard.Against.Null(logger, nameof(logger));
-        this.externalFileNameHelper = Guard.Against.Null(externalFileNameHelper, nameof(externalFileNameHelper));
+        this.logger = Guard.Against.Null(logger);
+        this.externalFileNameHelper = Guard.Against.Null(externalFileNameHelper);
 
-        blobConfigurationManager = Guard.Against.Null(blobConfigurationManager, nameof(blobConfigurationManager));
+        blobConfigurationManager = Guard.Against.Null(blobConfigurationManager);
         blobStorageConfig = blobConfigurationManager.Configuration;
     }
 

@@ -14,8 +14,8 @@ internal abstract class RepositoryBase
         IDatabaseConnectionProvider databaseConnectionProvider,
         ILogger logger)
     {
-        databaseConnectionProvider = Guard.Against.Null(databaseConnectionProvider, nameof(databaseConnectionProvider));
-        this.logger = Guard.Against.Null(logger, nameof(logger));
+        databaseConnectionProvider = Guard.Against.Null(databaseConnectionProvider);
+        this.logger = Guard.Against.Null(logger);
 
         Connection = databaseConnectionProvider.GetDatabaseConnection();
     }

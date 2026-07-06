@@ -11,7 +11,7 @@ public abstract class LocalizeExtensionBase(ITranslatorManager translatorManager
 {
     // ReSharper disable once InconsistentNaming
 #pragma warning disable IDE1006 // Naming Styles
-    internal readonly ITranslatorManager translatorManager = Guard.Against.Null(translatorManager, nameof(translatorManager));
+    internal readonly ITranslatorManager translatorManager = Guard.Against.Null(translatorManager);
 #pragma warning restore IDE1006 // Naming Styles
 
     [EditorBrowsable(EditorBrowsableState.Never)]

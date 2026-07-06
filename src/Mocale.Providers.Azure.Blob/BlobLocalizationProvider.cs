@@ -25,12 +25,12 @@ internal sealed partial class BlobLocalizationProvider : IExternalLocalizationPr
         ILocalizationParser localizationParser,
         ILogger<BlobLocalizationProvider> logger)
     {
-        this.blobResourceLocator = Guard.Against.Null(blobResourceLocator, nameof(blobResourceLocator));
-        this.externalFileNameHelper = Guard.Against.Null(externalFileNameHelper, nameof(externalFileNameHelper));
-        this.localizationParser = Guard.Against.Null(localizationParser, nameof(localizationParser));
-        this.logger = Guard.Against.Null(logger, nameof(logger));
+        this.blobResourceLocator = Guard.Against.Null(blobResourceLocator);
+        this.externalFileNameHelper = Guard.Against.Null(externalFileNameHelper);
+        this.localizationParser = Guard.Against.Null(localizationParser);
+        this.logger = Guard.Against.Null(logger);
 
-        blobConfigurationManager = Guard.Against.Null(blobConfigurationManager, nameof(blobConfigurationManager));
+        blobConfigurationManager = Guard.Against.Null(blobConfigurationManager);
         blobStorageConfig = blobConfigurationManager.Configuration;
     }
 
@@ -104,10 +104,7 @@ internal sealed partial class BlobLocalizationProvider : IExternalLocalizationPr
             LogUnableToFileFileThatMatchesCultureNameCultureName(cultureInfo.Name);
 
             // File could not be found
-            return new ExternalLocalizationResult()
-            {
-                Success = false,
-            };
+            return new ExternalLocalizationResult { Success = false };
         }
 
         var fileContents = await RetrieveAndParseFileContents(resourceUrl);
@@ -116,17 +113,10 @@ internal sealed partial class BlobLocalizationProvider : IExternalLocalizationPr
         {
             LogUnableToReadFileContentsAsLocalizationsResourceUrl(resourceUrl);
 
-            return new ExternalLocalizationResult()
-            {
-                Success = false,
-            };
+            return new ExternalLocalizationResult { Success = false };
         }
 
-        return new ExternalLocalizationResult()
-        {
-            Success = true,
-            Localizations = fileContents,
-        };
+        return new ExternalLocalizationResult { Success = true, Localizations = fileContents };
     }
 
     #endregion Interface Implementations

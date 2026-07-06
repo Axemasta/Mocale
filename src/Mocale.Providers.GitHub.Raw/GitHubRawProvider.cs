@@ -26,13 +26,13 @@ internal partial class GitHubRawProvider : IExternalLocalizationProvider
         ILocalizationParser localizationParser,
         ILogger<GitHubRawProvider> logger)
     {
-        githubConfigurationManager = Guard.Against.Null(githubConfigurationManager, nameof(githubConfigurationManager));
+        githubConfigurationManager = Guard.Against.Null(githubConfigurationManager);
 
         githubConfig = githubConfigurationManager.Configuration;
-        this.externalFileNameHelper = Guard.Against.Null(externalFileNameHelper, nameof(externalFileNameHelper));
-        this.httpClient = Guard.Against.Null(httpClient, nameof(httpClient));
-        this.localizationParser = Guard.Against.Null(localizationParser, nameof(localizationParser));
-        this.logger = Guard.Against.Null(logger, nameof(logger));
+        this.externalFileNameHelper = Guard.Against.Null(externalFileNameHelper);
+        this.httpClient = Guard.Against.Null(httpClient);
+        this.localizationParser = Guard.Against.Null(localizationParser);
+        this.logger = Guard.Against.Null(logger);
     }
 
     #endregion Constructors

@@ -39,8 +39,8 @@ public class LocalizeMultiBindingExtension(ITranslatorManager translatorManager)
     /// <inheritdoc/>
     public override MultiBinding ProvideValue(IServiceProvider serviceProvider)
     {
-        Guard.Against.NullOrEmpty(TranslationKey, nameof(TranslationKey));
-        Guard.Against.NullOrEmpty(Bindings, nameof(Bindings));
+        Guard.Against.NullOrEmpty(TranslationKey);
+        Guard.Against.NullOrEmpty(Bindings);
 
         var bindings = new List<BindingBase>()
         {

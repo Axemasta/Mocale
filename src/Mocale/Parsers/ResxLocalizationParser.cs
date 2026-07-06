@@ -5,7 +5,7 @@ namespace Mocale.Parsers;
 
 internal partial class ResxLocalizationParser(ILogger<ResxLocalizationParser> logger) : ILocalizationParser
 {
-    private readonly ILogger<ResxLocalizationParser> logger = Guard.Against.Null(logger, nameof(logger));
+    private readonly ILogger<ResxLocalizationParser> logger = Guard.Against.Null(logger);
 
     public Dictionary<string, string>? ParseLocalizationStream(Stream resourceStream)
     {
