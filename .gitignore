@@ -9,6 +9,7 @@
 *.user
 *.userosscache
 *.sln.docstates
+*.slnx.docstates
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -396,6 +397,7 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+*.slnx.iml
 
 # macOS Finder Files
 *.DS_STORE

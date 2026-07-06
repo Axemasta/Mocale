@@ -258,7 +258,10 @@ public partial class LocalizeBindingExtensionTests : FixtureBase<LocalizeBinding
 
 		translatorManager.UpdateTranslations(new Localization(new CultureInfo("en-GB"))
 		{
-			Translations = new Dictionary<string, string> { { "Key", "The number is {0}" } },
+			Translations = new Dictionary<string, string>
+			{
+				{ "Key", "The number is {0}" },
+			},
 		}, TranslationSource.Internal);
 
 		// Act
@@ -279,7 +282,10 @@ public partial class LocalizeBindingExtensionTests : FixtureBase<LocalizeBinding
 
 		translatorManager.UpdateTranslations(new Localization(culture)
 		{
-			Translations = new Dictionary<string, string> { { "Key", formatString } },
+			Translations = new Dictionary<string, string>
+			{
+				{ "Key", formatString },
+			},
 		}, TranslationSource.Internal);
 
 		// Act
